@@ -19,10 +19,12 @@ public class AddCharacterPopup : Popup {
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
     [SerializeField] private Button _createButton = default;
+    [SerializeField] private Button _closeButton = default;
     private Action<NPC> OnDone;
 
     private void Awake() {
         _createButton.onClick.AddListener(CreateCharacter);
+        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
 
         string[] types = Enum.GetNames(typeof(NPC.EType));
         List<string> typeOptions = new List<string>(types.Length);
@@ -60,6 +62,14 @@ public class AddCharacterPopup : Popup {
     }
 
     private void CreateCharacter() {
+        if (string.IsNullOrEmpty(_nameInput.text) ||
+            string.IsNullOrEmpty(_descriptionInput.text) ||
+            string.IsNullOrEmpty(_principleInput.text)
+        ) {
+
+            return;
+        }
+
         NPC npc = new NPC() {
             Name = _nameInput.text,
             Description = _descriptionInput.text,
@@ -69,7 +79,7 @@ public class AddCharacterPopup : Popup {
         };
 
         OnDone.Invoke(npc);
-        gameObject.SetActive(false);
+        _ = PopupManager.Instance.Back();
     }
 
     public override object GetRestorationData() {
