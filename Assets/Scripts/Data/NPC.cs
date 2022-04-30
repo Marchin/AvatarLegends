@@ -39,6 +39,9 @@ public class NPC {
     [JsonProperty("balance")]
     public int Balance;
     
+    [JsonProperty("fatigue")]
+    public int Fatigue;
+    
     [JsonProperty("techniques")]
     public List<Technique> Techniques = new List<Technique>();
     
@@ -70,6 +73,13 @@ public class NPC {
             OnValueChange = ChangeBalance
         });
 
+        result.Add(new InformationData {
+            Prefix = "Fatigue",
+            InitValue = Fatigue,
+            MaxValue = GetMaxFatigue(),
+            OnValueChange = ChangeFatigue
+        });
+
         return result;
     }
 
@@ -95,6 +105,34 @@ public class NPC {
             } break;
             case EType.Legendary: {
                 result = 4;
+            } break;
+        }
+
+        return result;
+    }
+
+    public void ChangeFatigue(int value) {
+        int maxFatigue = GetMaxFatigue();
+        UnityEngine.Debug.Assert((value >= 0) && (value <= maxFatigue), "Invalid Balance");
+
+        Fatigue = UnityEngine.Mathf.Clamp(value, 0, maxFatigue);
+    }
+
+    public int GetMaxFatigue() {
+        int result = 0;
+
+        switch (Type) {
+            case EType.Minor: {
+                result = 3;
+            } break;
+            case EType.Major: {
+                result = 5;
+            } break;
+            case EType.Master: {
+                result = 10;
+            } break;
+            case EType.Legendary: {
+                result = 15;
             } break;
         }
 
