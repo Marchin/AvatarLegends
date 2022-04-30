@@ -1,0 +1,1 @@
+public class DropdownList : DataList<DropdownElement, DropdownData> {}
