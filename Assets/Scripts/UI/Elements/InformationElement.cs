@@ -10,6 +10,7 @@ public class InformationData {
     public Action<bool> OnToggle;
     public Action OnMoreInfo;
     public Action OnDropdown;
+    public Action OnAdd;
     public string Prefix;
     public string Content;
     public int IndentLevel;
@@ -28,8 +29,8 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     [SerializeField] private Button _decreaseButton = default;
     [SerializeField] private Button _increaseButton = default;
     [SerializeField] private Button _dropdownButton = default;
+    [SerializeField] private Button _addButton = default;
     [SerializeField] private Toggle _toggle = default;
-    [SerializeField] private GameObject _moreInfoVisual = default;
     [SerializeField] private LayoutGroup _layoutGroup = default;
     [SerializeField] private ScrollContent _scrollContent = default;
     private InformationData _info;
@@ -84,22 +85,21 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
             _scrollContent.Refresh();
         }
 
+        _layoutGroup.padding.left = (data.IndentLevel * _indentWidth);
+
         _dropdownButton.gameObject.SetActive(data.OnDropdown != null);
         _decreaseButton.gameObject.SetActive(data.OnValueChange != null);
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
         _counter.gameObject.SetActive(data.OnValueChange != null);
         _toggle.gameObject.SetActive(data.OnToggle != null);
+        _counterValue = data.InitValue;
+        RefreshCounter();
 
-        _layoutGroup.padding.left = (data.IndentLevel * _indentWidth);
 
         _moreInfoButton.onClick.RemoveAllListeners();
         _moreInfoButton.onClick.AddListener(() => data.OnMoreInfo?.Invoke());
         _moreInfoButton.gameObject.SetActive(data.OnMoreInfo != null);
-        _counterValue = data.InitValue;
-        RefreshCounter();
 
-        if (_moreInfoVisual != null) {
-            _moreInfoVisual.gameObject.SetActive(data.OnMoreInfo != null);
-        }
+        _addButton.gameObject.SetActive(data.OnAdd != null);
     }
 }

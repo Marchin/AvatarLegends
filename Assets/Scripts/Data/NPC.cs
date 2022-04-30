@@ -51,13 +51,17 @@ public class NPC {
     [JsonProperty("conditions")]
     public List<Condition> Conditions = new List<Condition>();
 
-
     public List<InformationData> RetrieveData() {
         List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
             Prefix = "Type",
             Content = Type.ToString(),
+        });
+
+        result.Add(new InformationData {
+            Content = "Description",
+            OnMoreInfo = ShowDescription,
         });
 
         result.Add(new InformationData {
@@ -137,5 +141,10 @@ public class NPC {
         }
 
         return result;
+    }
+
+    public async void ShowDescription() {
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+        msgPopup.Populate(Description, "Description");
     }
 }

@@ -545,7 +545,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.25
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -778,8 +778,8 @@ MonoBehaviour:
   _decreaseButton: {fileID: 4849541686357919841}
   _increaseButton: {fileID: 4849541687227686192}
   _dropdownButton: {fileID: 2990520124601071955}
+  _addButton: {fileID: 4849541685289765691}
   _toggle: {fileID: 2990520124255484744}
-  _moreInfoVisual: {fileID: 5294996745527194847}
   _layoutGroup: {fileID: 2990520123930937482}
   _scrollContent: {fileID: 6692624612348847270}
 --- !u!114 &2990520123930937484
@@ -2012,7 +2012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 532625538848618243, guid: 09aee04af2a721342977bb8055cfa01f, type: 3}
       propertyPath: m_fontSize
-      value: 23.25
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 532625538848618243, guid: 09aee04af2a721342977bb8055cfa01f, type: 3}
       propertyPath: m_fontAsset
@@ -2320,6 +2320,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
+--- !u!114 &4849541685289765691 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7695946209229420812, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
+  m_PrefabInstance: {fileID: 2990520124333060663}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5294996745527194847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5294996745527194844 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}

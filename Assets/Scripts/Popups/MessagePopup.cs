@@ -79,19 +79,19 @@ public class MessagePopup : Popup {
         _content.text = message;
         _content.gameObject.SetActive(!string.IsNullOrEmpty(_content.text));
         _title.text = string.IsNullOrEmpty(title) ? "Message" : title;
-        _image.gameObject.SetActive(false);
-        _spriteReference = spriteReference;
-        if (_spriteReference?.RuntimeKeyIsValid() ?? false) {
-            _spriteHandle = UnityUtils.LoadSprite(_image, _spriteReference, _cts.Token);
-        }
-        _toggleDataList = toggleDataList;
-        _toggleList.Populate(_toggleDataList);
-        _toggleList.gameObject.SetActive(toggleDataList != null && toggleDataList.Count > 0);
+        // _image.gameObject.SetActive(false);
+        // _spriteReference = spriteReference;
+        // if (_spriteReference?.RuntimeKeyIsValid() ?? false) {
+        //     _spriteHandle = UnityUtils.LoadSprite(_image, _spriteReference, _cts.Token);
+        // }
+        // _toggleDataList = toggleDataList;
+        // _toggleList.Populate(_toggleDataList);
+        // _toggleList.gameObject.SetActive(toggleDataList != null && toggleDataList.Count > 0);
 
-        _buttonDataList = buttonDataList;
-        _buttonList.Populate(_buttonDataList);
-        _buttonList.gameObject.SetActive(_buttonDataList != null && _buttonDataList.Count > 0);
-        _buttonGrid.constraintCount = columns;
+        // _buttonDataList = buttonDataList;
+        // _buttonList.Populate(_buttonDataList);
+        // _buttonList.gameObject.SetActive(_buttonDataList != null && _buttonDataList.Count > 0);
+        // _buttonGrid.constraintCount = columns;
         _columns = columns;
     }
 
