@@ -14,6 +14,7 @@ public class MainPopup : Popup {
     }
 
     [SerializeField] private Button _addCharacter = default;
+    [SerializeField] private Button _editCharacter = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
@@ -24,6 +25,7 @@ public class MainPopup : Popup {
 
     private void Awake() {
         _addCharacter.onClick.AddListener(AddCharacter);
+        _editCharacter.onClick.AddListener(EditCharacter);
     }
 
     private void Refresh() {
@@ -39,7 +41,7 @@ public class MainPopup : Popup {
         if (_gameData.NPCs.Count > 0) {
             _noCharacterMsg.SetActive(false);
             _infoContainer.SetActive(true);
-            SetCharacter(_gameData.NPCs[0]);
+            SetCharacter(_selectedNPC ?? _gameData.NPCs[0]);
         } else {
             _noCharacterMsg.SetActive(true);
             _infoContainer.SetActive(false);
@@ -59,25 +61,45 @@ public class MainPopup : Popup {
     }
 
     private async void AddCharacter() {
-        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>();
+        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
         addCharacterPopup.Populate(OnCharacterCreation);
-        addCharacterPopup.gameObject.SetActive(true);
+    }
+
+    private async void EditCharacter() {
+        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
+        addCharacterPopup.Populate(OnCharacterEdition, _selectedNPC);
+    }
+
+    private void SortCharacters() {
+        _gameData.NPCs.Sort((x, y) => x.Name.CompareTo(y.Name));
     }
 
     private void OnCharacterCreation(NPC npc) {
         _gameData.NPCs.Add(npc);
+        _selectedNPC = npc;
+        SortCharacters();
+        Refresh();
+    }
+
+    private void OnCharacterEdition(NPC npc) {
+        _gameData.NPCs.Remove(_selectedNPC);
+        _gameData.NPCs.Add(npc);
+        _selectedNPC = npc;
+        SortCharacters();
         Refresh();
     }
 
     public override object GetRestorationData() {
         PopupData data = new PopupData {
-            Data = _gameData
+            Data = _gameData,
+            SelectedNPC = _selectedNPC
         };
 
         return data;
     }
 
     public override void Restore(object data) {
+        Debug.LogError("restore");
         if (data is PopupData popupData) {
             Populate(popupData.Data);
             if (popupData.SelectedNPC != null) {

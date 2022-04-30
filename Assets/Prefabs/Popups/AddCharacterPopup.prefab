@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 7652806402752010375}
   - component: {fileID: 7652806402752010368}
   m_Layer: 5
-  m_Name: CreateButton
+  m_Name: ConfirmButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NPC Creation
+  m_text: Character Creation
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1766,7 +1766,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create
+  m_text: Confirm
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3239,8 +3239,9 @@ MonoBehaviour:
   _training: {fileID: 6958189417681377089}
   _principleInput: {fileID: 7652806403098725818}
   _descriptionInput: {fileID: 7652806403342918949}
-  _createButton: {fileID: 7652806402752010375}
+  _confirmButton: {fileID: 7652806402752010375}
   _closeButton: {fileID: 3025706445632223766}
+  _title: {fileID: 7652806403183289182}
 --- !u!1 &7652806404652656105
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,12 +18,13 @@ public class AddCharacterPopup : Popup {
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
-    [SerializeField] private Button _createButton = default;
+    [SerializeField] private Button _confirmButton = default;
     [SerializeField] private Button _closeButton = default;
+    [SerializeField] private TextMeshProUGUI _title = default;
     private Action<NPC> OnDone;
 
     private void Awake() {
-        _createButton.onClick.AddListener(CreateCharacter);
+        _confirmButton.onClick.AddListener(CreateCharacter);
         _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
 
         string[] types = Enum.GetNames(typeof(NPC.EType));
@@ -49,13 +50,24 @@ public class AddCharacterPopup : Popup {
         });
     }
 
-    public void Populate(Action<NPC> onDone) {
+    public void Populate(Action<NPC> onDone, NPC npc = null) {
         OnDone = onDone;
         Clear();
+
+        if (npc != null) {
+            _nameInput.text = npc.Name;
+            _descriptionInput.text = npc.Description;
+            _principleInput.text = npc.Principle;
+            _npcType.Value = (int)npc.Type;
+            _training.Value = (int)npc.Training;
+        }
+
+        _title.text = (npc != null) ? "Character Edition" : "Character Creation";
     }
 
     private void Clear() {
         _nameInput.text = "";
+        _descriptionInput.text = "";
         _principleInput.text = "";
         _npcType.Value = 0;
         _training.Value = 0;
@@ -66,7 +78,6 @@ public class AddCharacterPopup : Popup {
             string.IsNullOrEmpty(_descriptionInput.text) ||
             string.IsNullOrEmpty(_principleInput.text)
         ) {
-
             return;
         }
 
