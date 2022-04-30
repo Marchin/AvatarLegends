@@ -1,10 +1,18 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class AddCharacterPopup : MonoBehaviour {
+public class AddCharacterPopup : Popup {
+    public class PopupData {
+        public string Name;
+        public NPC.EType NPCType;
+        public NPC.ETraining Training;
+        public string Principle;
+        public string Description;
+    }
+
     [SerializeField] private TMP_InputField _nameInput = default;
     [SerializeField] private DropdownElement _npcType = default;
     [SerializeField] private DropdownElement _training = default;
@@ -38,7 +46,7 @@ public class AddCharacterPopup : MonoBehaviour {
             Options = trainingOptions
         });
     }
-    
+
     public void Populate(Action<NPC> onDone) {
         OnDone = onDone;
         Clear();
@@ -57,12 +65,32 @@ public class AddCharacterPopup : MonoBehaviour {
             Description = _descriptionInput.text,
             Type = (NPC.EType)_npcType.Value,
             Training = (NPC.ETraining)_training.Value,
-            Techniques = new List<Technique>(),
-            Statuses = new List<Status>(),
             Principle = _principleInput.text
         };
 
         OnDone.Invoke(npc);
         gameObject.SetActive(false);
+    }
+
+    public override object GetRestorationData() {
+        PopupData popupData = new PopupData {
+            Name = _nameInput.text,
+            Description = _descriptionInput.text,
+            NPCType = (NPC.EType)_npcType.Value,
+            Training = (NPC.ETraining)_training.Value,
+            Principle = _principleInput.text
+        };
+
+        return popupData;
+    }
+
+    public override void Restore(object data) {
+        if (data is PopupData popupData) {
+            _nameInput.text = popupData.Name;
+            _descriptionInput.text = popupData.Description;
+            _npcType.Value = (int)popupData.NPCType;
+            _training.Value = (int)popupData.Training;
+            _principleInput.text = popupData.Principle;
+        }
     }
 }

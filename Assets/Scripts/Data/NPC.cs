@@ -40,13 +40,13 @@ public class NPC {
     public int Balance;
     
     [JsonProperty("techniques")]
-    public List<Technique> Techniques;
+    public List<Technique> Techniques = new List<Technique>();
     
     [JsonProperty("statuses")]
-    public List<Status> Statuses;
+    public List<Status> Statuses = new List<Status>();
 
     [JsonProperty("conditions")]
-    public List<Condition> Conditions;
+    public List<Condition> Conditions = new List<Condition>();
 
 
     public List<InformationData> RetrieveData() {

@@ -45,7 +45,7 @@ public class PopupManager : MonoBehaviourSingleton<PopupManager> {
             _stack.Clear();
         };
 
-        _parentCanvas = UnityUtils.GetOrGenerateRootGO("Popup Canvas");
+        _parentCanvas = UnityUtils.GetOrGenerateRootGO("PopupCanvas");
         _parentCanvas.GetOrAddComponent<Canvas>();
     }
 

@@ -1,12 +1,14 @@
 using TMPro;
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Newtonsoft.Json;
 
 public class MainPopup : Popup {
-    const string DataPath = "Assets/Data/Data.json";
+    public class PopupData {
+        public GameData Data;
+        public NPC SelectedNPC;
+    }
+
     public enum Tab {
         NPCs
     }
@@ -15,22 +17,13 @@ public class MainPopup : Popup {
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
-    [SerializeField] private AddCharacterPopup _addCharacterPopup = default;
     [SerializeField] private GameObject _infoContainer = default;
     [SerializeField] private GameObject _noCharacterMsg = default;
     private GameData _gameData;
+    private NPC _selectedNPC;
 
     private void Awake() {
-        string data = File.ReadAllText(DataPath);
-        _gameData = JsonConvert.DeserializeObject<GameData>(data) ?? new GameData();
-        
         _addCharacter.onClick.AddListener(AddCharacter);
-        Refresh();
-    }
-
-    private void OnDestroy() {
-        string data = JsonConvert.SerializeObject(_gameData);
-        File.WriteAllText(DataPath, data);
     }
 
     private void Refresh() {
@@ -57,15 +50,18 @@ public class MainPopup : Popup {
     private void SetCharacter(NPC npc) {
         _name.text = npc.Name;
         _infoList.Populate(npc.RetrieveData());
+        _selectedNPC = npc;
     }
 
-    public void Populate() {
-
+    public void Populate(GameData gameData) {
+        _gameData = gameData;
+        Refresh();
     }
 
-    private void AddCharacter() {
-        _addCharacterPopup.Populate(OnCharacterCreation);
-        _addCharacterPopup.gameObject.SetActive(true);
+    private async void AddCharacter() {
+        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>();
+        addCharacterPopup.Populate(OnCharacterCreation);
+        addCharacterPopup.gameObject.SetActive(true);
     }
 
     private void OnCharacterCreation(NPC npc) {
@@ -74,10 +70,19 @@ public class MainPopup : Popup {
     }
 
     public override object GetRestorationData() {
-        throw new System.NotImplementedException();
+        PopupData data = new PopupData {
+            Data = _gameData
+        };
+
+        return data;
     }
 
     public override void Restore(object data) {
-        throw new System.NotImplementedException();
+        if (data is PopupData popupData) {
+            Populate(popupData.Data);
+            if (popupData.SelectedNPC != null) {
+                SetCharacter(popupData.SelectedNPC);
+            }
+        }
     }
 }
