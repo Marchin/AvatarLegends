@@ -57,7 +57,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         });
         _moreInfoButton.onClick.AddListener(() => _info.OnMoreInfo());
         _addButton.onClick.AddListener(() => _info.OnAdd());
-        _toggle.onValueChanged.AddListener(value => _info.OnToggle(value));
+        _toggle.onValueChanged.AddListener(value => _info?.OnToggle?.Invoke(value));
     }
 
     private void RefreshCounter() {

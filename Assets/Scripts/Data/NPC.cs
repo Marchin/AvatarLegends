@@ -64,10 +64,12 @@ public class NPC {
             Content = Type.ToString(),
         });
 
-        result.Add(new InformationData {
-            Content = "Description",
-            OnMoreInfo = ShowDescription,
-        });
+        if (!string.IsNullOrEmpty(Description)) {
+            result.Add(new InformationData {
+                Content = "Description",
+                OnMoreInfo = ShowDescription,
+            });
+        }
 
         result.Add(new InformationData {
             Prefix = "Training",
@@ -96,10 +98,10 @@ public class NPC {
 
         result.Add(new InformationData {
             Content = $"Condition ({Conditions.Count}/{GetMaxConditions()})",
-            OnDropdown = (Conditions.Count > 0 && Conditions.Count < GetMaxConditions()) ?
-                onConditionDropdown :
-                null,
-            OnAdd = AddCondition,
+            OnDropdown = onConditionDropdown,
+            OnAdd = (Conditions.Count > 0 && Conditions.Count < GetMaxConditions()) ?
+                AddCondition :
+                (Action)null,
             Expanded = _showConditions
         });
 
@@ -120,7 +122,7 @@ public class NPC {
 
     private async void AddCondition() {
         var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
-        inputPopup.Populate("Add a condition", "Condition", onConfirm: async input => {
+        inputPopup.Populate("Add a condition.", "Condition", onConfirm: async input => {
             if (string.IsNullOrEmpty(input) || Conditions.ContainsKey(input)) {
                 var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
                 msgPopup.Populate(
