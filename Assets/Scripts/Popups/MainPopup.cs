@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MainPopup : Popup {
     public class PopupData {
         public GameData Data;
-        public NPC SelectedNPC;
+        public string SelectedNPC;
     }
 
     public enum Tab {
@@ -21,7 +21,8 @@ public class MainPopup : Popup {
     [SerializeField] private GameObject _infoContainer = default;
     [SerializeField] private GameObject _noCharacterMsg = default;
     private GameData _gameData;
-    private NPC _selectedNPC;
+    private Dictionary<string, NPC> NPCs => _gameData.NPCs;
+    private string _selectedNPC;
 
     private void Awake() {
         _addCharacter.onClick.AddListener(AddCharacter);
@@ -29,11 +30,14 @@ public class MainPopup : Popup {
     }
 
     private void Refresh() {
-        List<ButtonData> buttons = new List<ButtonData>(_gameData.NPCs.Count);
-        foreach (var npc in _gameData.NPCs) {
+        var names = new List<string>(NPCs.Keys);
+        names.Sort();
+        List<ButtonData> buttons = new List<ButtonData>(NPCs.Count);
+        foreach (var name in names) {
+            _selectedNPC = _selectedNPC ?? name;
             buttons.Add(new ButtonData {
-                Text = npc.Name,
-                Callback = () => SetCharacter(npc)
+                Text = name,
+                Callback = () => SetCharacter(NPCs[name])
             });
         }
         _nameList.Populate(buttons);
@@ -41,7 +45,7 @@ public class MainPopup : Popup {
         if (_gameData.NPCs.Count > 0) {
             _noCharacterMsg.SetActive(false);
             _infoContainer.SetActive(true);
-            SetCharacter(_selectedNPC ?? _gameData.NPCs[0]);
+            SetCharacter(NPCs[_selectedNPC]);
         } else {
             _noCharacterMsg.SetActive(true);
             _infoContainer.SetActive(false);
@@ -51,8 +55,9 @@ public class MainPopup : Popup {
 
     private void SetCharacter(NPC npc) {
         _name.text = npc.Name;
-        _infoList.Populate(npc.RetrieveData());
-        _selectedNPC = npc;
+        NPCs[npc.Name] = npc;
+        _infoList.Populate(NPCs[npc.Name].RetrieveData(Refresh));
+        _selectedNPC = npc.Name;
     }
 
     public void Populate(GameData gameData) {
@@ -67,25 +72,18 @@ public class MainPopup : Popup {
 
     private async void EditCharacter() {
         var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
-        addCharacterPopup.Populate(OnCharacterEdition, _selectedNPC);
-    }
-
-    private void SortCharacters() {
-        _gameData.NPCs.Sort((x, y) => x.Name.CompareTo(y.Name));
+        addCharacterPopup.Populate(OnCharacterEdition, _gameData.NPCs[_selectedNPC]);
     }
 
     private void OnCharacterCreation(NPC npc) {
-        _gameData.NPCs.Add(npc);
-        _selectedNPC = npc;
-        SortCharacters();
+        _gameData.NPCs.Add(npc.Name, npc);
+        _selectedNPC = npc.Name;
         Refresh();
     }
 
     private void OnCharacterEdition(NPC npc) {
-        _gameData.NPCs.Remove(_selectedNPC);
-        _gameData.NPCs.Add(npc);
-        _selectedNPC = npc;
-        SortCharacters();
+        _gameData.NPCs[npc.Name] = npc;
+        _selectedNPC = npc.Name;
         Refresh();
     }
 
@@ -99,11 +97,10 @@ public class MainPopup : Popup {
     }
 
     public override void Restore(object data) {
-        Debug.LogError("restore");
         if (data is PopupData popupData) {
             Populate(popupData.Data);
             if (popupData.SelectedNPC != null) {
-                SetCharacter(popupData.SelectedNPC);
+                SetCharacter(NPCs[popupData.SelectedNPC]);
             }
         }
     }

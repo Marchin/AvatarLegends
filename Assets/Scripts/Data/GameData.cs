@@ -4,16 +4,16 @@ using System.Collections.Generic;
 public class GameData {
     // Playbooks
     [JsonProperty("ncps")]
-    public List<NPC> NPCs = new List<NPC>();
+    public Dictionary<string, NPC> NPCs = new Dictionary<string, NPC>();
 
     [JsonProperty("conditions")]
-    public List<Condition> Conditions = new List<Condition>();
+    public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
 
     [JsonProperty("techniques")]
-    public List<Technique> Techniques = new List<Technique>();
+    public Dictionary<string, Technique> Techniques = new Dictionary<string, Technique>();
 
     [JsonProperty("statuses")]
-    public List<Status> Statuses = new List<Status>();
+    public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
 
     [JsonProperty("user")]
     public UserData User;

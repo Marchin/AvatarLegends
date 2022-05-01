@@ -36,7 +36,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     private InformationData _info;
     private int _counterValue;
 
-    private void Awake() {
+    private void Start() {
         _decreaseButton.onClick.AddListener(() => {
             if (_counterValue > 0) {
                 --_counterValue;
@@ -51,6 +51,12 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
                 RefreshCounter();
             }
         });
+        _dropdownButton.onClick.AddListener(() => {
+            _info.OnDropdown();
+        });
+        _moreInfoButton.onClick.AddListener(() => _info.OnMoreInfo());
+        _addButton.onClick.AddListener(() => _info.OnAdd());
+        _toggle.onValueChanged.AddListener(value => _info.OnToggle(value));
     }
 
     private void RefreshCounter() {
@@ -92,12 +98,10 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
         _counter.gameObject.SetActive(data.OnValueChange != null);
         _toggle.gameObject.SetActive(data.OnToggle != null);
+        _toggle.isOn = data.IsToggleOn;
         _counterValue = data.InitValue;
         RefreshCounter();
 
-
-        _moreInfoButton.onClick.RemoveAllListeners();
-        _moreInfoButton.onClick.AddListener(() => data.OnMoreInfo?.Invoke());
         _moreInfoButton.gameObject.SetActive(data.OnMoreInfo != null);
 
         _addButton.gameObject.SetActive(data.OnAdd != null);

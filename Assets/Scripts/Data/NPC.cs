@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 public class NPC {
@@ -43,15 +44,19 @@ public class NPC {
     public int Fatigue;
     
     [JsonProperty("techniques")]
-    public List<Technique> Techniques = new List<Technique>();
+    public Dictionary<string, Technique> Techniques = new Dictionary<string, Technique>();
     
     [JsonProperty("statuses")]
-    public List<Status> Statuses = new List<Status>();
+    public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
 
     [JsonProperty("conditions")]
-    public List<Condition> Conditions = new List<Condition>();
+    public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
+    private bool _showConditions;
+    private Action _onRefresh;
 
-    public List<InformationData> RetrieveData() {
+    public List<InformationData> RetrieveData(Action refresh) {
+        _onRefresh = refresh;
+
         List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
@@ -84,7 +89,45 @@ public class NPC {
             OnValueChange = ChangeFatigue
         });
 
+        Action onConditionDropdown = () => {
+            _showConditions = !_showConditions;
+            _onRefresh();
+        };
+
+        result.Add(new InformationData {
+            Prefix = "Conditions",
+            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
+            OnAdd = AddCondition
+        });
+
+        if (_showConditions) {
+            foreach (var condition in Conditions) {
+                result.Add(new InformationData {
+                    Prefix = condition.Key,
+                    IsToggleOn = condition.Value.IsOn,
+                    OnToggle = isOn => Conditions[condition.Key].IsOn = isOn,
+                    IndentLevel = 1
+                });
+            }
+        }
+
+
         return result;
+    }
+
+    private async void AddCondition() {
+        var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
+        inputPopup.Populate("Add a condition", "Condition", onConfirm: async input => {
+            if (string.IsNullOrEmpty(input) || Conditions.ContainsKey(input)) {
+                var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+                msgPopup.Populate("Please enter a valid name", "Name");
+            } else {
+                Conditions.Add(input, new Condition { Name = input });
+                _showConditions = true;
+                _onRefresh();
+                await PopupManager.Instance.Back();
+            }
+        });
     }
 
     public void ChangeBalance(int value) {
@@ -144,7 +187,7 @@ public class NPC {
     }
 
     public async void ShowDescription() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
         msgPopup.Populate(Description, "Description");
     }
 }
