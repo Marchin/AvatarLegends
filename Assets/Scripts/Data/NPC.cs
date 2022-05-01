@@ -85,7 +85,7 @@ public class NPC {
         });
 
         result.Add(new InformationData {
-            Prefix = "Fatigue",
+            Content = $"Fatigue",
             InitValue = Fatigue,
             MaxValue = GetMaxFatigue(),
             OnValueChange = ChangeFatigue
@@ -98,8 +98,8 @@ public class NPC {
 
         result.Add(new InformationData {
             Content = $"Condition ({Conditions.Count}/{GetMaxConditions()})",
-            OnDropdown = onConditionDropdown,
-            OnAdd = (Conditions.Count > 0 && Conditions.Count < GetMaxConditions()) ?
+            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
+            OnAdd = (Conditions.Count < GetMaxConditions()) ?
                 AddCondition :
                 (Action)null,
             Expanded = _showConditions
@@ -170,6 +170,7 @@ public class NPC {
         UnityEngine.Debug.Assert((value >= 0) && (value <= maxFatigue), "Invalid Balance");
 
         Fatigue = UnityEngine.Mathf.Clamp(value, 0, maxFatigue);
+        _onRefresh();
     }
 
     public int GetMaxFatigue() {

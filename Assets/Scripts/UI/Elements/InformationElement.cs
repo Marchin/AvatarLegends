@@ -63,7 +63,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     private void RefreshCounter() {
         _decreaseButton.interactable = _counterValue > 0;
         _increaseButton.interactable = _counterValue < _info.MaxValue;
-        _counter.text = _counterValue.ToString();
+        _counter.text = $"{_counterValue}/{_info.MaxValue}";
     }
 
     public void Populate(InformationData data) {
@@ -101,7 +101,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _dropdownButton.gameObject.SetActive(data.OnDropdown != null);
         _decreaseButton.gameObject.SetActive(data.OnValueChange != null);
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
-        _counter.gameObject.SetActive(data.OnValueChange != null);
+        _counter.transform.parent.gameObject.SetActive(data.OnValueChange != null);
         _toggle.gameObject.SetActive(data.OnToggle != null);
         _toggle.isOn = data.IsToggleOn;
         _counterValue = data.InitValue;
