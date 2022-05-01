@@ -19,9 +19,9 @@ public class MessagePopup : Popup {
 
     [SerializeField] private TextMeshProUGUI _title = default;
     [SerializeField] private TextMeshProUGUI _content = default;
-    [SerializeField] private Image _image = default;
     [SerializeField] private Button _closeButton = default;
-    [SerializeField] private ToggleList _toggleList = default;
+    // [SerializeField] private Image _image = default;
+    // [SerializeField] private ToggleList _toggleList = default;
     [SerializeField] private ButtonList _buttonList = default;
     [SerializeField] private GridLayoutGroup _buttonGrid = default;
     [SerializeField] private PopupCloser _backgroundCloser = default;
