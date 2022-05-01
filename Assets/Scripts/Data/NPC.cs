@@ -95,15 +95,18 @@ public class NPC {
         };
 
         result.Add(new InformationData {
-            Prefix = "Conditions",
-            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
-            OnAdd = AddCondition
+            Content = $"Condition ({Conditions.Count}/{GetMaxConditions()})",
+            OnDropdown = (Conditions.Count > 0 && Conditions.Count < GetMaxConditions()) ?
+                onConditionDropdown :
+                null,
+            OnAdd = AddCondition,
+            Expanded = _showConditions
         });
 
         if (_showConditions) {
             foreach (var condition in Conditions) {
                 result.Add(new InformationData {
-                    Prefix = condition.Key,
+                    Content = condition.Key,
                     IsToggleOn = condition.Value.IsOn,
                     OnToggle = isOn => Conditions[condition.Key].IsOn = isOn,
                     IndentLevel = 1
@@ -182,6 +185,27 @@ public class NPC {
             } break;
             case EType.Legendary: {
                 result = 15;
+            } break;
+        }
+
+        return result;
+    }
+
+    public int GetMaxConditions() {
+        int result = 0;
+
+        switch (Type) {
+            case EType.Minor: {
+                result = 1;
+            } break;
+            case EType.Major: {
+                result = 3;
+            } break;
+            case EType.Master: {
+                result = 5;
+            } break;
+            case EType.Legendary: {
+                result = 8;
             } break;
         }
 

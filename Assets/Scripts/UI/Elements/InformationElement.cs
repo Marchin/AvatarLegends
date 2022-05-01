@@ -17,6 +17,7 @@ public class InformationData {
     public int InitValue;
     public int MaxValue;
     public bool IsToggleOn;
+    public bool Expanded;
 }
 
 public class InformationElement : MonoBehaviour, IDataUIElement<InformationData> {
@@ -67,6 +68,10 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
 
     public void Populate(InformationData data) {
         _info = data;
+
+        _dropdownButton.transform.localScale = data.Expanded ?
+            new Vector3(1, -1, 1) :
+            Vector3.one;
 
         if (!string.IsNullOrEmpty(data.Prefix)) {
             if (_prefix != null) {
