@@ -15,6 +15,7 @@ public class MainPopup : Popup {
 
     [SerializeField] private Button _addCharacter = default;
     [SerializeField] private Button _editCharacter = default;
+    [SerializeField] private Button _deleteCharacter = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
@@ -27,6 +28,7 @@ public class MainPopup : Popup {
     private void Awake() {
         _addCharacter.onClick.AddListener(AddCharacter);
         _editCharacter.onClick.AddListener(EditCharacter);
+        _deleteCharacter.onClick.AddListener(DeleteCharacter);
     }
 
     private void Refresh() {
@@ -67,12 +69,41 @@ public class MainPopup : Popup {
 
     private async void AddCharacter() {
         var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
-        addCharacterPopup.Populate(OnCharacterCreation);
+        addCharacterPopup.Populate(OnCharacterCreation, NPCs.Keys);
     }
 
     private async void EditCharacter() {
         var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
-        addCharacterPopup.Populate(OnCharacterEdition, _gameData.NPCs[_selectedNPC]);
+        addCharacterPopup.Populate(OnCharacterEdition, NPCs.Keys, _gameData.NPCs[_selectedNPC]);
+    }
+
+    private async void DeleteCharacter() {
+        List<ButtonData> buttons = new List<ButtonData>();
+
+        buttons.Add(new ButtonData {
+            Text = "Yes",
+            Callback = () => {
+                var names = new List<string>(NPCs.Keys);
+                int nextNameIndex = names.IndexOf(_selectedNPC);
+                NPCs.Remove(_selectedNPC);
+                names.Remove(_selectedNPC);
+                nextNameIndex = Mathf.Min(nextNameIndex, names.Count - 1);
+                _selectedNPC = names[nextNameIndex];
+                Refresh();
+
+                _ = PopupManager.Instance.Back();
+            }
+        });
+
+        buttons.Add(new ButtonData {
+            Text = "No",
+            Callback = () => {
+                _ = PopupManager.Instance.Back();
+            }
+        });
+
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
+        msgPopup.Populate($"Do you want to delete {_selectedNPC}?", "Delete", buttonsList: buttons);
     }
 
     private void OnCharacterCreation(NPC npc) {
@@ -82,8 +113,11 @@ public class MainPopup : Popup {
     }
 
     private void OnCharacterEdition(NPC npc) {
-        _gameData.NPCs[npc.Name] = npc;
-        _selectedNPC = npc.Name;
+        if (_selectedNPC != npc.Name) {
+            NPCs.Remove(_selectedNPC);
+            _selectedNPC = npc.Name;
+        }
+        NPCs[npc.Name] = npc;
         Refresh();
     }
 

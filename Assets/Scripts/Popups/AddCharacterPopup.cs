@@ -22,6 +22,7 @@ public class AddCharacterPopup : Popup {
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private TextMeshProUGUI _title = default;
     private Action<NPC> OnDone;
+    private ICollection<string> names;
 
     private void Awake() {
         _confirmButton.onClick.AddListener(CreateCharacter);
@@ -50,8 +51,9 @@ public class AddCharacterPopup : Popup {
         });
     }
 
-    public void Populate(Action<NPC> onDone, NPC npc = null) {
+    public void Populate(Action<NPC> onDone, ICollection<string> names, NPC npc = null) {
         OnDone = onDone;
+        this.names = names;
         Clear();
 
         if (npc != null) {
@@ -73,11 +75,12 @@ public class AddCharacterPopup : Popup {
         _training.Value = 0;
     }
 
-    private void CreateCharacter() {
-        if (string.IsNullOrEmpty(_nameInput.text) ||
-            string.IsNullOrEmpty(_descriptionInput.text) ||
-            string.IsNullOrEmpty(_principleInput.text)
-        ) {
+    private async void CreateCharacter() {
+        if (string.IsNullOrEmpty(_nameInput.text) || names.Contains(_nameInput.text)) {
+            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+            msgPopup.Populate(
+                names.Contains(_nameInput.text) ? "Name already exists." : "Please enter a name.",
+                "Name");
             return;
         }
 

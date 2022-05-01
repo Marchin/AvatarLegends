@@ -61,7 +61,7 @@ public class MessagePopup : Popup {
         string message = "",
         string title = "", 
         AssetReferenceAtlasedSprite spriteReference = null,
-        List<ButtonData> buttonDataList = null,
+        List<ButtonData> buttonsList = null,
         List<ToggleData> toggleDataList = null,
         int columns = 2,
         bool showCloseButton = true
@@ -88,10 +88,10 @@ public class MessagePopup : Popup {
         // _toggleList.Populate(_toggleDataList);
         // _toggleList.gameObject.SetActive(toggleDataList != null && toggleDataList.Count > 0);
 
-        // _buttonDataList = buttonDataList;
-        // _buttonList.Populate(_buttonDataList);
-        // _buttonList.gameObject.SetActive(_buttonDataList != null && _buttonDataList.Count > 0);
-        // _buttonGrid.constraintCount = columns;
+        _buttonDataList = buttonsList;
+        _buttonList.Populate(_buttonDataList);
+        _buttonList.gameObject.SetActive(_buttonDataList != null && _buttonDataList.Count > 0);
+        _buttonGrid.constraintCount = columns;
         _columns = columns;
     }
 

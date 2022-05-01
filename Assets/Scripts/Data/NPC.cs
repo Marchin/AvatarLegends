@@ -120,7 +120,9 @@ public class NPC {
         inputPopup.Populate("Add a condition", "Condition", onConfirm: async input => {
             if (string.IsNullOrEmpty(input) || Conditions.ContainsKey(input)) {
                 var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-                msgPopup.Populate("Please enter a valid name", "Name");
+                msgPopup.Populate(
+                    Conditions.ContainsKey(input) ? "Name already exists." : "Please enter a name.",
+                    "Name");
             } else {
                 Conditions.Add(input, new Condition { Name = input });
                 _showConditions = true;
