@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AddCharacterPopup : Popup {
+public class AddNPCPopup : Popup {
     public class PopupData {
         public string Name;
         public NPC.EType NPCType;

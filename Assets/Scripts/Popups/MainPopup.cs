@@ -25,11 +25,13 @@ public class MainPopup : Popup {
     private Dictionary<string, IDataEntry> Entries;// => _gameData.NPCs;
     private string _selected;
     private Action _record;
+    private Action _onAddEntry;
+    private Action _onEditEntry;
 
     private void Awake() {
-        _addCharacter.onClick.AddListener(AddCharacter);
-        _editCharacter.onClick.AddListener(EditCharacter);
-        _deleteCharacter.onClick.AddListener(DeleteCharacter);
+        _addCharacter.onClick.AddListener(() => _onAddEntry());
+        _editCharacter.onClick.AddListener(() => _onEditEntry());
+        _deleteCharacter.onClick.AddListener(DeleteEntry);
 
         List<ButtonData> tabs = new List<ButtonData>();
 
@@ -37,23 +39,13 @@ public class MainPopup : Popup {
         tabs.Add(new ButtonData {
             Text = enemiesTabText,
             Callback = () => {
-                _record?.Invoke();
-                Entries = new Dictionary<string, IDataEntry>(_gameData.User.Enemies.Count);
-                foreach (var npc in _gameData.User.Enemies) {
-                    Entries.Add(npc.Key, npc.Value);
-                }
-                foreach (var tab in _tabsList.Elements) {
-                    tab.ButtonImage.color = (tab.Text == enemiesTabText) ? _tabSelectedColor : _tabUnselectedColor;
-                }
-                _record = null;
-                _selected = null;
-                Refresh();
-                _record = () => {
-                    _gameData.User.Enemies = new Dictionary<string, NPC>(Entries.Count);
-                    foreach (var entry in Entries) {
-                        _gameData.User.Enemies.Add(entry.Key, entry.Value as NPC);
-                    }
-                };
+                SetEntryCollection<NPC>(
+                    _gameData.User.Enemies,
+                    val => _gameData.User.Enemies = val,
+                    enemiesTabText,
+                    onAddEntry: AddNPC,
+                    onEditEntry: EditNPC
+                );
             }
         });
 
@@ -61,27 +53,55 @@ public class MainPopup : Popup {
         tabs.Add(new ButtonData {
             Text = npcsTabText,
             Callback = () => {
-                _record?.Invoke();
-                Entries = new Dictionary<string, IDataEntry>(_gameData.User.NPCs.Count);
-                foreach (var npc in _gameData.User.NPCs) {
-                    Entries.Add(npc.Key, npc.Value);
-                }
-                foreach (var tab in _tabsList.Elements) {
-                    tab.ButtonImage.color = (tab.Text == npcsTabText) ? _tabSelectedColor : _tabUnselectedColor;
-                }
-                _record = null;
-                _selected = null;
-                Refresh();
-                _record = () => {
-                    _gameData.User.NPCs = new Dictionary<string, NPC>(Entries.Count);
-                    foreach (var entry in Entries) {
-                        _gameData.User.NPCs.Add(entry.Key, entry.Value as NPC);
-                    }
-                };
+                SetEntryCollection<NPC>(
+                    _gameData.User.NPCs,
+                    val => _gameData.User.NPCs = val,
+                    npcsTabText,
+                    onAddEntry: AddNPC,
+                    onEditEntry: EditNPC
+                );
             }
         });
 
         _tabsList.Populate(tabs);
+        
+        async void AddNPC() {
+            var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+            addCharacterPopup.Populate(OnEntryCreation, Entries.Keys);
+        }
+
+        async void EditNPC() {
+            var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+            addCharacterPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected]);
+        }
+    }
+
+    private void SetEntryCollection<T>(Dictionary<string, T> entries, 
+        Action<Dictionary<string, T>> onSave,
+        string tabName,
+        Action onAddEntry,
+        Action onEditEntry
+    ) where T : IDataEntry {
+        _record?.Invoke();
+        Entries = new Dictionary<string, IDataEntry>(entries.Count);
+        foreach (var enemy in entries) {
+            Entries.Add(enemy.Key, enemy.Value);
+        }
+        foreach (var tab in _tabsList.Elements) {
+            tab.ButtonImage.color = (tab.Text == tabName) ? _tabSelectedColor : _tabUnselectedColor;
+        }
+        _record = null;
+        _selected = null;
+        _onAddEntry = onAddEntry;
+        _onEditEntry = onEditEntry;
+        Refresh();
+        _record = () => {
+            entries = new Dictionary<string, T>(Entries.Count);
+            foreach (var entry in Entries) {
+                entries.Add(entry.Key, (T)entry.Value);
+            }
+            onSave(entries);
+        };
     }
 
     private void Refresh() {
@@ -122,17 +142,7 @@ public class MainPopup : Popup {
         Refresh();
     }
 
-    private async void AddCharacter() {
-        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
-        addCharacterPopup.Populate(OnCharacterCreation, Entries.Keys);
-    }
-
-    private async void EditCharacter() {
-        var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddCharacterPopup>(restore: false);
-        addCharacterPopup.Populate(OnCharacterEdition, Entries.Keys, Entries[_selected]);
-    }
-
-    private async void DeleteCharacter() {
+    private async void DeleteEntry() {
         List<ButtonData> buttons = new List<ButtonData>();
 
         buttons.Add(new ButtonData {
@@ -161,13 +171,13 @@ public class MainPopup : Popup {
         msgPopup.Populate($"Do you want to delete {_selected}?", "Delete", buttonsList: buttons);
     }
 
-    private void OnCharacterCreation(IDataEntry entry) {
+    private void OnEntryCreation(IDataEntry entry) {
         Entries.Add(entry.Name, (IDataEntry)entry);
         _selected = entry.Name;
         Refresh();
     }
 
-    private void OnCharacterEdition(IDataEntry entry) {
+    private void OnEntryEdition(IDataEntry entry) {
         if (_selected != entry.Name) {
             Entries.Remove(_selected);
             _selected = entry.Name;

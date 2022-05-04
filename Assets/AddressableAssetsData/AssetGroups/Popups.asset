@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: e910dad259e639e47ba84edba21f457a
   m_SerializeEntries:
   - m_GUID: f8efccf9763e0684292eb9534a7aa3f8
-    m_Address: AddCharacterPopup
+    m_Address: AddNPCPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - popup
