@@ -22,8 +22,9 @@ public class AddNPCPopup : Popup {
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private TextMeshProUGUI _title = default;
     private Action<NPC> OnDone;
-    private ICollection<string> names;
-    private bool editing;
+    private ICollection<string> _names;
+    private NPC _editingNPC;
+    private bool Editing => _editingNPC != null;
 
     private void Awake() {
         _confirmButton.onClick.AddListener(CreateCharacter);
@@ -52,22 +53,21 @@ public class AddNPCPopup : Popup {
         });
     }
 
-    public void Populate(Action<IDataEntry> onDone, ICollection<string> names, IDataEntry entry = null) {
+    public void Populate(Action<IDataEntry> onDone, ICollection<string> names, NPC editingNPC = null) {
         OnDone = onDone;
-        this.names = names;
-        editing = (entry != null);
+        this._names = names;
+        _editingNPC = editingNPC;
         Clear();
 
-        if (editing) {
-            _nameInput.text = entry.Name;
-            // TODO:
-            // _descriptionInput.text = npc.Description;
-            // _principleInput.text = npc.Principle;
-            // _npcType.Value = (int)npc.Type;
-            // _training.Value = (int)npc.Training;
+        if (Editing) {
+            _nameInput.text = editingNPC.Name;
+            _descriptionInput.text = editingNPC.Description;
+            _principleInput.text = editingNPC.Principle;
+            _npcType.Value = (int)editingNPC.Type;
+            _training.Value = (int)editingNPC.Training;
         }
 
-        _title.text = editing ? "Character Edition" : "Character Creation";
+        _title.text = Editing ? "Character Edition" : "Character Creation";
     }
 
     private void Clear() {
@@ -80,11 +80,11 @@ public class AddNPCPopup : Popup {
 
     private async void CreateCharacter() {
         if (string.IsNullOrEmpty(_nameInput.text) || 
-            (!editing && names.Contains(_nameInput.text))
+            (!Editing && _names.Contains(_nameInput.text))
         ) {
             var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
             msgPopup.Populate(
-                names.Contains(_nameInput.text) ? "Name already exists." : "Please enter a name.",
+                _names.Contains(_nameInput.text) ? "Name already exists." : "Please enter a name.",
                 "Name");
             return;
         }
@@ -96,6 +96,19 @@ public class AddNPCPopup : Popup {
             Training = (NPC.ETraining)_training.Value,
             Principle = _principleInput.text
         };
+
+        if (Editing) {
+            npc.Balance = Math.Min(_editingNPC.Balance, npc.GetMaxBalance());
+            npc.Fatigue = Math.Min(_editingNPC.Balance, npc.GetMaxFatigue());
+            npc.Conditions = new Dictionary<string, Condition>(_editingNPC.Conditions);
+
+            int amountToRemove = Mathf.Max(npc.Conditions.Count - npc.GetMaxConditions(), 0);
+            List<string> keys = new List<string>(npc.Conditions.Keys);
+            for (int iKey = 0; iKey < amountToRemove; ++iKey) {
+                npc.Conditions.Remove(keys[keys.Count - iKey - 1]);
+            }
+            
+        }
 
         OnDone.Invoke(npc);
         _ = PopupManager.Instance.Back();

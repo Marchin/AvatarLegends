@@ -72,7 +72,7 @@ public class MainPopup : Popup {
 
         async void EditNPC() {
             var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-            addCharacterPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected]);
+            addCharacterPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
         }
     }
 
