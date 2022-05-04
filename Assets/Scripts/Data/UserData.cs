@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 public class UserData {
     [JsonProperty("ncps")]
-    public List<NPC> NPCs;
+    public Dictionary<string, NPC> NPCs = new Dictionary<string, NPC>();
 
     [JsonProperty("enemies")]
-    public List<NPC> Enemies;
+    public Dictionary<string, NPC> Enemies = new Dictionary<string, NPC>();
 
     [JsonProperty("custom_conditions")]
-    public List<Condition> CustomConditions;
+    public Dictionary<string, Condition> CustomConditions = new Dictionary<string, Condition>();
 
     [JsonProperty("custom_techniques")]
-    public List<Technique> CustomTechniques;
+    public Dictionary<string, Technique> CustomTechniques = new Dictionary<string, Technique>();
     // PCs
     // Encounters
 }

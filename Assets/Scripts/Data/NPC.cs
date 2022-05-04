@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-public class NPC {
+public class NPC : IDataEntry {
     public enum ETraining {
         Earth,
         Water,
@@ -20,7 +20,7 @@ public class NPC {
     }
 
     [JsonProperty("name")]
-    public string Name;
+    public string Name { get; set; }
     
     [JsonProperty("description")]
     public string Description;

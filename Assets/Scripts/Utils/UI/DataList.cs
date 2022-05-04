@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -45,6 +46,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
     private bool _wasScrollingDown;
     private bool _calculatingSizes;
     private CancellationTokenSource _scrollCTS;
+    public T this[int i] => Elements[i];
 
     private void Start() {
         _template.gameObject.SetActive(false);
@@ -118,7 +120,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
 
         OnPopulate?.Invoke(data);
     }
-
+    
     public async void CalculateSizes() {
         if (_scroll != null) {
             _calculatingSizes = true;

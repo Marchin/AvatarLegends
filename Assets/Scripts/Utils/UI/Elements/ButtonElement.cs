@@ -18,6 +18,9 @@ public class ButtonData {
 public class ButtonElement : MonoBehaviour, IDataUIElement<ButtonData> {
     [SerializeField] private TextMeshProUGUI _text = default;
     [SerializeField] private Button _button = default;
+    public void Invoke() => _button.onClick.Invoke();
+    public Graphic ButtonImage => _button.targetGraphic;
+    public string Text => _text.text;
 
     public void Populate(ButtonData data) {
         _text.text = data.Text;

@@ -16,5 +16,5 @@ public class GameData {
     public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
 
     [JsonProperty("user")]
-    public UserData User;
+    public UserData User = new UserData();
 }

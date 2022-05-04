@@ -52,18 +52,19 @@ public class AddCharacterPopup : Popup {
         });
     }
 
-    public void Populate(Action<NPC> onDone, ICollection<string> names, NPC npc = null) {
+    public void Populate(Action<IDataEntry> onDone, ICollection<string> names, IDataEntry entry = null) {
         OnDone = onDone;
         this.names = names;
-        editing = (npc != null);
+        editing = (entry != null);
         Clear();
 
         if (editing) {
-            _nameInput.text = npc.Name;
-            _descriptionInput.text = npc.Description;
-            _principleInput.text = npc.Principle;
-            _npcType.Value = (int)npc.Type;
-            _training.Value = (int)npc.Training;
+            _nameInput.text = entry.Name;
+            // TODO:
+            // _descriptionInput.text = npc.Description;
+            // _principleInput.text = npc.Principle;
+            // _npcType.Value = (int)npc.Type;
+            // _training.Value = (int)npc.Training;
         }
 
         _title.text = editing ? "Character Edition" : "Character Creation";
