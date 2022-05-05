@@ -10,7 +10,6 @@ public class MessagePopup : Popup {
     public class PopupData {
         public string Message;
         public string Title;
-        public AssetReferenceAtlasedSprite SpriteReference;
         public List<ButtonData> ButtonOptionsList;
         public List<ToggleData> ToggleOptionsList;
         public int Columns;
@@ -60,7 +59,6 @@ public class MessagePopup : Popup {
     public void Populate(
         string message = "",
         string title = "", 
-        AssetReferenceAtlasedSprite spriteReference = null,
         List<ButtonData> buttonsList = null,
         List<ToggleData> toggleDataList = null,
         int columns = 2,
@@ -99,7 +97,6 @@ public class MessagePopup : Popup {
         PopupData popupData = new PopupData {
             Message = _content.text,
             Title = _title.text,
-            SpriteReference = _spriteReference,
             ButtonOptionsList = _buttonDataList,
             ToggleOptionsList = _toggleDataList,
             Columns = _columns,
@@ -113,8 +110,7 @@ public class MessagePopup : Popup {
         if (data is PopupData popupData) {
             Populate(
                 popupData.Message, 
-                popupData.Title, 
-                popupData.SpriteReference, 
+                popupData.Title,
                 popupData.ButtonOptionsList,
                 popupData.ToggleOptionsList,
                 popupData.Columns,
