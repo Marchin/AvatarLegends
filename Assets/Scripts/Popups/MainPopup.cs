@@ -18,7 +18,7 @@ public class MainPopup : Popup {
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
     [SerializeField] private GameObject _infoContainer = default;
-    [SerializeField] private GameObject _noCharacterMsg = default;
+    [SerializeField] private GameObject _noEntryMsg = default;
     [SerializeField] private Color _tabSelectedColor = default;
     [SerializeField] private Color _tabUnselectedColor = default;
     private GameData _gameData;
@@ -59,6 +59,26 @@ public class MainPopup : Popup {
                     npcsTabText,
                     onAddEntry: AddNPC,
                     onEditEntry: EditNPC
+                );
+            }
+        });
+
+        const string techniquesTabText = "Techniques";
+        tabs.Add(new ButtonData {
+            Text = techniquesTabText,
+            Callback = () => {
+                SetEntryCollection<Technique>(
+                    _gameData.User.CustomTechniques,
+                    val => _gameData.User.CustomTechniques = val,
+                    techniquesTabText,
+                    onAddEntry: async () => {
+                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
+                        addTechniquePopup.Populate(OnEntryCreation, Entries.Keys);
+                    },
+                    onEditEntry: async () => {
+                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
+                        addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Technique);
+                    }
                 );
             }
         });
@@ -112,24 +132,24 @@ public class MainPopup : Popup {
             _selected = _selected ?? name;
             buttons.Add(new ButtonData {
                 Text = name,
-                Callback = () => SetCharacter(Entries[name])
+                Callback = () => SetEntry(Entries[name])
             });
         }
         _nameList.Populate(buttons);
 
         if (Entries.Count > 0) {
-            _noCharacterMsg.SetActive(false);
+            _noEntryMsg.SetActive(false);
             _infoContainer.SetActive(true);
-            SetCharacter(Entries[_selected]);
+            SetEntry(Entries[_selected]);
         } else {
-            _noCharacterMsg.SetActive(true);
+            _noEntryMsg.SetActive(true);
             _infoContainer.SetActive(false);
         }
 
         _record?.Invoke();
     }
 
-    private void SetCharacter(IDataEntry entry) {
+    private void SetEntry(IDataEntry entry) {
         _name.text = entry.Name;
         Entries[entry.Name] = entry;
         _infoList.Populate(Entries[entry.Name].RetrieveData(Refresh));
@@ -199,7 +219,7 @@ public class MainPopup : Popup {
         if (data is PopupData popupData) {
             Populate(popupData.Data);
             if (popupData.Selected != null) {
-                SetCharacter(Entries[popupData.Selected]);
+                SetEntry(Entries[popupData.Selected]);
             }
         }
     }
