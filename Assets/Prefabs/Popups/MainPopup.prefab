@@ -2027,7 +2027,7 @@ MonoBehaviour:
   _name: {fileID: 1955170110914356914}
   _infoList: {fileID: 2037435454947764908}
   _infoContainer: {fileID: 2037435453870214360}
-  _noEntryMsg: {fileID: 0}
+  _noEntryMsg: {fileID: 2037435454791484051}
   _tabSelectedColor: {r: 0.28155038, g: 0.31305328, b: 0.3490566, a: 1}
   _tabUnselectedColor: {r: 0.22294413, g: 0.250979, b: 0.2830189, a: 1}
 --- !u!1 &2037435455274658124
