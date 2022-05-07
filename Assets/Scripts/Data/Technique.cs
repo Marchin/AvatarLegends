@@ -60,8 +60,7 @@ public class Technique : IDataEntry {
 
         result.Add(new InformationData {
             Prefix = "Is Rare",
-            IsToggleOn = Rare,
-            OnToggle = isOn => Rare = isOn
+            IsToggleOn = Rare
         });
 
         return result;

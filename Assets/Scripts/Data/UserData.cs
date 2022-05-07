@@ -8,11 +8,14 @@ public class UserData {
     [JsonProperty("enemies")]
     public Dictionary<string, NPC> Enemies = new Dictionary<string, NPC>();
 
-    [JsonProperty("custom_conditions")]
-    public Dictionary<string, Condition> CustomConditions = new Dictionary<string, Condition>();
+    [JsonProperty("conditions")]
+    public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
 
-    [JsonProperty("custom_techniques")]
-    public Dictionary<string, Technique> CustomTechniques = new Dictionary<string, Technique>();
+    [JsonProperty("techniques")]
+    public Dictionary<string, Technique> Techniques = new Dictionary<string, Technique>();
+
+    [JsonProperty("status")]
+    public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
     // PCs
     // Encounters
 }

@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 
 public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
-    const string DataPref= "data";
     [SerializeField] private GameObject _loadingScreen = default;
     [SerializeField] private GameObject _loadingWheel = default;
     [SerializeField] private GameObject _inputLock = default;
@@ -15,7 +14,7 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
     public OperationBySubscription DisableBackButton { get; private set; }
     public OperationBySubscription LockScreen { get; private set; }
     private OperationBySubscription.Subscription _loadingWheelSubscription;
-    private GameData _gameData;
+    private AppData _appData;
     public bool Initialized { get; private set; }
     
     private async void Start() {
@@ -42,26 +41,25 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
             onAllFinished: () => _inputLock.SetActive(false)
         );
 
-        string data = PlayerPrefs.GetString(DataPref, "{}");
-        _gameData = JsonConvert.DeserializeObject<GameData>(data) ?? new GameData();
-
         await Addressables.InitializeAsync();
+
+        var data = await Addressables.LoadAssetAsync<TextAsset>("Data");
+        _appData = JsonConvert.DeserializeObject<AppData>(data.text) ?? new AppData();
 
         // UserDataManager.Instance.Sync().Forget();
         var mainPopup = await PopupManager.Instance.GetOrLoadPopup<MainPopup>();
-        mainPopup.Populate(_gameData);
+        mainPopup.Populate(_appData);
 
         Initialized = true;
-    }
-
-    private void OnDestroy() {
-        string data = JsonConvert.SerializeObject(_gameData);
-        PlayerPrefs.SetString(DataPref, data);
     }
 
     private void Update() {
         if (!DisableBackButton.IsRunning && Input.GetKeyDown(KeyCode.Escape)) {
             _ = PopupManager.Instance.Back();
         }
+    }
+
+    private void OnDestroy() {
+        _appData?.RecordData();
     }
 }

@@ -16,7 +16,7 @@ public class InformationData {
     public int IndentLevel;
     public int InitValue;
     public int MaxValue;
-    public bool IsToggleOn;
+    public bool? IsToggleOn;
     public bool Expanded;
 }
 
@@ -102,8 +102,9 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _decreaseButton.gameObject.SetActive(data.OnValueChange != null);
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
         _counter.transform.parent.gameObject.SetActive(data.OnValueChange != null);
-        _toggle.gameObject.SetActive(data.OnToggle != null);
-        _toggle.isOn = data.IsToggleOn;
+        _toggle.gameObject.SetActive((data.OnToggle != null) || data.IsToggleOn.HasValue);
+        _toggle.isOn = data.IsToggleOn ?? false;
+        _toggle.interactable = (data.OnToggle != null);
         _counterValue = data.InitValue;
         RefreshCounter();
 

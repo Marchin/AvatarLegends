@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MainPopup : Popup {
     public class PopupData {
-        public GameData Data;
+        public AppData Data;
         public string Selected;
     }
 
@@ -21,12 +21,13 @@ public class MainPopup : Popup {
     [SerializeField] private GameObject _noEntryMsg = default;
     [SerializeField] private Color _tabSelectedColor = default;
     [SerializeField] private Color _tabUnselectedColor = default;
-    private GameData _gameData;
+    private AppData _gameData;
     private Dictionary<string, IDataEntry> Entries;// => _gameData.NPCs;
     private string _selected;
     private Action _record;
     private Action _onAddEntry;
     private Action _onEditEntry;
+    private Func<IDataEntry, bool> _isEditable;
 
     private void Awake() {
         _addCharacter.onClick.AddListener(() => _onAddEntry());
@@ -40,11 +41,12 @@ public class MainPopup : Popup {
             Text = enemiesTabText,
             Callback = () => {
                 SetEntryCollection<NPC>(
-                    _gameData.User.Enemies,
-                    val => _gameData.User.Enemies = val,
+                    _gameData.Enemies,
+                    val => _gameData.Enemies = val,
                     enemiesTabText,
                     onAddEntry: AddNPC,
-                    onEditEntry: EditNPC
+                    onEditEntry: EditNPC,
+                    isEditable: _ => true
                 );
             }
         });
@@ -54,11 +56,12 @@ public class MainPopup : Popup {
             Text = npcsTabText,
             Callback = () => {
                 SetEntryCollection<NPC>(
-                    _gameData.User.NPCs,
-                    val => _gameData.User.NPCs = val,
+                    _gameData.NPCs,
+                    val => _gameData.NPCs = val,
                     npcsTabText,
                     onAddEntry: AddNPC,
-                    onEditEntry: EditNPC
+                    onEditEntry: EditNPC,
+                    isEditable: entry => _gameData.IsEditable(entry as NPC)
                 );
             }
         });
@@ -68,8 +71,8 @@ public class MainPopup : Popup {
             Text = techniquesTabText,
             Callback = () => {
                 SetEntryCollection<Technique>(
-                    _gameData.User.CustomTechniques,
-                    val => _gameData.User.CustomTechniques = val,
+                    _gameData.Techniques,
+                    val => _gameData.Techniques = val,
                     techniquesTabText,
                     onAddEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
@@ -78,7 +81,8 @@ public class MainPopup : Popup {
                     onEditEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
                         addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Technique);
-                    }
+                    },
+                    isEditable: entry => _gameData.IsEditable(entry as Technique)
                 );
             }
         });
@@ -100,7 +104,8 @@ public class MainPopup : Popup {
         Action<Dictionary<string, T>> onSave,
         string tabName,
         Action onAddEntry,
-        Action onEditEntry
+        Action onEditEntry,
+        Func<IDataEntry, bool> isEditable
     ) where T : IDataEntry {
         _record?.Invoke();
         Entries = new Dictionary<string, IDataEntry>(entries.Count);
@@ -114,6 +119,7 @@ public class MainPopup : Popup {
         _selected = null;
         _onAddEntry = onAddEntry;
         _onEditEntry = onEditEntry;
+        _isEditable = isEditable;
         Refresh();
         _record = () => {
             entries = new Dictionary<string, T>(Entries.Count);
@@ -154,9 +160,11 @@ public class MainPopup : Popup {
         Entries[entry.Name] = entry;
         _infoList.Populate(Entries[entry.Name].RetrieveData(Refresh));
         _selected = entry.Name;
+        _editCharacter.interactable = _isEditable(entry);
+        _deleteCharacter.interactable = _isEditable(entry);
     }
 
-    public void Populate(GameData gameData) {
+    public void Populate(AppData gameData) {
         _gameData = gameData;
         _tabsList[0].Invoke();
         Refresh();
