@@ -188,12 +188,10 @@ public class MainPopup : Popup {
         _deleteCharacter.interactable = _isEditable(entry);
     }
 
-    private async void DeleteEntry() {
-        List<ButtonData> buttons = new List<ButtonData>();
-
-        buttons.Add(new ButtonData {
-            Text = "Yes",
-            Callback = () => {
+    private void DeleteEntry() {
+        _ = MessagePopup.ShowConfirmationPopup(
+            $"Do you want to delete {_selected}?",
+            onYes: () => {
                 var names = new List<string>(Entries.Keys);
                 int nextNameIndex = names.IndexOf(_selected);
                 Entries.Remove(_selected);
@@ -204,17 +202,7 @@ public class MainPopup : Popup {
 
                 _ = PopupManager.Instance.Back();
             }
-        });
-
-        buttons.Add(new ButtonData {
-            Text = "No",
-            Callback = () => {
-                _ = PopupManager.Instance.Back();
-            }
-        });
-
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
-        msgPopup.Populate($"Do you want to delete {_selected}?", "Delete", buttonsList: buttons);
+        );
     }
 
     private void OnEntryCreation(IDataEntry entry) {

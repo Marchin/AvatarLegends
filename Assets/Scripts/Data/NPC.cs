@@ -119,6 +119,13 @@ public class NPC : IDataEntry {
                     Content = condition.Key,
                     IsToggleOn = condition.Value.IsOn,
                     OnToggle = isOn => Conditions[condition.Key].IsOn = isOn,
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {condition.Key} condition?",
+                            onYes: () => Conditions.Remove(condition.Key)
+                        );
+                        _onRefresh();
+                    },
                     IndentLevel = 1
                 });
             }
@@ -143,6 +150,13 @@ public class NPC : IDataEntry {
                 result.Add(new InformationData {
                     Content = technique.Key,
                     OnMoreInfo = technique.Value.ShowInfo,
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {technique.Key} condition?",
+                            onYes: () => Techniques.Remove(technique.Key)
+                        );
+                        _onRefresh();
+                    },
                     IndentLevel = 1
                 });
             }
@@ -168,6 +182,13 @@ public class NPC : IDataEntry {
                 result.Add(new InformationData {
                     Content = $"{status.Key} ({effect})",
                     OnMoreInfo = status.Value.ShowDescription,
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {status.Key} condition?",
+                            onYes: () => Statuses.Remove(status.Key)
+                        );
+                        _onRefresh();
+                    },
                     IndentLevel = 1
                 });
             }

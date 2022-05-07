@@ -3,8 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using System;
 using System.Threading;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class MessagePopup : Popup {
     public class PopupData {
@@ -123,5 +125,35 @@ public class MessagePopup : Popup {
         if (_spriteHandle.IsValid()) {
             Addressables.Release(_spriteHandle);
         }
+    }
+    
+    public static async UniTask<bool> ShowConfirmationPopup(string msg, Action onYes = null, Action onNo = null) {
+        bool hasConfirmed = false;
+
+        List<ButtonData> buttonList = new List<ButtonData>(2);
+
+        buttonList.Add(new ButtonData {
+            Text = "Yes",
+            Callback = () => {
+                onYes?.Invoke();
+                hasConfirmed = true;
+                _ = PopupManager.Instance.Back();
+            }
+        });
+
+        buttonList.Add(new ButtonData {
+            Text = "No",
+            Callback = () => {
+                onNo?.Invoke();
+                _ = PopupManager.Instance.Back();
+            }
+        });
+
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+        msgPopup.Populate(msg, "Confirm", buttonList);
+
+        await UniTask.WaitWhile(() => (msgPopup != null) && msgPopup.gameObject.activeInHierarchy);
+
+        return hasConfirmed;
     }
 }

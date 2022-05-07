@@ -212,5 +212,4 @@ public class PopupManager : MonoBehaviourSingleton<PopupManager> {
         Popup popup = result.Invoke(awaiter, null) as Popup;
         popup.Restore(restorationData.Data);
     }
-
 }

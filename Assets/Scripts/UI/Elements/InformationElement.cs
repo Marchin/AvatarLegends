@@ -2,8 +2,6 @@ using TMPro;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class InformationData {
     public Action<int> OnValueChange;
@@ -11,6 +9,7 @@ public class InformationData {
     public Action OnMoreInfo;
     public Action OnDropdown;
     public Action OnAdd;
+    public Action OnDelete;
     public string Prefix;
     public string Content;
     public int IndentLevel;
@@ -31,6 +30,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     [SerializeField] private Button _increaseButton = default;
     [SerializeField] private Button _dropdownButton = default;
     [SerializeField] private Button _addButton = default;
+    [SerializeField] private Button _deleteButton = default;
     [SerializeField] private Toggle _toggle = default;
     [SerializeField] private LayoutGroup _layoutGroup = default;
     [SerializeField] private ScrollContent _scrollContent = default;
@@ -55,6 +55,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _dropdownButton.onClick.AddListener(() => {
             _info.OnDropdown();
         });
+        _deleteButton.onClick.AddListener(() => _info.OnDelete());
         _moreInfoButton.onClick.AddListener(() => _info.OnMoreInfo());
         _addButton.onClick.AddListener(() => _info.OnAdd());
         _toggle.onValueChanged.AddListener(value => _info?.OnToggle?.Invoke(value));
@@ -98,6 +99,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
 
         _layoutGroup.padding.left = (data.IndentLevel * _indentWidth);
 
+        _deleteButton.gameObject.SetActive(data.OnDelete != null);
         _dropdownButton.gameObject.SetActive(data.OnDropdown != null);
         _decreaseButton.gameObject.SetActive(data.OnValueChange != null);
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
