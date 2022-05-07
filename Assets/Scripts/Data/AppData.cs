@@ -103,10 +103,10 @@ public class AppData {
             _techniques = value;
         }
     }
+
     public bool IsEditable(Technique technique) {
         return !_dataTechniques.ContainsKey(technique.Name);
     }
-
 
     [JsonProperty("statuses")]
     private Dictionary<string, Status> _dataStatuses = new Dictionary<string, Status>();
@@ -137,6 +137,10 @@ public class AppData {
             
             _statuses = value;
         }
+    }
+
+    public bool IsEditable(Status status) {
+        return !_dataStatuses.ContainsKey(status.Name);
     }
     
     public Dictionary<string, NPC> Enemies {

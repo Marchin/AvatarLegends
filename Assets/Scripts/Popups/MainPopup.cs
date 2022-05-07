@@ -87,6 +87,27 @@ public class MainPopup : Popup {
             }
         });
 
+        const string statusesTabText = "Statuses";
+        tabs.Add(new ButtonData {
+            Text = statusesTabText,
+            Callback = () => {
+                SetEntryCollection<Status>(
+                    _gameData.Statuses,
+                    val => _gameData.Statuses = val,
+                    statusesTabText,
+                    onAddEntry: async () => {
+                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
+                        addTechniquePopup.Populate(OnEntryCreation, Entries.Keys);
+                    },
+                    onEditEntry: async () => {
+                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
+                        addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Status);
+                    },
+                    isEditable: entry => _gameData.IsEditable(entry as Status)
+                );
+            }
+        });
+
         _tabsList.Populate(tabs);
         
         async void AddNPC() {
