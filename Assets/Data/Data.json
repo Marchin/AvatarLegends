@@ -2,6 +2,26 @@
     "techniques": {
         "Sunflower": {
             "name": "Sunflower",
+            "mastery": "Fire"
+        },
+        "Waterflower": {
+            "name": "Waterflower",
+            "mastery": "Water"
+        },
+        "Airflower": {
+            "name": "Airflower",
+            "mastery": "Air"
+        },
+        "Techflower": {
+            "name": "Techflower",
+            "mastery": "Tech"
+        },
+        "Weaponflower": {
+            "name": "Weaponflower",
+            "mastery": "Weapons"
+        },
+        "Earthflower": {
+            "name": "Earthflower",
             "mastery": "Earth"
         }
     },

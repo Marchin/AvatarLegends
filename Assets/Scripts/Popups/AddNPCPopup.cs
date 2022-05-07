@@ -108,6 +108,13 @@ public class AddNPCPopup : Popup {
                 npc.Conditions.Remove(keys[keys.Count - iKey - 1]);
             }
             
+            var availableTechniques = npc.GetAvailableTechniques();
+
+            foreach (var technique in _editingNPC.Techniques) {
+                if (availableTechniques.Contains(technique.Value)) {
+                    npc.Techniques.Add(technique.Key, technique.Value);
+                }
+            }
         }
 
         OnDone.Invoke(npc);

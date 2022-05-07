@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class MainPopup : Popup {
     public class PopupData {
-        public AppData Data;
         public string Selected;
+        public int TabIndex;
     }
 
     [SerializeField] private Button _addCharacter = default;
@@ -21,7 +21,7 @@ public class MainPopup : Popup {
     [SerializeField] private GameObject _noEntryMsg = default;
     [SerializeField] private Color _tabSelectedColor = default;
     [SerializeField] private Color _tabUnselectedColor = default;
-    private AppData _gameData;
+    private AppData Data => ApplicationManager.Instance.Data;
     private Dictionary<string, IDataEntry> Entries;// => _gameData.NPCs;
     private string _selected;
     private Action _record;
@@ -41,8 +41,8 @@ public class MainPopup : Popup {
             Text = enemiesTabText,
             Callback = () => {
                 SetEntryCollection<NPC>(
-                    _gameData.Enemies,
-                    val => _gameData.Enemies = val,
+                    Data.Enemies,
+                    val => Data.Enemies = val,
                     enemiesTabText,
                     onAddEntry: AddNPC,
                     onEditEntry: EditNPC,
@@ -56,12 +56,12 @@ public class MainPopup : Popup {
             Text = npcsTabText,
             Callback = () => {
                 SetEntryCollection<NPC>(
-                    _gameData.NPCs,
-                    val => _gameData.NPCs = val,
+                    Data.NPCs,
+                    val => Data.NPCs = val,
                     npcsTabText,
                     onAddEntry: AddNPC,
                     onEditEntry: EditNPC,
-                    isEditable: entry => _gameData.IsEditable(entry as NPC)
+                    isEditable: entry => Data.IsEditable(entry as NPC)
                 );
             }
         });
@@ -71,8 +71,8 @@ public class MainPopup : Popup {
             Text = techniquesTabText,
             Callback = () => {
                 SetEntryCollection<Technique>(
-                    _gameData.Techniques,
-                    val => _gameData.Techniques = val,
+                    Data.Techniques,
+                    val => Data.Techniques = val,
                     techniquesTabText,
                     onAddEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
@@ -82,7 +82,7 @@ public class MainPopup : Popup {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
                         addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Technique);
                     },
-                    isEditable: entry => _gameData.IsEditable(entry as Technique)
+                    isEditable: entry => Data.IsEditable(entry as Technique)
                 );
             }
         });
@@ -92,8 +92,8 @@ public class MainPopup : Popup {
             Text = statusesTabText,
             Callback = () => {
                 SetEntryCollection<Status>(
-                    _gameData.Statuses,
-                    val => _gameData.Statuses = val,
+                    Data.Statuses,
+                    val => Data.Statuses = val,
                     statusesTabText,
                     onAddEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
@@ -103,12 +103,15 @@ public class MainPopup : Popup {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
                         addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Status);
                     },
-                    isEditable: entry => _gameData.IsEditable(entry as Status)
+                    isEditable: entry => Data.IsEditable(entry as Status)
                 );
             }
         });
 
         _tabsList.Populate(tabs);
+        
+        _tabsList[0].Invoke();
+        Refresh();
         
         async void AddNPC() {
             var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
@@ -185,12 +188,6 @@ public class MainPopup : Popup {
         _deleteCharacter.interactable = _isEditable(entry);
     }
 
-    public void Populate(AppData gameData) {
-        _gameData = gameData;
-        _tabsList[0].Invoke();
-        Refresh();
-    }
-
     private async void DeleteEntry() {
         List<ButtonData> buttons = new List<ButtonData>();
 
@@ -237,7 +234,6 @@ public class MainPopup : Popup {
 
     public override object GetRestorationData() {
         PopupData data = new PopupData {
-            Data = _gameData,
             Selected = _selected
         };
 
@@ -246,7 +242,6 @@ public class MainPopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
-            Populate(popupData.Data);
             if (popupData.Selected != null) {
                 SetEntry(Entries[popupData.Selected]);
             }

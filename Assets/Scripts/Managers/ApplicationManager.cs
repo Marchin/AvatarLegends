@@ -14,7 +14,7 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
     public OperationBySubscription DisableBackButton { get; private set; }
     public OperationBySubscription LockScreen { get; private set; }
     private OperationBySubscription.Subscription _loadingWheelSubscription;
-    private AppData _appData;
+    public AppData Data { get; private set; }
     public bool Initialized { get; private set; }
     
     private async void Start() {
@@ -44,11 +44,10 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
         await Addressables.InitializeAsync();
 
         var data = await Addressables.LoadAssetAsync<TextAsset>("Data");
-        _appData = JsonConvert.DeserializeObject<AppData>(data.text) ?? new AppData();
+        Data = JsonConvert.DeserializeObject<AppData>(data.text) ?? new AppData();
 
         // UserDataManager.Instance.Sync().Forget();
-        var mainPopup = await PopupManager.Instance.GetOrLoadPopup<MainPopup>();
-        mainPopup.Populate(_appData);
+        await PopupManager.Instance.GetOrLoadPopup<MainPopup>();
 
         Initialized = true;
     }
@@ -60,6 +59,6 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
     }
 
     private void OnDestroy() {
-        _appData?.RecordData();
+        Data?.RecordData();
     }
 }

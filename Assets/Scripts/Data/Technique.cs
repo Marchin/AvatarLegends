@@ -70,4 +70,15 @@ public class Technique : IDataEntry {
         var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
         msgPopup.Populate(Description, "Description");
     }
+    
+    public async void ShowInfo() {
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
+        string infoContent = $"Mastery: {Mastery}\nApproach: {Approach}\n\n{Description}";
+
+        if (Rare) {
+            infoContent += "\n\n(Rare Technique)";
+        }
+
+        msgPopup.Populate(infoContent, Name);
+    }
 }

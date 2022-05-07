@@ -52,7 +52,9 @@ public class NPC : IDataEntry {
     [JsonProperty("conditions")]
     public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
     private bool _showConditions;
+    private bool _showTechinques;
     private Action _onRefresh;
+    private AppData Data => ApplicationManager.Instance.Data;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
@@ -116,6 +118,29 @@ public class NPC : IDataEntry {
             }
         }
 
+        Action onTechniqueDropdown = () => {
+            _showTechinques = !_showTechinques;
+            _onRefresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Techniques ({Techniques.Count}/{GetMaxTechniques()})",
+            OnDropdown = (Techniques.Count > 0) ? onTechniqueDropdown : null,
+            OnAdd = (Techniques.Count < GetMaxTechniques()) ?
+                AddTechnique :
+                (Action)null,
+            Expanded = _showTechinques
+        });
+
+        if (_showTechinques) {
+            foreach (var technique in Techniques) {
+                result.Add(new InformationData {
+                    Content = technique.Key,
+                    OnMoreInfo = technique.Value.ShowInfo,
+                    IndentLevel = 1
+                });
+            }
+        }
 
         return result;
     }
@@ -218,5 +243,119 @@ public class NPC : IDataEntry {
     public async void ShowDescription() {
         var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
         msgPopup.Populate(Description, "Description");
+    }
+
+    public async void AddTechnique() {
+        Dictionary<string, Technique> techniquesToAdd = new Dictionary<string, Technique>(Techniques);
+        List<InformationData> infoList = new List<InformationData>(Data.Techniques.Count);
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
+        var availableTechniques = GetAvailableTechniques();
+
+        foreach (var technique in Techniques) {
+            availableTechniques.Remove(technique.Value);
+        }
+
+        Refresh();
+
+        void Refresh() {
+            infoList.Clear();
+            foreach (var technique in availableTechniques) {
+                infoList.Add(new InformationData {
+                    Content = technique.Name,
+                    IsToggleOn = techniquesToAdd.ContainsKey(technique.Name),
+                    OnToggle = async isOn => {
+                        if (!isOn || (techniquesToAdd.Count < GetMaxTechniques())) {
+                            if (isOn) {
+                                techniquesToAdd.Add(technique.Name, technique);
+                            } else {
+                                techniquesToAdd.Remove(technique.Name);
+                            }
+
+                            Refresh();
+                        } else {
+                            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+                            msgPopup.Populate(
+                                "You've already reached the maximum amount of techniques for this NPC.",
+                                "Techniques Maxed"
+                            );
+                        }
+                    }
+                });
+            }
+
+            listPopup.Populate(infoList,
+                $"Add Technique ({techniquesToAdd.Count}/{GetMaxTechniques()})",
+                () => {
+                    Techniques = techniquesToAdd;
+                    _onRefresh();
+                }
+            );
+        }
+    }
+
+    public int GetMaxTechniques() {
+        int result = 0;
+
+        switch (Type) {
+            case EType.Minor: {
+                result = 0;
+            } break;
+            case EType.Major: {
+                result = 2;
+            } break;
+            case EType.Master: {
+                result = 5;
+            } break;
+            case EType.Legendary: {
+                result = 8;
+            } break;
+        }
+
+        return result;
+    }
+
+    public List<Technique> GetAvailableTechniques() {
+        List<Technique> results = new List<Technique>(100);
+
+        foreach (var technique in Data.Techniques) {
+            if (CanLearnTechnique(technique.Value)) {
+                results.Add(technique.Value);
+            }
+        }
+
+        return results;
+    }
+
+    private bool CanLearnTechnique(Technique technique) {
+        bool result = false;
+
+        switch (technique.Mastery) {
+            case Technique.EMastery.Universal: {
+                result = true;
+            } break;
+            case Technique.EMastery.Group: {
+                result = IsGroup;
+            } break;
+            case Technique.EMastery.Air: {
+                result = (Training == ETraining.Air);
+            } break;
+            case Technique.EMastery.Earth: {
+                result = (Training == ETraining.Earth);
+            } break;
+            case Technique.EMastery.Water: {
+                result = (Training == ETraining.Water);
+            } break;
+            case Technique.EMastery.Fire: {
+                result = (Training == ETraining.Fire);
+            } break;
+            case Technique.EMastery.Weapons: {
+                result = (Training == ETraining.Weapons);
+            } break;
+            case Technique.EMastery.Tech: {
+                result = (Training == ETraining.Tech);
+            } break;
+        }
+
+        return result;
     }
 }
