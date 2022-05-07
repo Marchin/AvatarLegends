@@ -53,6 +53,7 @@ public class NPC : IDataEntry {
     public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
     private bool _showConditions;
     private bool _showTechinques;
+    private bool _showStatuses;
     private Action _onRefresh;
     private AppData Data => ApplicationManager.Instance.Data;
 
@@ -142,6 +143,31 @@ public class NPC : IDataEntry {
                 result.Add(new InformationData {
                     Content = technique.Key,
                     OnMoreInfo = technique.Value.ShowInfo,
+                    IndentLevel = 1
+                });
+            }
+        }
+
+        Action onStatusesDropdown = () => {
+            _showStatuses = !_showStatuses;
+            _onRefresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Statuses ({Statuses.Count})",
+            OnDropdown = (Statuses.Count > 0) ? onStatusesDropdown : null,
+            OnAdd = (Statuses.Count < Data.Statuses.Count) ?
+                AddStatus :
+                (Action)null,
+            Expanded = _showStatuses
+        });
+
+        if (_showStatuses) {
+            foreach (var status in Statuses) {
+                string effect = status.Value.IsPositive ? "Positive" : "Negative";
+                result.Add(new InformationData {
+                    Content = $"{status.Key} ({effect})",
+                    OnMoreInfo = status.Value.ShowDescription,
                     IndentLevel = 1
                 });
             }
@@ -284,7 +310,8 @@ public class NPC : IDataEntry {
                                 "Techniques Maxed"
                             );
                         }
-                    }
+                    },
+                    OnMoreInfo = technique.ShowInfo
                 });
             }
 
@@ -362,5 +389,46 @@ public class NPC : IDataEntry {
         }
 
         return result;
+    }
+    
+    public async void AddStatus() {
+        Dictionary<string, Status> statusesToAdd = new Dictionary<string, Status>(Statuses);
+        List<InformationData> infoList = new List<InformationData>(Data.Statuses.Count);
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
+        var availableStatuses = new Dictionary<string, Status>(Data.Statuses);
+
+        foreach (var status in Statuses) {
+            availableStatuses.Remove(status.Key);
+        }
+
+        Refresh();
+
+        void Refresh() {
+            infoList.Clear();
+            foreach (var status in availableStatuses) {
+                infoList.Add(new InformationData {
+                    Content = status.Key,
+                    IsToggleOn = statusesToAdd.ContainsKey(status.Key),
+                    OnToggle = isOn => {
+                        if (isOn) {
+                            statusesToAdd.Add(status.Key, status.Value);
+                        } else {
+                            statusesToAdd.Remove(status.Key);
+                        }
+
+                        Refresh();
+                    },
+                    OnMoreInfo = status.Value.ShowDescription
+                });
+            }
+
+            listPopup.Populate(infoList,
+                $"Add Status",
+                () => {
+                    Statuses = statusesToAdd;
+                    _onRefresh();
+                }
+            );
+        }
     }
 }
