@@ -66,6 +66,11 @@ public class NPC : IDataEntry {
             Content = Type.ToString(),
         });
 
+        result.Add(new InformationData {
+            Content = "Is Group",
+            IsToggleOn = IsGroup,
+        });
+
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Content = "Description",

@@ -23,6 +23,10 @@
         "Earthflower": {
             "name": "Earthflower",
             "mastery": "Earth"
+        },
+        "Groupflower": {
+            "name": "Groupflower",
+            "mastery": "Group"
         }
     },
     

@@ -11,10 +11,12 @@ public class AddNPCPopup : Popup {
         public NPC.ETraining Training;
         public string Principle;
         public string Description;
+        public bool IsGroup;
     }
 
     [SerializeField] private TMP_InputField _nameInput = default;
     [SerializeField] private DropdownElement _npcType = default;
+    [SerializeField] private Toggle _isGroup = default;
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
@@ -38,7 +40,15 @@ public class AddNPCPopup : Popup {
         }
 
         _npcType.Populate(new DropdownData {
-            Options = typeOptions
+            Options = typeOptions,
+            Callback = value => {
+                if ((NPC.EType)value == NPC.EType.Minor) {
+                    _isGroup.isOn = false;
+                    _isGroup.interactable = false;
+                } else {
+                    _isGroup.interactable = true;
+                }
+            }
         });
 
         string[] trainings = Enum.GetNames(typeof(NPC.ETraining));
@@ -65,6 +75,7 @@ public class AddNPCPopup : Popup {
             _principleInput.text = editingNPC.Principle;
             _npcType.Value = (int)editingNPC.Type;
             _training.Value = (int)editingNPC.Training;
+            _isGroup.isOn = editingNPC.IsGroup;
         }
 
         _title.text = Editing ? "Character Edition" : "Character Creation";
@@ -76,6 +87,7 @@ public class AddNPCPopup : Popup {
         _principleInput.text = "";
         _npcType.Value = 0;
         _training.Value = 0;
+        _isGroup.isOn = false;
     }
 
     private async void CreateCharacter() {
@@ -94,7 +106,8 @@ public class AddNPCPopup : Popup {
             Description = _descriptionInput.text,
             Type = (NPC.EType)_npcType.Value,
             Training = (NPC.ETraining)_training.Value,
-            Principle = _principleInput.text
+            Principle = _principleInput.text,
+            IsGroup = _isGroup.isOn
         };
 
         if (Editing) {
@@ -127,7 +140,8 @@ public class AddNPCPopup : Popup {
             Description = _descriptionInput.text,
             NPCType = (NPC.EType)_npcType.Value,
             Training = (NPC.ETraining)_training.Value,
-            Principle = _principleInput.text
+            Principle = _principleInput.text,
+            IsGroup = _isGroup.isOn
         };
 
         return popupData;
@@ -140,6 +154,7 @@ public class AddNPCPopup : Popup {
             _npcType.Value = (int)popupData.NPCType;
             _training.Value = (int)popupData.Training;
             _principleInput.text = popupData.Principle;
+            _isGroup.isOn = popupData.IsGroup;
         }
     }
 }
