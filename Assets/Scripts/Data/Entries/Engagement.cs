@@ -36,9 +36,9 @@ public class Engagement : IDataEntry {
         };
 
         result.Add(new InformationData {
-            Content = "NPCs",
+            Content = $"NPCs ({NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (NPCs.Count < Data.NPCs.Count) ?
+            OnAdd = (NPCs.Count < GetAvailableNPCs().Count) ?
                 AddNPC :
                 (Action)null,
             Expanded = _showNPCs
@@ -73,9 +73,9 @@ public class Engagement : IDataEntry {
         };
 
         result.Add(new InformationData {
-            Content = "Enemies",
+            Content = $"Enemies ({Enemies.Count})",
             OnDropdown = (Enemies.Count > 0) ? onEnemyDropdown : null,
-            OnAdd = (Enemies.Count < Data.Enemies.Count) ?
+            OnAdd = (Enemies.Count < GetAvailableEnemies().Count) ?
                 AddEnemy :
                 (Action)null,
             Expanded = _showEnemies
@@ -116,11 +116,7 @@ public class Engagement : IDataEntry {
         List<NPC> npcsToAdd = new List<NPC>(NPCs);
         List<InformationData> infoList = new List<InformationData>(Data.NPCs.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        List<NPC> availableNPCs = new List<NPC>(Data.NPCs.Values);
-
-        foreach (var npc in NPCs) {
-            availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
-        }
+        List<NPC> availableNPCs = GetAvailableNPCs();
 
         Refresh();
 
@@ -154,15 +150,24 @@ public class Engagement : IDataEntry {
             );
         }
     }
+
+    private List<NPC> GetAvailableNPCs() {
+        List<NPC> availableNPCs = new List<NPC>(Data.NPCs.Values);
+
+        foreach (var engagement in Data.User.Engagements) {
+            foreach (var npc in engagement.Value.NPCs) {
+                availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
+            }
+        }
+
+        return availableNPCs;
+    }
+
     private async void AddEnemy() {
         List<NPC> enemiesToAdd = new List<NPC>(Enemies);
         List<InformationData> infoList = new List<InformationData>(Data.Enemies.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        var availableEnemies = new List<NPC>(Data.Enemies.Values);
-
-        foreach (var enemy in Enemies) {
-            availableEnemies.Remove(availableEnemies.Find(x => x.Name == enemy.Name));
-        }
+        var availableEnemies = GetAvailableEnemies();
 
         Refresh();
 
@@ -195,5 +200,17 @@ public class Engagement : IDataEntry {
                 }
             );
         }
+    }
+
+    private List<NPC> GetAvailableEnemies() {
+        List<NPC> availableEnemies = new List<NPC>(Data.Enemies.Values);
+
+        foreach (var engagement in Data.User.Engagements) {
+            foreach (var enemy in engagement.Value.Enemies) {
+                availableEnemies.Remove(availableEnemies.Find(x => x.Name == enemy.Name));
+            }
+        }
+
+        return availableEnemies;
     }
 }
