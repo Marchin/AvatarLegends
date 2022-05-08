@@ -20,7 +20,7 @@ public class AddEngagementPopup : Popup {
     private bool Editing => _editingEngagement != null;
 
     private void Awake() {
-        _confirmButton.onClick.AddListener(CreateCharacter);
+        _confirmButton.onClick.AddListener(CreateEngagement);
         _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
     }
 
@@ -41,7 +41,7 @@ public class AddEngagementPopup : Popup {
         _noteInput.text = "";
     }
 
-    private async void CreateCharacter() {
+    private async void CreateEngagement() {
         if (string.IsNullOrEmpty(_nameInput.text) || 
             (!Editing && _names.Contains(_nameInput.text))
         ) {

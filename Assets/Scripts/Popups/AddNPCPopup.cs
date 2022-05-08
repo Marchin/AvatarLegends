@@ -29,7 +29,7 @@ public class AddNPCPopup : Popup {
     private bool Editing => _editingNPC != null;
 
     private void Awake() {
-        _confirmButton.onClick.AddListener(CreateCharacter);
+        _confirmButton.onClick.AddListener(CreateNPC);
         _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
 
         string[] types = Enum.GetNames(typeof(NPC.EType));
@@ -90,7 +90,7 @@ public class AddNPCPopup : Popup {
         _isGroup.isOn = false;
     }
 
-    private async void CreateCharacter() {
+    private async void CreateNPC() {
         if (string.IsNullOrEmpty(_nameInput.text) || 
             (!Editing && _names.Contains(_nameInput.text))
         ) {

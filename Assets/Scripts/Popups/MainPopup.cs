@@ -10,9 +10,10 @@ public class MainPopup : Popup {
         public int TabIndex;
     }
 
-    [SerializeField] private Button _addCharacter = default;
-    [SerializeField] private Button _editCharacter = default;
-    [SerializeField] private Button _deleteCharacter = default;
+    [SerializeField] private Button _addEntry = default;
+    [SerializeField] private Button _editEntry = default;
+    [SerializeField] private Button _deleteEntry = default;
+    [SerializeField] private Button _deleteAll = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private ButtonList _tabsList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
@@ -28,11 +29,13 @@ public class MainPopup : Popup {
     private Action _onAddEntry;
     private Action _onEditEntry;
     private Func<IDataEntry, bool> _isEditable;
+    private Action _onDeleteAll;
 
     private void Awake() {
-        _addCharacter.onClick.AddListener(() => _onAddEntry());
-        _editCharacter.onClick.AddListener(() => _onEditEntry());
-        _deleteCharacter.onClick.AddListener(DeleteEntry);
+        _addEntry.onClick.AddListener(() => _onAddEntry());
+        _editEntry.onClick.AddListener(() => _onEditEntry());
+        _deleteAll.onClick.AddListener(() => _onDeleteAll());
+        _deleteEntry.onClick.AddListener(DeleteEntry);
 
         List<ButtonData> tabs = new List<ButtonData>();
 
@@ -124,7 +127,18 @@ public class MainPopup : Popup {
                         var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
                         addEngagementPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Engagement);
                     },
-                    isEditable: _ => true
+                    isEditable: _ => true,
+                    onDeleteAll: async () => {
+                        bool confirmed = await MessagePopup.ShowConfirmationPopup(
+                            "Delete all engagements?",
+                            onYes: () => {
+                                Entries.Clear();
+                                _selected = null;
+                                Refresh();
+                            },
+                            restore: false
+                        );
+                    }
                 );
             }
         });
@@ -135,13 +149,13 @@ public class MainPopup : Popup {
         Refresh();
         
         async void AddNPC() {
-            var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-            addCharacterPopup.Populate(OnEntryCreation, Entries.Keys);
+            var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+            addNPCPopup.Populate(OnEntryCreation, Entries.Keys);
         }
 
         async void EditNPC() {
-            var addCharacterPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-            addCharacterPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
+            var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+            addNPCPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
         }
     }
 
@@ -150,7 +164,8 @@ public class MainPopup : Popup {
         string tabName,
         Action onAddEntry,
         Action onEditEntry,
-        Func<IDataEntry, bool> isEditable
+        Func<IDataEntry, bool> isEditable,
+        Action onDeleteAll = null
     ) where T : IDataEntry {
         _record?.Invoke();
         Entries = new Dictionary<string, IDataEntry>(entries.Count);
@@ -165,6 +180,8 @@ public class MainPopup : Popup {
         _onAddEntry = onAddEntry;
         _onEditEntry = onEditEntry;
         _isEditable = isEditable;
+        _onDeleteAll = onDeleteAll;
+        _deleteAll.gameObject.SetActive(onDeleteAll != null);
         Refresh();
         _record = () => {
             entries = new Dictionary<string, T>(Entries.Count);
@@ -191,10 +208,12 @@ public class MainPopup : Popup {
         if (Entries.Count > 0) {
             _noEntryMsg.SetActive(false);
             _infoContainer.SetActive(true);
+            _deleteAll.interactable = true;
             SetEntry(Entries[_selected]);
         } else {
             _noEntryMsg.SetActive(true);
             _infoContainer.SetActive(false);
+            _deleteAll.interactable = false;
         }
 
         _record?.Invoke();
@@ -205,8 +224,8 @@ public class MainPopup : Popup {
         Entries[entry.Name] = entry;
         _infoList.Populate(Entries[entry.Name].RetrieveData(Refresh));
         _selected = entry.Name;
-        _editCharacter.interactable = _isEditable(entry);
-        _deleteCharacter.interactable = _isEditable(entry);
+        _editEntry.interactable = _isEditable(entry);
+        _deleteEntry.interactable = _isEditable(entry);
     }
 
     private void DeleteEntry() {

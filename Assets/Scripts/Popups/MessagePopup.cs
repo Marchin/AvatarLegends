@@ -127,7 +127,9 @@ public class MessagePopup : Popup {
         }
     }
     
-    public static async UniTask<bool> ShowConfirmationPopup(string msg, Action onYes = null, Action onNo = null) {
+    public static async UniTask<bool> ShowConfirmationPopup(
+        string msg, Action onYes = null, Action onNo = null, bool restore = true
+    ) {
         bool hasConfirmed = false;
 
         List<ButtonData> buttonList = new List<ButtonData>(2);
@@ -149,7 +151,7 @@ public class MessagePopup : Popup {
             }
         });
 
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore);
         msgPopup.Populate(msg, "Confirm", buttonList);
 
         await UniTask.WaitWhile(() => (msgPopup != null) && msgPopup.gameObject.activeInHierarchy);
