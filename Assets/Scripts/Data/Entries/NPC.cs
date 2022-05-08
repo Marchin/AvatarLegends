@@ -19,6 +19,12 @@ public class NPC : IDataEntry {
         Legendary,
     }
 
+    public enum EAlignment {
+        Neutral,
+        Ally,
+        Enemy
+    }
+
     [JsonProperty("name")]
     public string Name { get; set; }
     
@@ -27,6 +33,9 @@ public class NPC : IDataEntry {
 
     [JsonProperty("type")]
     public EType Type;
+
+    [JsonProperty("alignment")]
+    public EAlignment Alignment;
 
     [JsonProperty("is_group")]
     public bool IsGroup;
@@ -70,6 +79,11 @@ public class NPC : IDataEntry {
         result.Add(new InformationData {
             Content = "Is Group",
             IsToggleOn = IsGroup,
+        });
+
+        result.Add(new InformationData {
+            Prefix = "Alignment",
+            Content = Alignment.ToString(),
         });
 
         if (!string.IsNullOrEmpty(Description)) {

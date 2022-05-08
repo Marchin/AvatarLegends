@@ -143,12 +143,6 @@ public class AppData {
         return !_dataStatuses.ContainsKey(status.Name);
     }
     
-    public Dictionary<string, NPC> Enemies {
-        get => User.Enemies;
-        set => User.Enemies = value;
-    }
-
-
     public AppData() {
         string data = PlayerPrefs.GetString(UserDataPref, "{}");
         User = JsonConvert.DeserializeObject<UserData>(data) ?? new UserData();

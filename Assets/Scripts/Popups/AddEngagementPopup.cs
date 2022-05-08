@@ -59,7 +59,6 @@ public class AddEngagementPopup : Popup {
 
         if (Editing) {
             engagement.NPCs = _editingEngagement.NPCs;
-            engagement.Enemies = _editingEngagement.Enemies;
         }
 
         OnDone.Invoke(engagement);

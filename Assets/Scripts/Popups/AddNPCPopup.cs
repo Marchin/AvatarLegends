@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class AddNPCPopup : Popup {
     public class PopupData {
         public string Name;
-        public NPC.EType NPCType;
+        public NPC.EAlignment Alignment;
+        public NPC.EType Type;
         public NPC.ETraining Training;
         public string Principle;
         public string Description;
@@ -15,7 +16,8 @@ public class AddNPCPopup : Popup {
     }
 
     [SerializeField] private TMP_InputField _nameInput = default;
-    [SerializeField] private DropdownElement _npcType = default;
+    [SerializeField] private DropdownElement _type = default;
+    [SerializeField] private DropdownElement _alignment = default;
     [SerializeField] private Toggle _isGroup = default;
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
@@ -32,6 +34,17 @@ public class AddNPCPopup : Popup {
         _confirmButton.onClick.AddListener(CreateNPC);
         _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
 
+        string[] alignments = Enum.GetNames(typeof(NPC.EAlignment));
+        List<string> alignmentOptions = new List<string>(alignments.Length);
+
+        for (int iAlignment = 0; iAlignment < alignments.Length; ++iAlignment) {
+            alignmentOptions.Add(alignments[iAlignment]);
+        }
+
+        _alignment.Populate(new DropdownData {
+            Options = alignmentOptions
+        });
+
         string[] types = Enum.GetNames(typeof(NPC.EType));
         List<string> typeOptions = new List<string>(types.Length);
 
@@ -39,7 +52,7 @@ public class AddNPCPopup : Popup {
             typeOptions.Add(types[iType]);
         }
 
-        _npcType.Populate(new DropdownData {
+        _type.Populate(new DropdownData {
             Options = typeOptions,
             Callback = value => {
                 if ((NPC.EType)value == NPC.EType.Minor) {
@@ -73,19 +86,21 @@ public class AddNPCPopup : Popup {
             _nameInput.text = editingNPC.Name;
             _descriptionInput.text = editingNPC.Description;
             _principleInput.text = editingNPC.Principle;
-            _npcType.Value = (int)editingNPC.Type;
+            _alignment.Value = (int)editingNPC.Alignment;
+            _type.Value = (int)editingNPC.Type;
             _training.Value = (int)editingNPC.Training;
             _isGroup.isOn = editingNPC.IsGroup;
         }
 
-        _title.text = Editing ? "Character Edition" : "Character Creation";
+        _title.text = Editing ? "NPC Edition" : "NPC Creation";
     }
 
     private void Clear() {
         _nameInput.text = "";
         _descriptionInput.text = "";
         _principleInput.text = "";
-        _npcType.Value = 0;
+        _alignment.Value = 0;
+        _type.Value = 0;
         _training.Value = 0;
         _isGroup.isOn = false;
     }
@@ -104,7 +119,8 @@ public class AddNPCPopup : Popup {
         NPC npc = new NPC() {
             Name = _nameInput.text,
             Description = _descriptionInput.text,
-            Type = (NPC.EType)_npcType.Value,
+            Alignment = (NPC.EAlignment)_alignment.Value,
+            Type = (NPC.EType)_type.Value,
             Training = (NPC.ETraining)_training.Value,
             Principle = _principleInput.text,
             IsGroup = _isGroup.isOn
@@ -138,7 +154,8 @@ public class AddNPCPopup : Popup {
         PopupData popupData = new PopupData {
             Name = _nameInput.text,
             Description = _descriptionInput.text,
-            NPCType = (NPC.EType)_npcType.Value,
+            Alignment = (NPC.EAlignment)_alignment.Value,
+            Type = (NPC.EType)_type.Value,
             Training = (NPC.ETraining)_training.Value,
             Principle = _principleInput.text,
             IsGroup = _isGroup.isOn
@@ -151,7 +168,8 @@ public class AddNPCPopup : Popup {
         if (data is PopupData popupData) {
             _nameInput.text = popupData.Name;
             _descriptionInput.text = popupData.Description;
-            _npcType.Value = (int)popupData.NPCType;
+            _alignment.Value = (int)popupData.Alignment;
+            _type.Value = (int)popupData.Type;
             _training.Value = (int)popupData.Training;
             _principleInput.text = popupData.Principle;
             _isGroup.isOn = popupData.IsGroup;

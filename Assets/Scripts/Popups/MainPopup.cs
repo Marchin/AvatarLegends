@@ -39,21 +39,6 @@ public class MainPopup : Popup {
 
         List<ButtonData> tabs = new List<ButtonData>();
 
-        const string enemiesTabText = "Enemies";
-        tabs.Add(new ButtonData {
-            Text = enemiesTabText,
-            Callback = () => {
-                SetEntryCollection<NPC>(
-                    Data.Enemies,
-                    val => Data.Enemies = val,
-                    enemiesTabText,
-                    onAddEntry: AddNPC,
-                    onEditEntry: EditNPC,
-                    isEditable: _ => true
-                );
-            }
-        });
-
         const string npcsTabText = "NPCs";
         tabs.Add(new ButtonData {
             Text = npcsTabText,
@@ -169,8 +154,8 @@ public class MainPopup : Popup {
     ) where T : IDataEntry {
         _record?.Invoke();
         Entries = new Dictionary<string, IDataEntry>(entries.Count);
-        foreach (var enemy in entries) {
-            Entries.Add(enemy.Key, enemy.Value);
+        foreach (var entry in entries) {
+            Entries.Add(entry.Key, entry.Value);
         }
         foreach (var tab in _tabsList.Elements) {
             tab.ButtonImage.color = (tab.Text == tabName) ? _tabSelectedColor : _tabUnselectedColor;

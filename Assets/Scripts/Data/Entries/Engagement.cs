@@ -6,9 +6,6 @@ public class Engagement : IDataEntry {
     [JsonProperty("name")]
     public string Name { get; set; }
 
-    [JsonProperty("enemies")]
-    public List<NPC> Enemies = new List<NPC>();
-
     [JsonProperty("npcs")]
     public List<NPC> NPCs = new List<NPC>();
 
@@ -18,7 +15,6 @@ public class Engagement : IDataEntry {
     private Action _onRefresh;
     private AppData Data => ApplicationManager.Instance.Data;
     private bool _showNPCs;
-    private bool _showEnemies;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
@@ -38,7 +34,7 @@ public class Engagement : IDataEntry {
         result.Add(new InformationData {
             Content = $"NPCs ({NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (NPCs.Count < GetAvailableNPCs().Count) ?
+            OnAdd = (GetAvailableNPCs().Count > 0) ?
                 AddNPC :
                 (Action)null,
             Expanded = _showNPCs
@@ -47,7 +43,7 @@ public class Engagement : IDataEntry {
         if (_showNPCs) {
             foreach (var npc in NPCs) {
                 result.Add(new InformationData {
-                    Content = npc.Name,
+                    Content = $"{npc.Name} ({npc.Alignment})",
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
                             $"Remove {npc.Name} from the engagement?",
@@ -61,43 +57,6 @@ public class Engagement : IDataEntry {
 
                         void Refresh() {
                             listPopup.Populate(npc.RetrieveData(Refresh), npc.Name, null);
-                        }
-                    }
-                });
-            }
-        }
-
-        Action onEnemyDropdown = () => {
-            _showEnemies = !_showEnemies;
-            _onRefresh();
-        };
-
-        result.Add(new InformationData {
-            Content = $"Enemies ({Enemies.Count})",
-            OnDropdown = (Enemies.Count > 0) ? onEnemyDropdown : null,
-            OnAdd = (Enemies.Count < GetAvailableEnemies().Count) ?
-                AddEnemy :
-                (Action)null,
-            Expanded = _showEnemies
-        });
-
-        if (_showEnemies) {
-            foreach (var enemy in Enemies) {
-                result.Add(new InformationData {
-                    Content = enemy.Name,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
-                            $"Remove {enemy.Name} from the engagement?",
-                            onYes: () => Enemies.Remove(enemy)
-                        );
-                        _onRefresh();
-                    },
-                    OnMoreInfo = async () => {
-                        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
-                        Refresh();
-
-                        void Refresh() {
-                            listPopup.Populate(enemy.RetrieveData(Refresh), enemy.Name, null);
                         }
                     }
                 });
@@ -161,56 +120,5 @@ public class Engagement : IDataEntry {
         }
 
         return availableNPCs;
-    }
-
-    private async void AddEnemy() {
-        List<NPC> enemiesToAdd = new List<NPC>(Enemies);
-        List<InformationData> infoList = new List<InformationData>(Data.Enemies.Count);
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        var availableEnemies = GetAvailableEnemies();
-
-        Refresh();
-
-        void Refresh() {
-            infoList.Clear();
-            foreach (var enemy in availableEnemies) {
-                infoList.Add(new InformationData {
-                    Content = enemy.Name,
-                    IsToggleOn = enemiesToAdd.Contains(enemy),
-                    OnToggle = isOn => {
-                        if (isOn) {
-                            enemiesToAdd.Add(enemy);
-                        } else {
-                            enemiesToAdd.Remove(enemy);
-                        }
-
-                        Refresh();
-                    },
-                    OnMoreInfo = string.IsNullOrEmpty(enemy.Description) ?
-                        (Action)null :
-                        enemy.ShowDescription
-                });
-            }
-
-            listPopup.Populate(infoList,
-                $"Add Enemies",
-                () => {
-                    Enemies = enemiesToAdd;
-                    _onRefresh();
-                }
-            );
-        }
-    }
-
-    private List<NPC> GetAvailableEnemies() {
-        List<NPC> availableEnemies = new List<NPC>(Data.Enemies.Values);
-
-        foreach (var engagement in Data.User.Engagements) {
-            foreach (var enemy in engagement.Value.Enemies) {
-                availableEnemies.Remove(availableEnemies.Find(x => x.Name == enemy.Name));
-            }
-        }
-
-        return availableEnemies;
     }
 }
