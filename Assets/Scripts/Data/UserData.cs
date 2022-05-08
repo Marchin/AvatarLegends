@@ -16,6 +16,8 @@ public class UserData {
 
     [JsonProperty("status")]
     public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
+    
+    [JsonProperty("engagement")]
+    public Dictionary<string, Engagement> Engagements = new Dictionary<string, Engagement>();
     // PCs
-    // Encounters
 }

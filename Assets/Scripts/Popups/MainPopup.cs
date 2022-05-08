@@ -96,14 +96,35 @@ public class MainPopup : Popup {
                     val => Data.Statuses = val,
                     statusesTabText,
                     onAddEntry: async () => {
-                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
-                        addTechniquePopup.Populate(OnEntryCreation, Entries.Keys);
+                        var addStatusPopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
+                        addStatusPopup.Populate(OnEntryCreation, Entries.Keys);
                     },
                     onEditEntry: async () => {
-                        var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
-                        addTechniquePopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Status);
+                        var addStatusPopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
+                        addStatusPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Status);
                     },
                     isEditable: entry => Data.IsEditable(entry as Status)
+                );
+            }
+        });
+
+        const string engagementsTabText = "Engagements";
+        tabs.Add(new ButtonData {
+            Text = engagementsTabText,
+            Callback = () => {
+                SetEntryCollection<Engagement>(
+                    Data.User.Engagements,
+                    val => Data.User.Engagements = val,
+                    engagementsTabText,
+                    onAddEntry: async () => {
+                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
+                        addEngagementPopup.Populate(OnEntryCreation, Entries.Keys);
+                    },
+                    onEditEntry: async () => {
+                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
+                        addEngagementPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Engagement);
+                    },
+                    isEditable: _ => true
                 );
             }
         });

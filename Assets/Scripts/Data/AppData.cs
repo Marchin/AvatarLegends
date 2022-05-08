@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class AppData {
     const string UserDataPref= "user_data";
-    private UserData User;
+    public UserData User { get; private set; }
 
     // Playbooks
     [JsonProperty("ncps")]

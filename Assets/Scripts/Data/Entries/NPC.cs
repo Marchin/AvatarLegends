@@ -337,7 +337,7 @@ public class NPC : IDataEntry {
             }
 
             listPopup.Populate(infoList,
-                $"Add Technique ({techniquesToAdd.Count}/{GetMaxTechniques()})",
+                $"Add Techniques ({techniquesToAdd.Count}/{GetMaxTechniques()})",
                 () => {
                     Techniques = techniquesToAdd;
                     _onRefresh();
@@ -444,7 +444,7 @@ public class NPC : IDataEntry {
             }
 
             listPopup.Populate(infoList,
-                $"Add Status",
+                $"Add Statuses",
                 () => {
                     Statuses = statusesToAdd;
                     _onRefresh();
