@@ -78,6 +78,7 @@ public class InputPopup : Popup {
         _confirmButton.onClick.AddListener(() => {
             OnConfirm?.Invoke(_input.text);
         });
+        _input.Select();
     }
 
     public override object GetRestorationData() {
