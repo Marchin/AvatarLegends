@@ -128,15 +128,18 @@ public class NPC : IDataEntry {
         });
 
         if (_showConditions) {
-            foreach (var condition in Conditions) {
+            List<string> conditionNames = new List<string>(Conditions.Keys);
+            conditionNames.Sort();
+            foreach (var conditionName in conditionNames) {
+                Condition condition = Conditions[conditionName];
                 result.Add(new InformationData {
-                    Content = condition.Key,
-                    IsToggleOn = condition.Value.IsOn,
-                    OnToggle = isOn => Conditions[condition.Key].IsOn = isOn,
+                    Content = conditionName,
+                    IsToggleOn = condition.IsOn,
+                    OnToggle = isOn => Conditions[conditionName].IsOn = isOn,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
-                            $"Remove {condition.Key} condition?",
-                            onYes: () => Conditions.Remove(condition.Key)
+                            $"Remove {conditionName} condition?",
+                            onYes: () => Conditions.Remove(conditionName)
                         );
                         _onRefresh();
                     },
@@ -160,14 +163,17 @@ public class NPC : IDataEntry {
         });
 
         if (_showTechinques) {
-            foreach (var technique in Techniques) {
+            List<string> techniqueNames = new List<string>(Techniques.Keys);
+            techniqueNames.Sort();
+            foreach (var techniqueName in techniqueNames) {
+                Technique technique = Techniques[techniqueName];
                 result.Add(new InformationData {
-                    Content = technique.Key,
-                    OnMoreInfo = technique.Value.ShowInfo,
+                    Content = techniqueName,
+                    OnMoreInfo = technique.ShowInfo,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
-                            $"Remove {technique.Key} condition?",
-                            onYes: () => Techniques.Remove(technique.Key)
+                            $"Remove {techniqueName} technique?",
+                            onYes: () => Techniques.Remove(techniqueName)
                         );
                         _onRefresh();
                     },
@@ -191,15 +197,25 @@ public class NPC : IDataEntry {
         });
 
         if (_showStatuses) {
-            foreach (var status in Statuses) {
-                string effect = status.Value.IsPositive ? "Positive" : "Negative";
+            List<string> statusesName = new List<string>(Statuses.Keys);
+            statusesName.Sort((x, y) => {
+                if (Statuses[x].IsPositive != Statuses[y].IsPositive) {
+                    return Statuses[x].IsPositive ? -1 : 1;
+                } else {
+                    return x.CompareTo(y);
+                }
+            });
+
+            foreach (var statusName in statusesName) {
+                Status status = Statuses[statusName];
+                string effect = status.IsPositive ? "Positive" : "Negative";
                 result.Add(new InformationData {
-                    Content = $"{status.Key} ({effect})",
-                    OnMoreInfo = status.Value.ShowDescription,
+                    Content = $"{statusName} ({effect})",
+                    OnMoreInfo = status.ShowDescription,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
-                            $"Remove {status.Key} condition?",
-                            onYes: () => Statuses.Remove(status.Key)
+                            $"Remove {statusName} status?",
+                            onYes: () => Statuses.Remove(statusName)
                         );
                         _onRefresh();
                     },
@@ -321,6 +337,8 @@ public class NPC : IDataEntry {
             availableTechniques.Remove(technique.Value);
         }
 
+        availableTechniques.Sort((x, y) => x.Name.CompareTo(y.Name));
+
         Refresh();
 
         void Refresh() {
@@ -436,24 +454,36 @@ public class NPC : IDataEntry {
             availableStatuses.Remove(status.Key);
         }
 
+        List<string> statusesName = new List<string>(availableStatuses.Keys);
+        statusesName.Sort((x, y) => {
+            if (availableStatuses[x].IsPositive != availableStatuses[y].IsPositive) {
+                return availableStatuses[x].IsPositive ? -1 : 1;
+            } else {
+                return x.CompareTo(y);
+            }
+        });
+
         Refresh();
 
         void Refresh() {
             infoList.Clear();
-            foreach (var status in availableStatuses) {
+
+            foreach (var statusName in statusesName) {
+                Status status = availableStatuses[statusName];
+                string effect = status.IsPositive ? "Positive" : "Negative";
                 infoList.Add(new InformationData {
-                    Content = status.Key,
-                    IsToggleOn = statusesToAdd.ContainsKey(status.Key),
+                    Content = statusName + $" {(effect)}",
+                    IsToggleOn = statusesToAdd.ContainsKey(statusName),
                     OnToggle = isOn => {
                         if (isOn) {
-                            statusesToAdd.Add(status.Key, status.Value);
+                            statusesToAdd.Add(statusName, status);
                         } else {
-                            statusesToAdd.Remove(status.Key);
+                            statusesToAdd.Remove(statusName);
                         }
 
                         Refresh();
                     },
-                    OnMoreInfo = status.Value.ShowDescription
+                    OnMoreInfo = status.ShowDescription
                 });
             }
 
