@@ -968,6 +968,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1044780894700933683, guid: cc15466b08cd12045bcfcc544009f5c9, type: 3}
+      propertyPath: m_LineType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044780895288922313, guid: cc15466b08cd12045bcfcc544009f5c9, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3273524852424851370, guid: cc15466b08cd12045bcfcc544009f5c9, type: 3}
       propertyPath: m_MinHeight
       value: 128
