@@ -126,6 +126,17 @@ public class MessagePopup : Popup {
             Addressables.Release(_spriteHandle);
         }
     }
+
+    public static void ShowMessage(string msg, string title, bool restore = true) {
+        _ = ShowMessageAsync(msg, title, restore);
+    }
+
+    public static async UniTask ShowMessageAsync(string msg, string title, bool restore = true) {
+        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore);
+        msgPopup.Populate(msg, title);
+
+        await UniTask.WaitWhile(() => (msgPopup != null) && msgPopup.gameObject.activeInHierarchy);
+    }
     
     public static async UniTask<bool> ShowConfirmationPopup(
         string msg, Action onYes = null, Action onNo = null, bool restore = true
