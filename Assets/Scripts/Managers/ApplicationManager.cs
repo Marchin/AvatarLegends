@@ -47,7 +47,7 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
         Data = JsonConvert.DeserializeObject<AppData>(data.text) ?? new AppData();
 
         // UserDataManager.Instance.Sync().Forget();
-        await PopupManager.Instance.GetOrLoadPopup<MainPopup>();
+        await PopupManager.Instance.GetOrLoadPopup<CampaignSelectionPopup>();
 
         Initialized = true;
     }

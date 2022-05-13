@@ -13,6 +13,9 @@ public class AddNPCPopup : Popup {
         public string Principle;
         public string Description;
         public bool IsGroup;
+        public Action<IDataEntry> OnDone;
+        public ICollection<string> Names;
+        public NPC EditingNPC;
     }
 
     [SerializeField] private TMP_InputField _nameInput = default;
@@ -25,7 +28,7 @@ public class AddNPCPopup : Popup {
     [SerializeField] private Button _confirmButton = default;
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private TextMeshProUGUI _title = default;
-    private Action<NPC> OnDone;
+    private Action<IDataEntry> OnDone;
     private ICollection<string> _names;
     private NPC _editingNPC;
     private bool Editing => _editingNPC != null;
@@ -158,7 +161,8 @@ public class AddNPCPopup : Popup {
             Type = (NPC.EType)_type.Value,
             Training = (NPC.ETraining)_training.Value,
             Principle = _principleInput.text,
-            IsGroup = _isGroup.isOn
+            IsGroup = _isGroup.isOn,
+            EditingNPC = _editingNPC
         };
 
         return popupData;
@@ -166,6 +170,7 @@ public class AddNPCPopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
+            Populate(popupData.OnDone, popupData.Names, popupData.EditingNPC);
             _nameInput.text = popupData.Name;
             _descriptionInput.text = popupData.Description;
             _alignment.Value = (int)popupData.Alignment;

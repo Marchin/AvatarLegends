@@ -1,16 +1,27 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Newtonsoft.Json;
 
-public class Engagement : IDataEntry {
+public class Session : IDataEntry {
+    [JsonProperty("number")]
+    public int Number;
+
     [JsonProperty("name")]
     public string Name { get; set; }
+
+    [JsonProperty("description")]
+    public string Description;
+
+    [JsonProperty("note")]
+    public string Note;
 
     [JsonProperty("npcs")]
     public List<NPC> NPCs = new List<NPC>();
 
-    [JsonProperty("note")]
-    public string Note;
+    [JsonProperty("engagement")]
+    public Dictionary<string, Engagement> Engagements = new Dictionary<string, Engagement>();
 
     private Action _onRefresh;
     private bool _showNPCs;
@@ -19,11 +30,21 @@ public class Engagement : IDataEntry {
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
 
-        var result = new List<InformationData>();
+        List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
-            Content = "Note",
-            OnMoreInfo = ShowNote
+            Prefix = "Number",
+            Content = Number.ToString(),
+        });
+
+        result.Add(new InformationData {
+            Prefix = "Description",
+            OnMoreInfo = () => MessagePopup.ShowMessage(Description, "Description", false),
+        });
+
+        result.Add(new InformationData {
+            Prefix = "Note",
+            OnMoreInfo = () => MessagePopup.ShowMessage(Note, "Note", false),
         });
 
         Action onNPCDropdown = () => {
@@ -62,6 +83,11 @@ public class Engagement : IDataEntry {
                 });
             }
         }
+
+        result.Add(new InformationData {
+            Prefix = "Notes",
+            Content = Note,
+        });
 
         return result;
     }
@@ -113,10 +139,8 @@ public class Engagement : IDataEntry {
     private List<NPC> GetAvailableNPCs() {
         List<NPC> availableNPCs = new List<NPC>(Data.NPCs.Values);
 
-        foreach (var engagement in Data.User.CurrentSession.Engagements) {
-            foreach (var npc in engagement.Value.NPCs) {
-                availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
-            }
+        foreach (var npc in NPCs) {
+            availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
         }
 
         return availableNPCs;

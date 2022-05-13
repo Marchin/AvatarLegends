@@ -23,14 +23,18 @@ public class MainPopup : Popup {
     [SerializeField] private Color _tabSelectedColor = default;
     [SerializeField] private Color _tabUnselectedColor = default;
     private AppData Data => ApplicationManager.Instance.Data;
-    private Dictionary<string, IDataEntry> Entries;// => _gameData.NPCs;
+    private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    private Dictionary<string, IDataEntry> Entries;
     private string _selected;
     private Action _record;
     private Action _onAddEntry;
     private Action _onEditEntry;
+    private Action<IDataEntry> _onSetEntry;
     private Func<IDataEntry, bool> _isEditable;
     private Action _onDeleteAll;
-
+    private Action<List<string>> _customSort;
+    private GameObject _engagementTab;
+    
     private void Awake() {
         _addEntry.onClick.AddListener(() => _onAddEntry());
         _editEntry.onClick.AddListener(() => _onEditEntry());
@@ -38,6 +42,40 @@ public class MainPopup : Popup {
         _deleteEntry.onClick.AddListener(DeleteEntry);
 
         List<ButtonData> tabs = new List<ButtonData>();
+
+        const string sessionsTabText = "Sessions";
+        tabs.Add(new ButtonData {
+            Text = sessionsTabText,
+            Callback = () => {
+                SetEntryCollection<Session>(
+                    Data.User.SelectedCampaign.Sessions,
+                    val => Data.User.SelectedCampaign.Sessions = val,
+                    sessionsTabText,
+                    onSetEntry: entry => {
+                        Data.User.SelectedCampaign.CurrentSession = entry as Session;
+                    },
+                    onAddEntry: async () => {
+                        var addSessionPopup = await PopupManager.Instance.GetOrLoadPopup<AddSessionPopup>(restore: false);
+                        addSessionPopup.Populate(
+                            entry => {
+                                Data.User.SelectedCampaign.Sessions.Add(entry.Name, entry as Session);
+                                OnEntryCreation(entry);
+                            },
+                            Entries.Keys);
+                    },
+                    onEditEntry: async () => {
+                        var addSessionPopup = await PopupManager.Instance.GetOrLoadPopup<AddSessionPopup>(restore: false);
+                        addSessionPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Session);
+                    },
+                    isEditable: _ => true,
+                    customSort: names => {
+                        names.Sort((x, y) => SelectedCampaign.Sessions[y].Number.CompareTo(
+                            SelectedCampaign.Sessions[x].Number
+                        ));
+                    }
+                );
+            }
+        });
 
         const string npcsTabText = "NPCs";
         tabs.Add(new ButtonData {
@@ -47,8 +85,15 @@ public class MainPopup : Popup {
                     Data.NPCs,
                     val => Data.NPCs = val,
                     npcsTabText,
-                    onAddEntry: AddNPC,
-                    onEditEntry: EditNPC,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+                        addNPCPopup.Populate(OnEntryCreation, Entries.Keys);
+                    },
+                    onEditEntry: async () => {
+                        var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
+                        addNPCPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
+                    },
                     isEditable: entry => Data.IsEditable(entry as NPC)
                 );
             }
@@ -62,6 +107,7 @@ public class MainPopup : Popup {
                     Data.Techniques,
                     val => Data.Techniques = val,
                     techniquesTabText,
+                    onSetEntry: null,
                     onAddEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
                         addTechniquePopup.Populate(OnEntryCreation, Entries.Keys);
@@ -83,6 +129,7 @@ public class MainPopup : Popup {
                     Data.Statuses,
                     val => Data.Statuses = val,
                     statusesTabText,
+                    onSetEntry: null,
                     onAddEntry: async () => {
                         var addStatusPopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
                         addStatusPopup.Populate(OnEntryCreation, Entries.Keys);
@@ -101,9 +148,10 @@ public class MainPopup : Popup {
             Text = engagementsTabText,
             Callback = () => {
                 SetEntryCollection<Engagement>(
-                    Data.User.Engagements,
-                    val => Data.User.Engagements = val,
+                    Data.User.CurrentSession.Engagements,
+                    val => Data.User.CurrentSession.Engagements = val,
                     engagementsTabText,
+                    onSetEntry: null,
                     onAddEntry: async () => {
                         var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
                         addEngagementPopup.Populate(OnEntryCreation, Entries.Keys);
@@ -129,28 +177,27 @@ public class MainPopup : Popup {
         });
 
         _tabsList.Populate(tabs);
+
+        foreach (var element in _tabsList.Elements) {
+            if ((element as ButtonElement).Text == engagementsTabText) {
+                _engagementTab = element.gameObject;
+                break;
+            }
+        }
         
         _tabsList[0].Invoke();
         Refresh();
-        
-        async void AddNPC() {
-            var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-            addNPCPopup.Populate(OnEntryCreation, Entries.Keys);
-        }
-
-        async void EditNPC() {
-            var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-            addNPCPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
-        }
     }
 
     private void SetEntryCollection<T>(Dictionary<string, T> entries, 
         Action<Dictionary<string, T>> onSave,
         string tabName,
+        Action<IDataEntry> onSetEntry,
         Action onAddEntry,
         Action onEditEntry,
         Func<IDataEntry, bool> isEditable,
-        Action onDeleteAll = null
+        Action onDeleteAll = null,
+        Action<List<string>> customSort = null
     ) where T : IDataEntry {
         _record?.Invoke();
         Entries = new Dictionary<string, IDataEntry>(entries.Count);
@@ -163,9 +210,11 @@ public class MainPopup : Popup {
         _record = null;
         _selected = null;
         _onAddEntry = onAddEntry;
+        _onSetEntry = onSetEntry;
         _onEditEntry = onEditEntry;
         _isEditable = isEditable;
         _onDeleteAll = onDeleteAll;
+        _customSort = customSort;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
         Refresh();
         _record = () => {
@@ -178,8 +227,16 @@ public class MainPopup : Popup {
     }
 
     private void Refresh() {
+        _record?.Invoke();
+
         var names = new List<string>(Entries.Keys);
-        names.Sort();
+
+        if (_customSort != null) {
+            _customSort(names);
+        } else {
+            names.Sort();
+        }
+        
         List<ButtonData> buttons = new List<ButtonData>(Entries.Count);
         foreach (var name in names) {
             _selected = _selected ?? name;
@@ -201,7 +258,7 @@ public class MainPopup : Popup {
             _deleteAll.interactable = false;
         }
 
-        _record?.Invoke();
+        _engagementTab.SetActive(Data.User.CurrentSession != null);
     }
 
     private void SetEntry(IDataEntry entry) {
@@ -211,6 +268,7 @@ public class MainPopup : Popup {
         _selected = entry.Name;
         _editEntry.interactable = _isEditable(entry);
         _deleteEntry.interactable = _isEditable(entry);
+        _onSetEntry?.Invoke(entry);
     }
 
     private void DeleteEntry() {
@@ -222,10 +280,8 @@ public class MainPopup : Popup {
                 Entries.Remove(_selected);
                 names.Remove(_selected);
                 nextNameIndex = Mathf.Min(nextNameIndex, names.Count - 1);
-                _selected = names[nextNameIndex];
+                _selected = (nextNameIndex >= 0) ? names[nextNameIndex] : null;
                 Refresh();
-
-                _ = PopupManager.Instance.Back();
             }
         );
     }
@@ -255,7 +311,7 @@ public class MainPopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
-            if (popupData.Selected != null) {
+            if ((popupData.Selected != null) && Entries.ContainsKey(popupData.Selected)) {
                 SetEntry(Entries[popupData.Selected]);
             }
         }

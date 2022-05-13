@@ -20,7 +20,7 @@ public class AppData {
                     _npcs.Add(npc.Key, npc.Value);
                 }
 
-                foreach (var npc in User.NPCs) {
+                foreach (var npc in User.SelectedCampaign.NPCs) {
                     _npcs.Add(npc.Key, npc.Value);
                 }
             }
@@ -28,10 +28,10 @@ public class AppData {
             return _npcs;
         }
         set {
-            User.NPCs = new Dictionary<string, NPC>(value);
+            User.SelectedCampaign.NPCs = new Dictionary<string, NPC>(value);
 
             foreach (var npc in _dataNPCs) {
-                User.NPCs.Remove(npc.Key);
+                User.SelectedCampaign.NPCs.Remove(npc.Key);
             }
             
             _npcs = value;
