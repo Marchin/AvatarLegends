@@ -20,8 +20,8 @@ public class MainPopup : Popup {
     [SerializeField] private InformationList _infoList = default;
     [SerializeField] private GameObject _infoContainer = default;
     [SerializeField] private GameObject _noEntryMsg = default;
-    [SerializeField] private Color _tabSelectedColor = default;
-    [SerializeField] private Color _tabUnselectedColor = default;
+    [SerializeField] private Color _selectedColor = default;
+    [SerializeField] private Color _unselectedColor = default;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     private Dictionary<string, IDataEntry> Entries;
@@ -205,7 +205,7 @@ public class MainPopup : Popup {
             Entries.Add(entry.Key, entry.Value);
         }
         foreach (var tab in _tabsList.Elements) {
-            tab.ButtonImage.color = (tab.Text == tabName) ? _tabSelectedColor : _tabUnselectedColor;
+            tab.ButtonImage.color = (tab.Text == tabName) ? _selectedColor : _unselectedColor;
         }
         _record = null;
         _selected = null;
@@ -268,6 +268,13 @@ public class MainPopup : Popup {
         _selected = entry.Name;
         _editEntry.interactable = _isEditable(entry);
         _deleteEntry.interactable = _isEditable(entry);
+
+        foreach (var element in _nameList.Elements) {
+            element.ButtonImage.color = (element.Text == entry.Name) ?
+                _selectedColor :
+                _unselectedColor;
+        }
+
         _onSetEntry?.Invoke(entry);
     }
 
