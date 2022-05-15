@@ -4,9 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AddTechniquePopup : Popup {
+public class AddTechniquePopup : AddEntryPopup<Technique> {
     public class PopupData {
-        public string Name;
+        public BasePopupData BasePopupData;
         public Technique.EMastery Mastery;
         public Technique.EApproach Approach;
         public string Description;
@@ -14,21 +14,13 @@ public class AddTechniquePopup : Popup {
     }
 
     [SerializeField] private TextMeshProUGUI _title = default;
-    [SerializeField] private TMP_InputField _nameInput = default;
     [SerializeField] private DropdownElement _masteryDropdown = default;
     [SerializeField] private DropdownElement _approachDropdown = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
     [SerializeField] private Toggle _isRare = default;
-    [SerializeField] private Button _confirmButton = default;
-    [SerializeField] private Button _closeButton = default;
-    private Action<Technique> OnDone;
-    private ICollection<string> _names;
-    private Technique _editingTechnique;
-    private bool Editing => _editingTechnique != null;
 
-    private void Awake() {
-        _confirmButton.onClick.AddListener(CreateTechnique);
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+    protected override void Awake() {
+        base.Awake();
 
         string[] masteries = Enum.GetNames(typeof(Technique.EMastery));
         List<string> masteryOptions = new List<string>(masteries.Length);
@@ -53,58 +45,40 @@ public class AddTechniquePopup : Popup {
         });
     }
 
-    public void Populate(Action<IDataEntry> onDone, ICollection<string> names, Technique editingTechnique = null) {
-        OnDone = onDone;
-        this._names = names;
-        _editingTechnique = editingTechnique;
-        Clear();
-
+    protected override void OnPopulated() {
         if (Editing) {
-            _nameInput.text = editingTechnique.Name;
-            _descriptionInput.text = editingTechnique.Description;
-            _approachDropdown.Value = (int)editingTechnique.Approach;
-            _masteryDropdown.Value = (int)editingTechnique.Mastery;
-            _isRare.isOn = editingTechnique.Rare;
+            _descriptionInput.text = _editingEntry.Description;
+            _approachDropdown.Value = (int)_editingEntry.Approach;
+            _masteryDropdown.Value = (int)_editingEntry.Mastery;
+            _isRare.isOn = _editingEntry.Rare;
         }
 
         _title.text = Editing ? "Techique Edition" : "Techique Creation";
     }
 
-    private void Clear() {
-        _nameInput.text = "";
+    protected override void OnClear() {
         _descriptionInput.text = "";
         _approachDropdown.Value = 0;
         _masteryDropdown.Value = 0;
         _isRare.isOn = false;
     }
 
-    private async void CreateTechnique() {
-        if (string.IsNullOrEmpty(_nameInput.text) || 
-            (!Editing && _names.Contains(_nameInput.text))
-        ) {
-            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-            msgPopup.Populate(
-                _names.Contains(_nameInput.text) ? "Name already exists." : "Please enter a name.",
-                "Name");
-            return;
-        }
-
+    protected override IDataEntry OnEntryCreation() {
         Technique technique = new Technique() {
-            Name = _nameInput.text,
+            Name = NewName,
             Description = _descriptionInput.text,
             Mastery = (Technique.EMastery)_masteryDropdown.Value,
             Approach = (Technique.EApproach)_approachDropdown.Value,
             Rare = _isRare.isOn
         };
 
-        OnDone.Invoke(technique);
-        _ = PopupManager.Instance.Back();
+        return technique;
 
     }
 
     public override object GetRestorationData() {
         PopupData popupData = new PopupData {
-            Name = _nameInput.text,
+            BasePopupData = base.GetRestorationData() as BasePopupData,
             Description = _descriptionInput.text,
             Mastery = (Technique.EMastery)_masteryDropdown.Value,
             Approach = (Technique.EApproach)_approachDropdown.Value,
@@ -116,7 +90,7 @@ public class AddTechniquePopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
-            _nameInput.text = popupData.Name;
+            base.Restore(popupData.BasePopupData);
             _descriptionInput.text = popupData.Description;
             _masteryDropdown.Value = (int)popupData.Mastery;
             _approachDropdown.Value = (int)popupData.Approach;

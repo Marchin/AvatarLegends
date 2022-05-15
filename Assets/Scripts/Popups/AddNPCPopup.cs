@@ -4,38 +4,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AddNPCPopup : Popup {
+public class AddNPCPopup : AddEntryPopup<NPC> {
     public class PopupData {
-        public string Name;
+        public BasePopupData BasePopupData;
         public NPC.EAlignment Alignment;
         public NPC.EType Type;
         public NPC.ETraining Training;
         public string Principle;
         public string Description;
         public bool IsGroup;
-        public Action<IDataEntry> OnDone;
-        public ICollection<string> Names;
-        public NPC EditingNPC;
     }
 
-    [SerializeField] private TMP_InputField _nameInput = default;
     [SerializeField] private DropdownElement _type = default;
     [SerializeField] private DropdownElement _alignment = default;
     [SerializeField] private Toggle _isGroup = default;
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
-    [SerializeField] private Button _confirmButton = default;
-    [SerializeField] private Button _closeButton = default;
     [SerializeField] private TextMeshProUGUI _title = default;
-    private Action<IDataEntry> OnDone;
-    private ICollection<string> _names;
-    private NPC _editingNPC;
-    private bool Editing => _editingNPC != null;
 
-    private void Awake() {
-        _confirmButton.onClick.AddListener(CreateNPC);
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+    protected override void Awake() {
+        base.Awake();
 
         string[] alignments = Enum.GetNames(typeof(NPC.EAlignment));
         List<string> alignmentOptions = new List<string>(alignments.Length);
@@ -79,27 +68,20 @@ public class AddNPCPopup : Popup {
         });
     }
 
-    public void Populate(Action<IDataEntry> onDone, ICollection<string> names, NPC editingNPC = null) {
-        OnDone = onDone;
-        this._names = names;
-        _editingNPC = editingNPC;
-        Clear();
-
+    protected override void OnPopulated() {
         if (Editing) {
-            _nameInput.text = editingNPC.Name;
-            _descriptionInput.text = editingNPC.Description;
-            _principleInput.text = editingNPC.Principle;
-            _alignment.Value = (int)editingNPC.Alignment;
-            _type.Value = (int)editingNPC.Type;
-            _training.Value = (int)editingNPC.Training;
-            _isGroup.isOn = editingNPC.IsGroup;
+            _descriptionInput.text = _editingEntry.Description;
+            _principleInput.text = _editingEntry.Principle;
+            _alignment.Value = (int)_editingEntry.Alignment;
+            _type.Value = (int)_editingEntry.Type;
+            _training.Value = (int)_editingEntry.Training;
+            _isGroup.isOn = _editingEntry.IsGroup;
         }
 
         _title.text = Editing ? "NPC Edition" : "NPC Creation";
     }
 
-    private void Clear() {
-        _nameInput.text = "";
+    protected override void OnClear() {
         _descriptionInput.text = "";
         _principleInput.text = "";
         _alignment.Value = 0;
@@ -108,19 +90,9 @@ public class AddNPCPopup : Popup {
         _isGroup.isOn = false;
     }
 
-    private async void CreateNPC() {
-        if (string.IsNullOrEmpty(_nameInput.text) || 
-            (!Editing && _names.Contains(_nameInput.text))
-        ) {
-            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-            msgPopup.Populate(
-                _names.Contains(_nameInput.text) ? "Name already exists." : "Please enter a name.",
-                "Name");
-            return;
-        }
-
+    protected override IDataEntry OnEntryCreation() {
         NPC npc = new NPC() {
-            Name = _nameInput.text,
+            Name = NewName,
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
@@ -130,9 +102,9 @@ public class AddNPCPopup : Popup {
         };
 
         if (Editing) {
-            npc.Balance = Math.Min(_editingNPC.Balance, npc.GetMaxBalance());
-            npc.Fatigue = Math.Min(_editingNPC.Balance, npc.GetMaxFatigue());
-            npc.Conditions = new Dictionary<string, Condition>(_editingNPC.Conditions);
+            npc.Balance = Math.Min(_editingEntry.Balance, npc.GetMaxBalance());
+            npc.Fatigue = Math.Min(_editingEntry.Balance, npc.GetMaxFatigue());
+            npc.Conditions = new Dictionary<string, Condition>(_editingEntry.Conditions);
 
             int amountToRemove = Mathf.Max(npc.Conditions.Count - npc.GetMaxConditions(), 0);
             List<string> keys = new List<string>(npc.Conditions.Keys);
@@ -142,27 +114,25 @@ public class AddNPCPopup : Popup {
             
             var availableTechniques = npc.GetAvailableTechniques();
 
-            foreach (var technique in _editingNPC.Techniques) {
+            foreach (var technique in _editingEntry.Techniques) {
                 if (availableTechniques.Contains(technique.Value)) {
                     npc.Techniques.Add(technique.Key, technique.Value);
                 }
             }
         }
 
-        OnDone.Invoke(npc);
-        _ = PopupManager.Instance.Back();
+        return npc;
     }
 
     public override object GetRestorationData() {
         PopupData popupData = new PopupData {
-            Name = _nameInput.text,
+            BasePopupData = base.GetRestorationData() as BasePopupData,
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
             Training = (NPC.ETraining)_training.Value,
             Principle = _principleInput.text,
-            IsGroup = _isGroup.isOn,
-            EditingNPC = _editingNPC
+            IsGroup = _isGroup.isOn
         };
 
         return popupData;
@@ -170,8 +140,7 @@ public class AddNPCPopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
-            Populate(popupData.OnDone, popupData.Names, popupData.EditingNPC);
-            _nameInput.text = popupData.Name;
+            base.Restore(popupData.BasePopupData);
             _descriptionInput.text = popupData.Description;
             _alignment.Value = (int)popupData.Alignment;
             _type.Value = (int)popupData.Type;

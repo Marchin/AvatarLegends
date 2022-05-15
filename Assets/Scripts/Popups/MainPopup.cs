@@ -61,7 +61,8 @@ public class MainPopup : Popup {
                                 Data.User.SelectedCampaign.Sessions.Add(entry.Name, entry as Session);
                                 OnEntryCreation(entry);
                             },
-                            Entries.Keys);
+                            Entries.Keys,
+                            null);
                     },
                     onEditEntry: async () => {
                         var addSessionPopup = await PopupManager.Instance.GetOrLoadPopup<AddSessionPopup>(restore: false);
@@ -88,7 +89,7 @@ public class MainPopup : Popup {
                     onSetEntry: null,
                     onAddEntry: async () => {
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-                        addNPCPopup.Populate(OnEntryCreation, Entries.Keys);
+                        addNPCPopup.Populate(OnEntryCreation, Entries.Keys, null);
                     },
                     onEditEntry: async () => {
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
@@ -110,7 +111,7 @@ public class MainPopup : Popup {
                     onSetEntry: null,
                     onAddEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
-                        addTechniquePopup.Populate(OnEntryCreation, Entries.Keys);
+                        addTechniquePopup.Populate(OnEntryCreation, Entries.Keys, null);
                     },
                     onEditEntry: async () => {
                         var addTechniquePopup = await PopupManager.Instance.GetOrLoadPopup<AddTechniquePopup>(restore: false);
@@ -132,7 +133,7 @@ public class MainPopup : Popup {
                     onSetEntry: null,
                     onAddEntry: async () => {
                         var addStatusPopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
-                        addStatusPopup.Populate(OnEntryCreation, Entries.Keys);
+                        addStatusPopup.Populate(OnEntryCreation, Entries.Keys, null);
                     },
                     onEditEntry: async () => {
                         var addStatusPopup = await PopupManager.Instance.GetOrLoadPopup<AddStatusPopup>(restore: false);
@@ -154,7 +155,7 @@ public class MainPopup : Popup {
                     onSetEntry: null,
                     onAddEntry: async () => {
                         var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
-                        addEngagementPopup.Populate(OnEntryCreation, Entries.Keys);
+                        addEngagementPopup.Populate(OnEntryCreation, Entries.Keys, null);
                     },
                     onEditEntry: async () => {
                         var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);

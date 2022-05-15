@@ -795,12 +795,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Vertical: 0
   FullScreen: 1
-  _title: {fileID: 2418795331743579200}
   _nameInput: {fileID: 7941508961171966433}
-  _descriptionInput: {fileID: 6536749877180271927}
-  _isPositive: {fileID: 3639128587973800134}
   _confirmButton: {fileID: 7744519594562873867}
   _closeButton: {fileID: 5430276568408393681}
+  _title: {fileID: 2418795331743579200}
+  _descriptionInput: {fileID: 6536749877180271927}
+  _isPositive: {fileID: 3639128587973800134}
 --- !u!114 &2418795331743579200 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8651637059609069626, guid: 710302472f673014c935e40a4c37ef2e, type: 3}

@@ -16,7 +16,8 @@ public class CampaignSelectionPopup : Popup {
                     campaigns.Add(entry.Name, entry as Campaign);
                     RefreshCampaignButtons();
                 },
-                campaigns.Keys
+                campaigns.Keys,
+                null
             );
         });
 
