@@ -12,6 +12,7 @@ public class Status : IDataEntry {
     [JsonProperty("is_positive")]
     public bool IsPositive;
     private Action _onRefresh;
+    public Action OnMoreInfo => null;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
@@ -34,8 +35,7 @@ public class Status : IDataEntry {
         return result;
     }
 
-    public async void ShowDescription() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
-        msgPopup.Populate(Description, "Description");
+    public void ShowDescription() {
+        MessagePopup.ShowMessage(Description, nameof(Description));
     }
 }

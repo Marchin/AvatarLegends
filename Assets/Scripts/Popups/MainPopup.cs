@@ -144,6 +144,28 @@ public class MainPopup : Popup {
             }
         });
 
+        const string conditionsTabText = "Conditions";
+        tabs.Add(new ButtonData {
+            Text = conditionsTabText,
+            Callback = () => {
+                SetEntryCollection<Condition>(
+                    Data.Conditions,
+                    val => Data.Conditions = val,
+                    conditionsTabText,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addConditionPopup = await PopupManager.Instance.GetOrLoadPopup<AddConditionPopup>(restore: false);
+                        addConditionPopup.Populate(OnEntryCreation, Entries.Keys, null);
+                    },
+                    onEditEntry: async () => {
+                        var addConditionPopup = await PopupManager.Instance.GetOrLoadPopup<AddConditionPopup>(restore: false);
+                        addConditionPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Condition);
+                    },
+                    isEditable: entry => Data.IsEditable(entry as Condition)
+                );
+            }
+        });
+
         const string engagementsTabText = "Engagements";
         tabs.Add(new ButtonData {
             Text = engagementsTabText,

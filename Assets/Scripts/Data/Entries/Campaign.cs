@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Newtonsoft.Json;
 
 public class Campaign : IDataEntry {
@@ -20,8 +18,9 @@ public class Campaign : IDataEntry {
     [JsonProperty("sesions")]
     public Dictionary<string, Session> Sessions = new Dictionary<string, Session>();
 
-    private string _currentSessionName;
-    public Session CurrentSession
+    [JsonIgnore] private string _currentSessionName;
+
+    [JsonIgnore] public Session CurrentSession
     {
         get {
             if (!string.IsNullOrEmpty(_currentSessionName) && Sessions.ContainsKey(_currentSessionName)) {
@@ -36,7 +35,8 @@ public class Campaign : IDataEntry {
             }
         }
     }
-    public Session LastSession {
+
+    [JsonIgnore] public Session LastSession {
         get {
             List<Session> sessions = new List<Session>(Sessions.Values);
 
@@ -53,6 +53,7 @@ public class Campaign : IDataEntry {
     private Action _onRefresh;
     private bool _showNPCs;
     private bool _showSessions;
+    public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
 
     public List<InformationData> RetrieveData(Action refresh) {
@@ -60,10 +61,12 @@ public class Campaign : IDataEntry {
 
         List<InformationData> result = new List<InformationData>();
 
-        result.Add(new InformationData {
-            Prefix = "Description",
-            OnMoreInfo = () => MessagePopup.ShowMessage(Description, "Description", false),
-        });
+        if (string.IsNullOrEmpty(Description)) {
+            result.Add(new InformationData {
+                Prefix = "Description",
+                OnMoreInfo = () => MessagePopup.ShowMessage(Description, "Description", false),
+            });
+        }
 
         result.Add(new InformationData {
             Prefix = "Note",

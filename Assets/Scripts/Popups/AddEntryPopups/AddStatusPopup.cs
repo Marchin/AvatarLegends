@@ -9,7 +9,6 @@ public class AddStatusPopup : AddEntryPopup<Status> {
         public bool IsPositive;
     }
 
-    [SerializeField] private TextMeshProUGUI _title = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
     [SerializeField] private Toggle _isPositive = default;
 
@@ -18,8 +17,6 @@ public class AddStatusPopup : AddEntryPopup<Status> {
             _descriptionInput.text = _editingEntry.Description;
             _isPositive.isOn = _editingEntry.IsPositive;
         }
-
-        _title.text = Editing ? "Techique Edition" : "Techique Creation";
     }
 
     protected override void OnClear() {

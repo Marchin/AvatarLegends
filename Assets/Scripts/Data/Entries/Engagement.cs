@@ -14,6 +14,7 @@ public class Engagement : IDataEntry {
 
     private Action _onRefresh;
     private bool _showNPCs;
+    public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
 
     public List<InformationData> RetrieveData(Action refresh) {

@@ -35,6 +35,7 @@ public class Technique : IDataEntry {
     public bool Rare;
     
     private Action _onRefresh;
+    public Action OnMoreInfo => null;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;

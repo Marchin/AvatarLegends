@@ -13,7 +13,6 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
         public bool IsRare;
     }
 
-    [SerializeField] private TextMeshProUGUI _title = default;
     [SerializeField] private DropdownElement _masteryDropdown = default;
     [SerializeField] private DropdownElement _approachDropdown = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
@@ -52,8 +51,6 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             _masteryDropdown.Value = (int)_editingEntry.Mastery;
             _isRare.isOn = _editingEntry.Rare;
         }
-
-        _title.text = Editing ? "Techique Edition" : "Techique Creation";
     }
 
     protected override void OnClear() {

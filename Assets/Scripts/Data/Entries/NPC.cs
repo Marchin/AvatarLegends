@@ -59,11 +59,12 @@ public class NPC : IDataEntry {
     public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
 
     [JsonProperty("conditions")]
-    public Dictionary<string, Condition> Conditions = new Dictionary<string, Condition>();
+    public Dictionary<string, ConditionState> Conditions = new Dictionary<string, ConditionState>();
     private bool _showConditions;
     private bool _showTechinques;
     private bool _showStatuses;
     private Action _onRefresh;
+    public Action OnMoreInfo => !string.IsNullOrEmpty(Description) ? ShowDescription : null;
     private AppData Data => ApplicationManager.Instance.Data;
 
     public List<InformationData> RetrieveData(Action refresh) {
@@ -100,7 +101,7 @@ public class NPC : IDataEntry {
 
         result.Add(new InformationData {
             Prefix = "Principle",
-            Content = Principle,
+            Content = string.IsNullOrEmpty(Principle) ? "(none)" : Principle,
             InitValue = Balance,
             MaxValue = GetMaxBalance(),
             OnValueChange = ChangeBalance
@@ -131,7 +132,7 @@ public class NPC : IDataEntry {
             List<string> conditionNames = new List<string>(Conditions.Keys);
             conditionNames.Sort();
             foreach (var conditionName in conditionNames) {
-                Condition condition = Conditions[conditionName];
+                ConditionState condition = Conditions[conditionName];
                 result.Add(new InformationData {
                     Content = conditionName,
                     IsToggleOn = condition.IsOn,
@@ -227,21 +228,21 @@ public class NPC : IDataEntry {
         return result;
     }
 
-    private async void AddCondition() {
-        var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
-        inputPopup.Populate("Add a condition.", "Condition", onConfirm: async input => {
-            if (string.IsNullOrEmpty(input) || Conditions.ContainsKey(input)) {
-                var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-                msgPopup.Populate(
-                    Conditions.ContainsKey(input) ? "Name already exists." : "Please enter a name.",
-                    "Name");
-            } else {
-                Conditions.Add(input, new Condition { Name = input });
-                _showConditions = true;
+    private void AddCondition() {
+        var availableConditions = IDataEntry.GetAvailableEntries<Condition>(Conditions.Keys, Data.Conditions.Values);
+        if (availableConditions.Count > 0) {
+            Action<List<string>> onDone = names => {
+                foreach (var name in names) {
+                    if (!Conditions.ContainsKey(name)) {
+                        Conditions.Add(name, new ConditionState { Name = name });
+                    }
+                }
                 _onRefresh();
-                await PopupManager.Instance.Back();
-            }
-        });
+            };
+            IDataEntry.AddEntry<Condition>(Conditions.Keys, Data.Conditions.Values, onDone);
+        } else {
+            MessagePopup.ShowMessage("No more conditions available, add more under the \"Conditions\" tab.", "Conditions");
+        }
     }
 
     public void ChangeBalance(int value) {
@@ -322,9 +323,8 @@ public class NPC : IDataEntry {
         return result;
     }
 
-    public async void ShowDescription() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
-        msgPopup.Populate(Description, "Description");
+    public void ShowDescription() {
+        MessagePopup.ShowMessage(Description, nameof(Description));
     }
 
     public async void AddTechnique() {

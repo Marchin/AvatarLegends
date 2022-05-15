@@ -12,6 +12,7 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
         public IDataEntry EditingEntry;
     }
 
+    [SerializeField] private TextMeshProUGUI _title = default;
     [SerializeField] private TMP_InputField _nameInput = default;
     [SerializeField] private Button _confirmButton = default;
     [SerializeField] private Button _closeButton = default;
@@ -31,6 +32,8 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
         this._names = names;
         _editingEntry = editingEntry;
         Clear();
+
+        _title.text = Editing ? $"{typeof(T)} Edition" : $"{typeof(T)} Creation";
 
         if (Editing) {
             _nameInput.text = _editingEntry.Name;

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class AppData {
     const string UserDataPref= "user_data";
-    public UserData User { get; private set; }
+    [JsonIgnore] public UserData User { get; private set; }
 
     // Playbooks
     [JsonProperty("ncps")]
     private Dictionary<string, NPC> _dataNPCs = new Dictionary<string, NPC>();
-    private Dictionary<string, NPC> _npcs;
-    public Dictionary<string, NPC> NPCs
+    [JsonIgnore] private Dictionary<string, NPC> _npcs;
+    [JsonIgnore] public Dictionary<string, NPC> NPCs
     {
         get {
             if (_npcs == null) {
@@ -44,8 +44,8 @@ public class AppData {
 
     [JsonProperty("conditions")]
     private Dictionary<string, Condition> _dataConditions = new Dictionary<string, Condition>();
-    private Dictionary<string, Condition> _conditions;
-    public Dictionary<string, Condition> Conditions
+    [JsonIgnore] private Dictionary<string, Condition> _conditions;
+    [JsonIgnore] public Dictionary<string, Condition> Conditions
     {
         get {
             if (_conditions == null) {
@@ -73,10 +73,14 @@ public class AppData {
         }
     }
 
+    public bool IsEditable(Condition condition) {
+        return !_dataConditions.ContainsKey(condition.Name);
+    }
+
     [JsonProperty("techniques")]
     private Dictionary<string, Technique> _dataTechniques = new Dictionary<string, Technique>();
-    private Dictionary<string, Technique> _techniques;
-    public Dictionary<string, Technique> Techniques
+    [JsonIgnore] private Dictionary<string, Technique> _techniques;
+    [JsonIgnore] public Dictionary<string, Technique> Techniques
     {
         get {
             if (_techniques == null) {
@@ -110,8 +114,8 @@ public class AppData {
 
     [JsonProperty("statuses")]
     private Dictionary<string, Status> _dataStatuses = new Dictionary<string, Status>();
-    private Dictionary<string, Status> _statuses;
-    public Dictionary<string, Status> Statuses
+    [JsonIgnore] private Dictionary<string, Status> _statuses;
+    [JsonIgnore] public Dictionary<string, Status> Statuses
     {
         get {
             if (_statuses == null) {

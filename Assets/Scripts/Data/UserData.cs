@@ -14,7 +14,10 @@ public class UserData {
     [JsonProperty("status")]
     public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
 
+    [JsonIgnore]
     public string SelectedCampaignName;
+    [JsonIgnore]
     public Campaign SelectedCampaign => Campaigns[SelectedCampaignName];
+    [JsonIgnore]
     public Session CurrentSession => SelectedCampaign.CurrentSession;
 }

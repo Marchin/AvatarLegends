@@ -21,7 +21,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
-    [SerializeField] private TextMeshProUGUI _title = default;
 
     protected override void Awake() {
         base.Awake();
@@ -77,8 +76,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             _training.Value = (int)_editingEntry.Training;
             _isGroup.isOn = _editingEntry.IsGroup;
         }
-
-        _title.text = Editing ? "NPC Edition" : "NPC Creation";
     }
 
     protected override void OnClear() {
@@ -104,7 +101,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         if (Editing) {
             npc.Balance = Math.Min(_editingEntry.Balance, npc.GetMaxBalance());
             npc.Fatigue = Math.Min(_editingEntry.Balance, npc.GetMaxFatigue());
-            npc.Conditions = new Dictionary<string, Condition>(_editingEntry.Conditions);
+            npc.Conditions = new Dictionary<string, ConditionState>(_editingEntry.Conditions);
 
             int amountToRemove = Mathf.Max(npc.Conditions.Count - npc.GetMaxConditions(), 0);
             List<string> keys = new List<string>(npc.Conditions.Keys);
