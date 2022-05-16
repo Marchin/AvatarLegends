@@ -44,7 +44,7 @@ public class Campaign : IDataEntry {
             List<Session> sessions = new List<Session>(Sessions.Values);
 
             if (sessions.Count > 0) {
-                sessions.Sort((x, y) => x.Number.CompareTo(y.Number));
+                sessions.Sort((x, y) => y.Number.CompareTo(x.Number));
 
                 return sessions[0];
             } else {
@@ -52,6 +52,7 @@ public class Campaign : IDataEntry {
             }
         }
     }
+
     private Action _onRefresh;
     private bool _showNPCs;
     private bool _showPCs;
