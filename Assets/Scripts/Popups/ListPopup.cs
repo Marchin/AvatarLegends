@@ -21,9 +21,9 @@ public class ListPopup : Popup {
     private void Awake() {
         _confirmButton.onClick.AddListener(() => {
             _onConfirm();
-            _ = PopupManager.Instance.Back();
+            PopupManager.Instance.Back();
         });
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
     }
 
     public void Populate(List<InformationData> data, string title, Action onConfirm) {

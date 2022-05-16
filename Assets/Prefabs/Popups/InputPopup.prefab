@@ -592,6 +592,7 @@ MonoBehaviour:
   _confirmButton: {fileID: 4639848823947551608}
   _closeButton: {fileID: 4710336839359013412}
   _backgroundCloser: {fileID: 5352859432390179192}
+  _layoutElement: {fileID: 5183096212618463173}
 --- !u!114 &3139857949858519477 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8651637059609069626, guid: 710302472f673014c935e40a4c37ef2e, type: 3}
@@ -722,6 +723,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
+--- !u!114 &5183096212618463173 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1851232273230099055, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
+  m_PrefabInstance: {fileID: 6800131400744154538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5183096212618463174 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1851232273230099052, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}

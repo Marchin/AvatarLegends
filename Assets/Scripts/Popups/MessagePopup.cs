@@ -50,7 +50,7 @@ public class MessagePopup : Popup {
     }
 
     private void Awake() {
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
     }
 
     private void OnDisable() {
@@ -150,7 +150,7 @@ public class MessagePopup : Popup {
             Callback = () => {
                 onYes?.Invoke();
                 hasConfirmed = true;
-                _ = PopupManager.Instance.Back();
+                PopupManager.Instance.Back();
             }
         });
 
@@ -158,7 +158,7 @@ public class MessagePopup : Popup {
             Text = "No",
             Callback = () => {
                 onNo?.Invoke();
-                _ = PopupManager.Instance.Back();
+                PopupManager.Instance.Back();
             }
         });
 

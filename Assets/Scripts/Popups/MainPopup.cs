@@ -43,7 +43,7 @@ public class MainPopup : Popup {
         _editEntry.onClick.AddListener(() => _onEditEntry());
         _deleteAll.onClick.AddListener(() => _onDeleteAll());
         _deleteEntry.onClick.AddListener(DeleteEntry);
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
 
         List<ButtonData> tabs = new List<ButtonData>();
 

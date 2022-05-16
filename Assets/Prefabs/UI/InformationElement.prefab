@@ -654,9 +654,9 @@ RectTransform:
   - {fileID: 5294996744420603782}
   - {fileID: 2990520123623093344}
   - {fileID: 5294996744092623575}
+  - {fileID: 6528507384264330350}
   - {fileID: 5294996745527194844}
   - {fileID: 5294996744147326008}
-  - {fileID: 6528507384264330350}
   - {fileID: 2990520124255484742}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 8
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
@@ -1125,22 +1125,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2990520123930937483}
     m_Modifications:
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376360, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_Name
       value: MoreInfoButton
@@ -1155,7 +1139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1319,22 +1303,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2990520123930937483}
     m_Modifications:
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376360, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_Name
       value: IncreaseButton
@@ -1545,22 +1513,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2990520123930937483}
     m_Modifications:
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376360, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_Name
       value: DecreaseButton
@@ -1947,22 +1899,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2990520123930937483}
     m_Modifications:
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376360, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_Name
       value: AddButton
@@ -1977,7 +1913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2137,22 +2073,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2990520123930937483}
     m_Modifications:
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879587590471567997, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376360, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_Name
       value: EditButton
@@ -2167,7 +2087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6988440144843376363, guid: eaa800ddd99b57b458d17884c44448aa, type: 3}
       propertyPath: m_AnchorMax.x

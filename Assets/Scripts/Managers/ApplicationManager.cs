@@ -54,7 +54,7 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
 
     private void Update() {
         if (!DisableBackButton.IsRunning && Input.GetKeyDown(KeyCode.Escape)) {
-            _ = PopupManager.Instance.Back();
+            PopupManager.Instance.Back();
         }
     }
 

@@ -48,12 +48,25 @@ public class Session : IDataEntry {
             });
         }
 
-        if (string.IsNullOrEmpty(Note)) {
-            result.Add(new InformationData {
-                Prefix = "Note",
-                OnMoreInfo = () => MessagePopup.ShowMessage(Note, "Note", false),
-            });
-        }
+        result.Add(new InformationData {
+            Content = nameof(Note),
+            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
+                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
+                null,
+            OnEdit = async () => {
+                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+                inputPopup.Populate(
+                    "",
+                    nameof(Note),
+                    input => {
+                        Note = input;
+                        PopupManager.Instance.Back();
+                    },
+                    inputText: Note,
+                    multiLine: true
+                );
+            }
+        });
 
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;
@@ -136,11 +149,6 @@ public class Session : IDataEntry {
                 });
             }
         }
-
-        result.Add(new InformationData {
-            Prefix = "Notes",
-            Content = Note,
-        });
 
         return result;
 

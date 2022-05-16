@@ -11,7 +11,7 @@ public class AddCampaignPopup : AddEntryPopup<Campaign> {
 
     protected override void OnPopulated() {
         if (Editing) {
-            _descriptionInput.text = _editingEntry.Note;;
+            _descriptionInput.text = _editingEntry.Description;
         }
     }
 

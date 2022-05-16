@@ -11,6 +11,6 @@ public class PopupCloser : MonoBehaviour {
     }
 
     private void Awake() {
-        _button.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _button.onClick.AddListener(PopupManager.Instance.Back);
     }
 }

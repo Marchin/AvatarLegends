@@ -21,7 +21,10 @@ public class InputPopup : Popup {
     [SerializeField] private Button _confirmButton = default;
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private PopupCloser _backgroundCloser = default;
+    [SerializeField] private LayoutElement _layoutElement = default;
     private OperationBySubscription.Subscription _disableBackButton;
+    private float _initHeight;
+    private Action<string> OnConfirm;
     private bool ShowCloseButton {
         get => _closeButton.gameObject.activeSelf;
         set {
@@ -37,10 +40,10 @@ public class InputPopup : Popup {
             }
         }
     }
-    private Action<string> OnConfirm;
 
     private void Awake() {
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
+        _initHeight = _layoutElement.minHeight;
     }
 
     private void OnEnable() {
@@ -64,10 +67,12 @@ public class InputPopup : Popup {
         string buttonText = "Confirm",
         string inputText = "",
         bool readOnly = false,
-        bool showCloseButton = true
+        bool showCloseButton = true,
+        bool multiLine = false
     ) {
         ShowCloseButton = showCloseButton;
         _message.text = message;
+        _message.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(message));
         _title.text = title;
         OnConfirm = onConfirm;
         _confirmButtonText.text = buttonText;
@@ -78,6 +83,10 @@ public class InputPopup : Popup {
         _confirmButton.onClick.AddListener(() => {
             OnConfirm?.Invoke(_input.text);
         });
+        _input.lineType = multiLine ?
+            TMP_InputField.LineType.MultiLineNewline :
+            TMP_InputField.LineType.SingleLine;
+        _layoutElement.minHeight = multiLine ? _initHeight * 2f : _initHeight;
         _input.Select();
     }
 

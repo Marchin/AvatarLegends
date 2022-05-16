@@ -29,8 +29,23 @@ public class Engagement : IDataEntry {
         var result = new List<InformationData>();
 
         result.Add(new InformationData {
-            Content = "Note",
-            OnMoreInfo = ShowNote
+            Content = nameof(Note),
+            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
+                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
+                null,
+            OnEdit = async () => {
+                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+                inputPopup.Populate(
+                    "",
+                    nameof(Note),
+                    input => {
+                        Note = input;
+                        PopupManager.Instance.Back();
+                    },
+                    inputText: Note,
+                    multiLine: true
+                );
+            }
         });
 
         Action onNPCDropdown = () => {
@@ -128,10 +143,5 @@ public class Engagement : IDataEntry {
             PCs = newPCs;
             _onRefresh();
         }
-    }
-
-    public async void ShowNote() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
-        msgPopup.Populate(Note, "Note");
     }
 }

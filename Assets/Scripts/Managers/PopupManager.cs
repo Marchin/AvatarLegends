@@ -116,8 +116,12 @@ public class PopupManager : MonoBehaviourSingleton<PopupManager> {
 
         return popup;
     }
+    
+    public void Back() {
+        _ = BackAsync();
+    }
 
-    public async UniTask Back() {
+    public async UniTask BackAsync() {
         if (ClosingPopup) {
             Debug.LogWarning("A popup is already being closed");
             return;

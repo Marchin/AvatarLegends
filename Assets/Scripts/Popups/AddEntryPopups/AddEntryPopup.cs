@@ -24,7 +24,7 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
 
     protected virtual void Awake() {
         _confirmButton.onClick.AddListener(CreateEntry);
-        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
     }
 
     public void Populate(Action<IDataEntry> onDone, ICollection<string> names, T editingEntry) {
@@ -63,7 +63,7 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
         }
 
         OnDone.Invoke(OnEntryCreation());
-        _ = PopupManager.Instance.Back();
+        PopupManager.Instance.Back();
     }
 
     protected abstract IDataEntry OnEntryCreation();
