@@ -14,6 +14,7 @@ public class MainPopup : Popup {
     [SerializeField] private Button _editEntry = default;
     [SerializeField] private Button _deleteEntry = default;
     [SerializeField] private Button _deleteAll = default;
+    [SerializeField] private Button _closeButton = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private ButtonList _tabsList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
@@ -42,6 +43,7 @@ public class MainPopup : Popup {
         _editEntry.onClick.AddListener(() => _onEditEntry());
         _deleteAll.onClick.AddListener(() => _onDeleteAll());
         _deleteEntry.onClick.AddListener(DeleteEntry);
+        _closeButton.onClick.AddListener(() => _ = PopupManager.Instance.Back());
 
         List<ButtonData> tabs = new List<ButtonData>();
 
