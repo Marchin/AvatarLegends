@@ -18,13 +18,18 @@ public class Session : IDataEntry {
     [JsonProperty("npcs")]
     public List<string> NPCs = new List<string>();
 
+    [JsonProperty("pcs")]
+    public List<string> PCs = new List<string>();
+
     [JsonProperty("engagement")]
     public Dictionary<string, Engagement> Engagements = new Dictionary<string, Engagement>();
 
     public Action OnMoreInfo => null;
     private Action _onRefresh;
     private bool _showNPCs;
+    private bool _showPCs;
     private AppData Data => ApplicationManager.Instance.Data;
+    private Campaign SelectedCampaign => Data.User.SelectedCampaign;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
@@ -66,6 +71,10 @@ public class Session : IDataEntry {
 
         if (_showNPCs) {
             foreach (var npc in NPCs) {
+                if (!Data.NPCs.ContainsKey(npc)) {
+                    continue;
+                }
+
                 result.Add(new InformationData {
                     Content = $"{npc} ({Data.NPCs[npc].Alignment})",
                     OnDelete = async () => {
@@ -87,6 +96,47 @@ public class Session : IDataEntry {
             }
         }
 
+        Action onPCDropdown = () => {
+            _showPCs = !_showPCs;
+            _onRefresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"PCs ({PCs.Count})",
+            OnDropdown = (PCs.Count > 0) ? onPCDropdown : null,
+            OnAdd = (IDataEntry.GetAvailableEntries<PC>(PCs, SelectedCampaign.PCs.Values).Count > 0) ?
+                () => IDataEntry.AddEntry<PC>(PCs, SelectedCampaign.PCs.Values, UpdatePCs) :
+                (Action)null,
+            Expanded = _showPCs
+        });
+
+        if (_showPCs) {
+            foreach (var pc in PCs) {
+                if (!SelectedCampaign.PCs.ContainsKey(pc)) {
+                    continue;
+                }
+
+                result.Add(new InformationData {
+                    Content = pc,
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {pc} from the engagement?",
+                            onYes: () => PCs.Remove(pc)
+                        );
+                        _onRefresh();
+                    },
+                    OnMoreInfo = async () => {
+                        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+                        Refresh();
+
+                        void Refresh() {
+                            listPopup.Populate(SelectedCampaign.PCs[pc].RetrieveData(Refresh), pc, null);
+                        }
+                    }
+                });
+            }
+        }
+
         result.Add(new InformationData {
             Prefix = "Notes",
             Content = Note,
@@ -98,54 +148,34 @@ public class Session : IDataEntry {
             NPCs = newNPCs;
             _onRefresh();
         }
+
+        void UpdatePCs(List<string> newPCs) {
+            PCs = newPCs;
+            _onRefresh();
+        }
     }
 
-    // private async void AddNPC() {
-    //     List<NPC> npcsToAdd = new List<NPC>(NPCs);
-    //     List<InformationData> infoList = new List<InformationData>(Data.NPCs.Count);
-    //     var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-    //     List<NPC> availableNPCs = GetAvailableNPCs();
+    public List<NPC> GetNPCsData() {
+        List<NPC> npcs = new List<NPC>(NPCs.Count);
 
-    //     Refresh();
+        foreach (var npcName in NPCs) {
+            if (SelectedCampaign.NPCs.ContainsKey(npcName)) {
+                npcs.Add(SelectedCampaign.NPCs[npcName]);
+            }
+        }
 
-    //     void Refresh() {
-    //         infoList.Clear();
-    //         foreach (var npc in availableNPCs) {
-    //             infoList.Add(new InformationData {
-    //                 Content = npc.Name,
-    //                 IsToggleOn = npcsToAdd.Contains(npc),
-    //                 OnToggle = isOn => {
-    //                     if (isOn) {
-    //                         npcsToAdd.Add(npc);
-    //                     } else {
-    //                         npcsToAdd.Remove(npc);
-    //                     }
+        return npcs;
+    }
 
-    //                     Refresh();
-    //                 },
-    //                 OnMoreInfo = string.IsNullOrEmpty(npc.Description) ?
-    //                     (Action)null :
-    //                     npc.ShowDescription
-    //             });
-    //         }
+    public List<PC> GetPCsData() {
+        List<PC> pcs = new List<PC>(PCs.Count);
 
-    //         listPopup.Populate(infoList,
-    //             $"Add NPCs",
-    //             () => {
-    //                 NPCs = npcsToAdd;
-    //                 _onRefresh();
-    //             }
-    //         );
-    //     }
-    // }
+        foreach (var pcName in PCs) {
+            if (SelectedCampaign.PCs.ContainsKey(pcName)) {
+                pcs.Add(SelectedCampaign.PCs[pcName]);
+            }
+        }
 
-    // private List<NPC> GetAvailableNPCs() {
-    //     List<NPC> availableNPCs = new List<NPC>(Data.NPCs.Values);
-
-    //     foreach (var npc in NPCs) {
-    //         availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
-    //     }
-
-    //     return availableNPCs;
-    // }
+        return pcs;
+    }
 }

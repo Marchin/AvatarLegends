@@ -3,15 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public class NPC : IDataEntry {
-    public enum ETraining {
-        Earth,
-        Water,
-        Fire,
-        Air,
-        Weapons,
-        Tech
-    }
-
     public enum EType {
         Minor,
         Major,
@@ -63,12 +54,12 @@ public class NPC : IDataEntry {
     private bool _showConditions;
     private bool _showTechinques;
     private bool _showStatuses;
-    private Action _onRefresh;
+    private Action _refresh;
     public Action OnMoreInfo => !string.IsNullOrEmpty(Description) ? ShowDescription : null;
     private AppData Data => ApplicationManager.Instance.Data;
 
     public List<InformationData> RetrieveData(Action refresh) {
-        _onRefresh = refresh;
+        _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
 
@@ -116,7 +107,7 @@ public class NPC : IDataEntry {
 
         Action onConditionDropdown = () => {
             _showConditions = !_showConditions;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -142,7 +133,7 @@ public class NPC : IDataEntry {
                             $"Remove {conditionName} condition?",
                             onYes: () => Conditions.Remove(conditionName)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     IndentLevel = 1
                 });
@@ -151,7 +142,7 @@ public class NPC : IDataEntry {
 
         Action onTechniqueDropdown = () => {
             _showTechinques = !_showTechinques;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -176,7 +167,7 @@ public class NPC : IDataEntry {
                             $"Remove {techniqueName} technique?",
                             onYes: () => Techniques.Remove(techniqueName)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     IndentLevel = 1
                 });
@@ -185,7 +176,7 @@ public class NPC : IDataEntry {
 
         Action onStatusesDropdown = () => {
             _showStatuses = !_showStatuses;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -218,7 +209,7 @@ public class NPC : IDataEntry {
                             $"Remove {statusName} status?",
                             onYes: () => Statuses.Remove(statusName)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     IndentLevel = 1
                 });
@@ -237,7 +228,7 @@ public class NPC : IDataEntry {
                         Conditions.Add(name, new ConditionState { Name = name });
                     }
                 }
-                _onRefresh();
+                _refresh();
             };
             IDataEntry.AddEntry<Condition>(Conditions.Keys, Data.Conditions.Values, onDone);
         } else {
@@ -278,7 +269,7 @@ public class NPC : IDataEntry {
         UnityEngine.Debug.Assert((value >= 0) && (value <= maxFatigue), "Invalid Balance");
 
         Fatigue = UnityEngine.Mathf.Clamp(value, 0, maxFatigue);
-        _onRefresh();
+        _refresh();
     }
 
     public int GetMaxFatigue() {
@@ -372,7 +363,7 @@ public class NPC : IDataEntry {
                 $"Add Techniques ({techniquesToAdd.Count}/{GetMaxTechniques()})",
                 () => {
                     Techniques = techniquesToAdd;
-                    _onRefresh();
+                    _refresh();
                 }
             );
         }
@@ -491,7 +482,7 @@ public class NPC : IDataEntry {
                 $"Add Statuses",
                 () => {
                     Statuses = statusesToAdd;
-                    _onRefresh();
+                    _refresh();
                 }
             );
         }

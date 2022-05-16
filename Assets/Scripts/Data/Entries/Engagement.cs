@@ -7,15 +7,21 @@ public class Engagement : IDataEntry {
     public string Name { get; set; }
 
     [JsonProperty("npcs")]
-    public List<NPC> NPCs = new List<NPC>();
+    public List<string> NPCs = new List<string>();
+
+    [JsonProperty("pcs")]
+    public List<string> PCs = new List<string>();
 
     [JsonProperty("note")]
     public string Note;
 
     private Action _onRefresh;
     private bool _showNPCs;
+    private bool _showPCs;
     public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
+    private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    private Session CurrentSession => Data.User.CurrentSession;
 
     public List<InformationData> RetrieveData(Action refresh) {
         _onRefresh = refresh;
@@ -33,22 +39,27 @@ public class Engagement : IDataEntry {
         };
 
         result.Add(new InformationData {
-            Content = $"NPCs ({NPCs.Count})",
+            Content = $"NPCs ({NPCs.Count}/{CurrentSession.NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (GetAvailableNPCs().Count > 0) ?
-                AddNPC :
+            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(NPCs, CurrentSession.GetNPCsData()).Count > 0) ?
+                () => IDataEntry.AddEntry<NPC>(NPCs, CurrentSession.GetNPCsData(), UpdateNPCs)  :
                 (Action)null,
             Expanded = _showNPCs
         });
 
         if (_showNPCs) {
-            foreach (var npc in NPCs) {
+            foreach (var npcName in NPCs) {
+                if (!Data.NPCs.ContainsKey(npcName)) {
+                    continue;
+                }
+
+                NPC npc = Data.NPCs[npcName];
                 result.Add(new InformationData {
-                    Content = $"{npc.Name} ({npc.Alignment})",
+                    Content = $"{npcName} ({npc.Alignment})",
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
-                            $"Remove {npc.Name} from the engagement?",
-                            onYes: () => NPCs.Remove(npc)
+                            $"Remove {npcName} from the engagement?",
+                            onYes: () => NPCs.Remove(npcName)
                         );
                         _onRefresh();
                     },
@@ -57,7 +68,49 @@ public class Engagement : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(npc.RetrieveData(Refresh), npc.Name, null);
+                            listPopup.Populate(npc.RetrieveData(Refresh), npcName, null);
+                        }
+                    }
+                });
+            }
+        }
+
+        Action onPCDropdown = () => {
+            _showPCs = !_showPCs;
+            _onRefresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"PCs ({PCs.Count}/{CurrentSession.PCs.Count})",
+            OnDropdown = (PCs.Count > 0) ? onPCDropdown : null,
+            OnAdd = (IDataEntry.GetAvailableEntries<PC>(PCs, CurrentSession.GetPCsData()).Count > 0) ?
+                () => IDataEntry.AddEntry<PC>(PCs, CurrentSession.GetPCsData(), UpdatePCs)  :
+                (Action)null,
+            Expanded = _showPCs
+        });
+
+        if (_showPCs) {
+            foreach (var pcName in PCs) {
+                if (!CurrentSession.PCs.Contains(pcName)) {
+                    continue;
+                }
+
+                PC pc = SelectedCampaign.PCs[pcName];
+                result.Add(new InformationData {
+                    Content = pcName,
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {pcName} from the engagement?",
+                            onYes: () => PCs.Remove(pcName)
+                        );
+                        _onRefresh();
+                    },
+                    OnMoreInfo = async () => {
+                        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+                        Refresh();
+
+                        void Refresh() {
+                            listPopup.Populate(pc.RetrieveData(Refresh), pcName, null);
                         }
                     }
                 });
@@ -65,61 +118,20 @@ public class Engagement : IDataEntry {
         }
 
         return result;
+
+        void UpdateNPCs(List<string> newNPCs) {
+            NPCs = newNPCs;
+            _onRefresh();
+        }
+
+        void UpdatePCs(List<string> newPCs) {
+            PCs = newPCs;
+            _onRefresh();
+        }
     }
 
     public async void ShowNote() {
         var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
         msgPopup.Populate(Note, "Note");
-    }
-
-    private async void AddNPC() {
-        List<NPC> npcsToAdd = new List<NPC>(NPCs);
-        List<InformationData> infoList = new List<InformationData>(Data.NPCs.Count);
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        List<NPC> availableNPCs = GetAvailableNPCs();
-
-        Refresh();
-
-        void Refresh() {
-            infoList.Clear();
-            foreach (var npc in availableNPCs) {
-                infoList.Add(new InformationData {
-                    Content = npc.Name,
-                    IsToggleOn = npcsToAdd.Contains(npc),
-                    OnToggle = isOn => {
-                        if (isOn) {
-                            npcsToAdd.Add(npc);
-                        } else {
-                            npcsToAdd.Remove(npc);
-                        }
-
-                        Refresh();
-                    },
-                    OnMoreInfo = string.IsNullOrEmpty(npc.Description) ?
-                        (Action)null :
-                        npc.ShowDescription
-                });
-            }
-
-            listPopup.Populate(infoList,
-                $"Add NPCs",
-                () => {
-                    NPCs = npcsToAdd;
-                    _onRefresh();
-                }
-            );
-        }
-    }
-
-    private List<NPC> GetAvailableNPCs() {
-        List<NPC> availableNPCs = new List<NPC>(Data.NPCs.Values);
-
-        foreach (var engagement in Data.User.CurrentSession.Engagements) {
-            foreach (var npc in engagement.Value.NPCs) {
-                availableNPCs.Remove(availableNPCs.Find(x => x.Name == npc.Name));
-            }
-        }
-
-        return availableNPCs;
     }
 }

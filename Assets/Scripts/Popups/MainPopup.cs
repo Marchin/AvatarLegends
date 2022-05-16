@@ -73,7 +73,8 @@ public class MainPopup : Popup {
                         names.Sort((x, y) => SelectedCampaign.Sessions[y].Number.CompareTo(
                             SelectedCampaign.Sessions[x].Number
                         ));
-                    }
+                    },
+                    selectedEntry: SelectedCampaign.CurrentSession.Name
                 );
             }
         });
@@ -96,6 +97,61 @@ public class MainPopup : Popup {
                         addNPCPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as NPC);
                     },
                     isEditable: entry => Data.IsEditable(entry as NPC)
+                );
+            }
+        });
+
+        const string pcsTabText = "PCs";
+        tabs.Add(new ButtonData {
+            Text = pcsTabText,
+            Callback = () => {
+                SetEntryCollection<PC>(
+                    SelectedCampaign.PCs,
+                    val => SelectedCampaign.PCs = val,
+                    pcsTabText,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddPCPopup>(restore: false);
+                        addPCPopup.Populate(OnEntryCreation, Entries.Keys, null);
+                    },
+                    onEditEntry: async () => {
+                        var addPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddPCPopup>(restore: false);
+                        addPCPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as PC);
+                    },
+                    isEditable: entry => true
+                );
+            }
+        });
+
+        const string engagementsTabText = "Engagements";
+        tabs.Add(new ButtonData {
+            Text = engagementsTabText,
+            Callback = () => {
+                SetEntryCollection<Engagement>(
+                    Data.User.CurrentSession.Engagements,
+                    val => Data.User.CurrentSession.Engagements = val,
+                    engagementsTabText,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
+                        addEngagementPopup.Populate(OnEntryCreation, Entries.Keys, null);
+                    },
+                    onEditEntry: async () => {
+                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
+                        addEngagementPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Engagement);
+                    },
+                    isEditable: _ => true,
+                    onDeleteAll: async () => {
+                        bool confirmed = await MessagePopup.ShowConfirmationPopup(
+                            "Delete all engagements?",
+                            onYes: () => {
+                                Entries.Clear();
+                                _selected = null;
+                                Refresh();
+                            },
+                            restore: false
+                        );
+                    }
                 );
             }
         });
@@ -144,6 +200,28 @@ public class MainPopup : Popup {
             }
         });
 
+        const string playbooksTabText = "Playbooks";
+        tabs.Add(new ButtonData {
+            Text = playbooksTabText,
+            Callback = () => {
+                SetEntryCollection<Playbook>(
+                    Data.Playbooks,
+                    val => Data.Playbooks = val,
+                    playbooksTabText,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
+                        addPlaybookPopup.Populate(OnEntryCreation, Entries.Keys, null);
+                    },
+                    onEditEntry: async () => {
+                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
+                        addPlaybookPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Playbook);
+                    },
+                    isEditable: entry => Data.IsEditable(entry as Playbook)
+                );
+            }
+        });
+
         const string conditionsTabText = "Conditions";
         tabs.Add(new ButtonData {
             Text = conditionsTabText,
@@ -162,39 +240,6 @@ public class MainPopup : Popup {
                         addConditionPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Condition);
                     },
                     isEditable: entry => Data.IsEditable(entry as Condition)
-                );
-            }
-        });
-
-        const string engagementsTabText = "Engagements";
-        tabs.Add(new ButtonData {
-            Text = engagementsTabText,
-            Callback = () => {
-                SetEntryCollection<Engagement>(
-                    Data.User.CurrentSession.Engagements,
-                    val => Data.User.CurrentSession.Engagements = val,
-                    engagementsTabText,
-                    onSetEntry: null,
-                    onAddEntry: async () => {
-                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
-                        addEngagementPopup.Populate(OnEntryCreation, Entries.Keys, null);
-                    },
-                    onEditEntry: async () => {
-                        var addEngagementPopup = await PopupManager.Instance.GetOrLoadPopup<AddEngagementPopup>(restore: false);
-                        addEngagementPopup.Populate(OnEntryEdition, Entries.Keys, Entries[_selected] as Engagement);
-                    },
-                    isEditable: _ => true,
-                    onDeleteAll: async () => {
-                        bool confirmed = await MessagePopup.ShowConfirmationPopup(
-                            "Delete all engagements?",
-                            onYes: () => {
-                                Entries.Clear();
-                                _selected = null;
-                                Refresh();
-                            },
-                            restore: false
-                        );
-                    }
                 );
             }
         });
@@ -220,7 +265,8 @@ public class MainPopup : Popup {
         Action onEditEntry,
         Func<IDataEntry, bool> isEditable,
         Action onDeleteAll = null,
-        Action<List<string>> customSort = null
+        Action<List<string>> customSort = null,
+        string selectedEntry = null
     ) where T : IDataEntry {
         _record?.Invoke();
         Entries = new Dictionary<string, IDataEntry>(entries.Count);
@@ -231,7 +277,7 @@ public class MainPopup : Popup {
             tab.ButtonImage.color = (tab.Text == tabName) ? _selectedColor : _unselectedColor;
         }
         _record = null;
-        _selected = null;
+        _selected = selectedEntry;
         _onAddEntry = onAddEntry;
         _onSetEntry = onSetEntry;
         _onEditEntry = onEditEntry;

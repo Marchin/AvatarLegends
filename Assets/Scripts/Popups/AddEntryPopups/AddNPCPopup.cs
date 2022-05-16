@@ -9,7 +9,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         public BasePopupData BasePopupData;
         public NPC.EAlignment Alignment;
         public NPC.EType Type;
-        public NPC.ETraining Training;
+        public ETraining Training;
         public string Principle;
         public string Description;
         public bool IsGroup;
@@ -55,7 +55,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             }
         });
 
-        string[] trainings = Enum.GetNames(typeof(NPC.ETraining));
+        string[] trainings = Enum.GetNames(typeof(ETraining));
         List<string> trainingOptions = new List<string>(trainings.Length);
 
         for (int iTraining = 0; iTraining < trainings.Length; ++iTraining) {
@@ -93,7 +93,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
-            Training = (NPC.ETraining)_training.Value,
+            Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
             IsGroup = _isGroup.isOn
         };
@@ -127,7 +127,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
-            Training = (NPC.ETraining)_training.Value,
+            Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
             IsGroup = _isGroup.isOn
         };

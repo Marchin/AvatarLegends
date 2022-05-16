@@ -44,4 +44,10 @@ public class Condition : IDataEntry {
 
         return result;
     }
+
+    public void ShowInfo() {
+        string infoContent = $"Effect: {Effect}\n\nClearing Condition: {ClearingCondition}";
+
+        MessagePopup.ShowMessage(infoContent, Name);
+    }
 }

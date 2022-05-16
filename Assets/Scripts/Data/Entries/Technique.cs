@@ -67,19 +67,17 @@ public class Technique : IDataEntry {
         return result;
     }
     
-    public async void ShowDescription() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
-        msgPopup.Populate(Description, "Description");
+    public void ShowDescription() {
+        MessagePopup.ShowMessage(Description, nameof(Description));
     }
     
-    public async void ShowInfo() {
-        var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore: false);
+    public void ShowInfo() {
         string infoContent = $"Mastery: {Mastery}\nApproach: {Approach}\n\n{Description}";
 
         if (Rare) {
             infoContent += "\n\n(Rare Technique)";
         }
 
-        msgPopup.Populate(infoContent, Name);
+        MessagePopup.ShowMessage(infoContent, Name);
     }
 }

@@ -147,6 +147,41 @@ public class AppData {
         return !_dataStatuses.ContainsKey(status.Name);
     }
     
+    [JsonProperty("playbooks")]
+    private Dictionary<string, Playbook> _dataPlaybooks = new Dictionary<string, Playbook>();
+    [JsonIgnore] private Dictionary<string, Playbook> _playbooks;
+    [JsonIgnore] public Dictionary<string, Playbook> Playbooks
+    {
+        get {
+            if (_playbooks == null) {
+                _playbooks = new Dictionary<string, Playbook>();
+
+                foreach (var playbook in _dataPlaybooks) {
+                    _playbooks.Add(playbook.Key, playbook.Value);
+                }
+
+                foreach (var playbook in User.Playbooks) {
+                    _playbooks.Add(playbook.Key, playbook.Value);
+                }
+            }
+
+            return _playbooks;
+        }
+        set {
+            User.Playbooks = new Dictionary<string, Playbook>(value);
+
+            foreach (var playbook in _dataPlaybooks) {
+                User.Playbooks.Remove(playbook.Key);
+            }
+            
+            _playbooks = value;
+        }
+    }
+
+    public bool IsEditable(Playbook status) {
+        return !_dataPlaybooks.ContainsKey(status.Name);
+    }
+    
     public AppData() {
         string data = PlayerPrefs.GetString(UserDataPref, "{}");
         User = JsonConvert.DeserializeObject<UserData>(data) ?? new UserData();

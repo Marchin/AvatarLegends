@@ -24,6 +24,7 @@ public class DropdownElement : MonoBehaviour, IDataUIElement<DropdownData> {
         get => _dropdown.value;
         set => _dropdown.value = value;
     }
+    public string SelectedOption => _dropdown.options[Value].text;
 
     public void Populate(DropdownData data) {
         _dropdown.ClearOptions();

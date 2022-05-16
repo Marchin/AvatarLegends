@@ -15,6 +15,9 @@ public class Campaign : IDataEntry {
     [JsonProperty("npcs")]
     public Dictionary<string, NPC> NPCs = new Dictionary<string, NPC>();
 
+    [JsonProperty("pcs")]
+    public Dictionary<string, PC> PCs = new Dictionary<string, PC>();
+
     [JsonProperty("sesions")]
     public Dictionary<string, Session> Sessions = new Dictionary<string, Session>();
 
@@ -49,9 +52,9 @@ public class Campaign : IDataEntry {
             }
         }
     }
-    // PCs
     private Action _onRefresh;
     private bool _showNPCs;
+    private bool _showPCs;
     private bool _showSessions;
     public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
