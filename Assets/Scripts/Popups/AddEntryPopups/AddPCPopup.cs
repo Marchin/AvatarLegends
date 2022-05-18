@@ -58,6 +58,7 @@ public class AddPCPopup : AddEntryPopup<PC> {
     protected override IDataEntry OnEntryCreation() {
         PC pc = new PC() {
             Name = NewName,
+            Player = _playerInput.text,
             Backstory = _backstoryInput.text,
             Training = (ETraining)_training.Value,
             Playbook = _playbook.SelectedOption
