@@ -101,7 +101,9 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         if (Editing) {
             npc.Balance = Math.Min(_editingEntry.Balance, npc.GetMaxBalance());
             npc.Fatigue = Math.Min(_editingEntry.Balance, npc.GetMaxFatigue());
+            npc.Statuses = _editingEntry.Statuses;
             npc.Conditions = new Dictionary<string, ConditionState>(_editingEntry.Conditions);
+            npc.Connections = _editingEntry.Connections;
 
             int amountToRemove = Mathf.Max(npc.Conditions.Count - npc.GetMaxConditions(), 0);
             List<string> keys = new List<string>(npc.Conditions.Keys);
@@ -109,11 +111,11 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
                 npc.Conditions.Remove(keys[keys.Count - iKey - 1]);
             }
             
-            var availableTechniques = npc.GetAvailableTechniques();
+            var learnableTechniques = npc.GetLearnableTechniques();
 
             foreach (var technique in _editingEntry.Techniques) {
-                if (availableTechniques.Contains(technique.Value)) {
-                    npc.Techniques.Add(technique.Key, technique.Value);
+                if (learnableTechniques.Contains(technique)) {
+                    npc.Techniques.Add(technique);
                 }
             }
         }

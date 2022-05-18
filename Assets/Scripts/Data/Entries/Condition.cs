@@ -37,7 +37,7 @@ public class Condition : IDataEntry {
 
         if (!string.IsNullOrEmpty(ClearingCondition)) {
             result.Add(new InformationData {
-                Content = nameof(ClearingCondition),
+                Content = "Clearing Condition",
                 OnMoreInfo = () => MessagePopup.ShowMessage(ClearingCondition, nameof(ClearingCondition))
             });
         }

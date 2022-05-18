@@ -63,6 +63,10 @@ public class AddPCPopup : AddEntryPopup<PC> {
             Playbook = _playbook.SelectedOption
         };
 
+        if (Editing) {
+            pc.Connections = _editingEntry.Connections;
+        }
+
         return pc;
     }
 

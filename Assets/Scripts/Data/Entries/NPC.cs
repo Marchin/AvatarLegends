@@ -47,10 +47,10 @@ public class NPC : IDataEntry {
     public string Note;
     
     [JsonProperty("techniques")]
-    public Dictionary<string, Technique> Techniques = new Dictionary<string, Technique>();
+    public List<string> Techniques = new List<string>();
     
     [JsonProperty("statuses")]
-    public Dictionary<string, Status> Statuses = new Dictionary<string, Status>();
+    public List<string> Statuses = new List<string>();
 
     [JsonProperty("conditions")]
     public Dictionary<string, ConditionState> Conditions = new Dictionary<string, ConditionState>();
@@ -185,10 +185,8 @@ public class NPC : IDataEntry {
         });
 
         if (_showTechinques) {
-            List<string> techniqueNames = new List<string>(Techniques.Keys);
-            techniqueNames.Sort();
-            foreach (var techniqueName in techniqueNames) {
-                Technique technique = Techniques[techniqueName];
+            foreach (var techniqueName in Techniques) {
+                Technique technique = Data.Techniques[techniqueName];
                 result.Add(new InformationData {
                     Content = techniqueName,
                     OnMoreInfo = technique.ShowInfo,
@@ -219,17 +217,8 @@ public class NPC : IDataEntry {
         });
 
         if (_showStatuses) {
-            List<string> statusesName = new List<string>(Statuses.Keys);
-            statusesName.Sort((x, y) => {
-                if (Statuses[x].IsPositive != Statuses[y].IsPositive) {
-                    return Statuses[x].IsPositive ? -1 : 1;
-                } else {
-                    return x.CompareTo(y);
-                }
-            });
-
-            foreach (var statusName in statusesName) {
-                Status status = Statuses[statusName];
+            foreach (var statusName in Statuses) {
+                Status status = Data.Statuses[statusName];
                 string effect = status.IsPositive ? "Positive" : "Negative";
                 result.Add(new InformationData {
                     Content = $"{statusName} ({effect})",
@@ -414,29 +403,30 @@ public class NPC : IDataEntry {
     }
 
     public async void AddTechnique() {
-        Dictionary<string, Technique> techniquesToAdd = new Dictionary<string, Technique>(Techniques);
+        List<string> techniquesToAdd = new List<string>(Data.Techniques.Count);
         List<InformationData> infoList = new List<InformationData>(Data.Techniques.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        var availableTechniques = GetAvailableTechniques();
+        var availableTechniques = GetLearnableTechniques();
 
         foreach (var technique in Techniques) {
-            availableTechniques.Remove(technique.Value);
+            availableTechniques.Remove(technique);
         }
 
-        availableTechniques.Sort((x, y) => x.Name.CompareTo(y.Name));
+        availableTechniques.Sort();
 
         Refresh();
 
         void Refresh() {
             infoList.Clear();
-            foreach (var technique in availableTechniques) {
+            foreach (var techniqueName in availableTechniques) {
+                Technique technique = Data.Techniques[techniqueName];
                 infoList.Add(new InformationData {
                     Content = technique.Name,
-                    IsToggleOn = techniquesToAdd.ContainsKey(technique.Name),
+                    IsToggleOn = techniquesToAdd.Contains(technique.Name),
                     OnToggle = async isOn => {
                         if (!isOn || (techniquesToAdd.Count < GetMaxTechniques())) {
                             if (isOn) {
-                                techniquesToAdd.Add(technique.Name, technique);
+                                techniquesToAdd.Add(technique.Name);
                             } else {
                                 techniquesToAdd.Remove(technique.Name);
                             }
@@ -455,9 +445,10 @@ public class NPC : IDataEntry {
             }
 
             listPopup.Populate(infoList,
-                $"Add Techniques ({techniquesToAdd.Count}/{GetMaxTechniques()})",
+                $"Add Techniques ({techniquesToAdd.Count}/{availableTechniques.Count})",
                 () => {
-                    Techniques = techniquesToAdd;
+                    Techniques.AddRange(techniquesToAdd);
+                    Techniques.Sort();
                     _refresh();
                 }
             );
@@ -485,12 +476,12 @@ public class NPC : IDataEntry {
         return result;
     }
 
-    public List<Technique> GetAvailableTechniques() {
-        List<Technique> results = new List<Technique>(100);
+    public List<string> GetLearnableTechniques() {
+        List<string> results = new List<string>(100);
 
         foreach (var technique in Data.Techniques) {
             if (CanLearnTechnique(technique.Value)) {
-                results.Add(technique.Value);
+                results.Add(technique.Key);
             }
         }
 
@@ -531,19 +522,18 @@ public class NPC : IDataEntry {
     }
     
     public async void AddStatus() {
-        Dictionary<string, Status> statusesToAdd = new Dictionary<string, Status>(Statuses);
+        List<string> statusesToAdd = new List<string>();
         List<InformationData> infoList = new List<InformationData>(Data.Statuses.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        var availableStatuses = new Dictionary<string, Status>(Data.Statuses);
+        var availableStatuses = new List<string>(Data.Statuses.Keys);
 
         foreach (var status in Statuses) {
-            availableStatuses.Remove(status.Key);
+            availableStatuses.Remove(status);
         }
 
-        List<string> statusesName = new List<string>(availableStatuses.Keys);
-        statusesName.Sort((x, y) => {
-            if (availableStatuses[x].IsPositive != availableStatuses[y].IsPositive) {
-                return availableStatuses[x].IsPositive ? -1 : 1;
+        availableStatuses.Sort((x, y) => {
+            if (Data.Statuses[x].IsPositive != Data.Statuses[y].IsPositive) {
+                return Data.Statuses[x].IsPositive ? -1 : 1;
             } else {
                 return x.CompareTo(y);
             }
@@ -554,15 +544,15 @@ public class NPC : IDataEntry {
         void Refresh() {
             infoList.Clear();
 
-            foreach (var statusName in statusesName) {
-                Status status = availableStatuses[statusName];
+            foreach (var statusName in availableStatuses) {
+                Status status = Data.Statuses[statusName];
                 string effect = status.IsPositive ? "Positive" : "Negative";
                 infoList.Add(new InformationData {
-                    Content = statusName + $" {(effect)}",
-                    IsToggleOn = statusesToAdd.ContainsKey(statusName),
+                    Content = statusName + $" ({effect})",
+                    IsToggleOn = statusesToAdd.Contains(statusName),
                     OnToggle = isOn => {
                         if (isOn) {
-                            statusesToAdd.Add(statusName, status);
+                            statusesToAdd.Add(statusName);
                         } else {
                             statusesToAdd.Remove(statusName);
                         }
@@ -576,7 +566,15 @@ public class NPC : IDataEntry {
             listPopup.Populate(infoList,
                 $"Add Statuses",
                 () => {
-                    Statuses = statusesToAdd;
+                    Statuses.AddRange(statusesToAdd);
+                    Statuses.Sort((x, y) => {
+                        if (Data.Statuses[x].IsPositive != Data.Statuses[y].IsPositive) {
+                            return Data.Statuses[x].IsPositive ? -1 : 1;
+                        } else {
+                            return x.CompareTo(y);
+                        }
+                    });
+
                     _refresh();
                 }
             );
