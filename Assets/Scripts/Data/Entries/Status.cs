@@ -40,6 +40,38 @@ public class Status : IDataEntry {
     }
     
     public Filter GetFilterData() {
-        return null;
+        Filter filter = new Filter();
+        
+        filter.Toggles.Add(new ToggleActionData(
+            "Positive",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list = list.FindAll(x => (x as Status).IsPositive);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Negative",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list = list.FindAll(x => !(x as Status).IsPositive);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.Reverse();
+                }
+                return list;
+            }
+        ));
+
+        return filter;
     }
 }

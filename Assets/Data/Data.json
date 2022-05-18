@@ -2,15 +2,19 @@
     "techniques": {
         "Sunflower": {
             "name": "Sunflower",
-            "mastery": "Fire"
+            "mastery": "Fire",
+            "approach": "Attack"
         },
         "Waterflower": {
             "name": "Waterflower",
-            "mastery": "Water"
+            "mastery": "Water",
+            "approach": "Defense"
         },
         "Airflower": {
             "name": "Airflower",
-            "mastery": "Air"
+            "mastery": "Air",
+            "approach": "Evade",
+            "is_rare": true
         },
         "Techflower": {
             "name": "Techflower",
@@ -18,7 +22,8 @@
         },
         "Weaponflower": {
             "name": "Weaponflower",
-            "mastery": "Weapons"
+            "mastery": "Weapons",
+            "is_rare": true
         },
         "Earthflower": {
             "name": "Earthflower",

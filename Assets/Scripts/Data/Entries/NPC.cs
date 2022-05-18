@@ -709,6 +709,7 @@ public class NPC : IDataEntry {
 
         filter.Filters.Add(typeFilter);
 
+
         var alignmentFilter = new FilterChannelData(
             nameof(Alignment),
             entry => new List<int> { (int)(entry as NPC).Alignment }
@@ -738,21 +739,32 @@ public class NPC : IDataEntry {
 
         filter.Filters.Add(trainingFilter);
 
-        filter.Toggles.Add(new ToggleActionData(
-            "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list.Reverse();
-                }
-                return list;
-            }
-        ));
 
         filter.Toggles.Add(new ToggleActionData(
             "Is Group",
             action: (list, isOn) => {
                 if (isOn) {
                     list.RemoveAll(x => !(x as NPC).IsGroup);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Is Not Group",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.RemoveAll(x => (x as NPC).IsGroup);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.Reverse();
                 }
                 return list;
             }

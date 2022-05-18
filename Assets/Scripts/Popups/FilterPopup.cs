@@ -13,8 +13,8 @@ public class FilterPopup : Popup {
     [SerializeField] private Button _clearButton = default;
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private FilterChannelDataList _filterList = default;
-    [SerializeField] private FilterChannelEntryList _filterEntryList = default;
     [SerializeField] private ToggleList _toggleList = default;
+    [SerializeField] private FilterChannelEntryList _filterEntryList = default;
     private Filter _filter;
     private Action<Filter> _callback;
 
@@ -69,6 +69,8 @@ public class FilterPopup : Popup {
             _filterList.Populate(_filter.Filters);
         }
 
+        _filterList.gameObject.SetActive(_filter.Filters?.Count > 0);
+
         if (filter.Toggles != null) {
             _filter.Toggles = new List<ToggleActionData>(filter.Toggles.Count);
             List<ToggleData> togglesData = new List<ToggleData>(_filter.Toggles.Count);
@@ -79,6 +81,8 @@ public class FilterPopup : Popup {
             }
             _toggleList.Populate(togglesData);
         }
+
+        _toggleList.gameObject.SetActive(_filter.Toggles?.Count > 0);
 
         _filterEntryList.gameObject.SetActive(false);
         gameObject.SetActive(true);

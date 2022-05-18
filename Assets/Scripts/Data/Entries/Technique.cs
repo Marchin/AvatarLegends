@@ -2,6 +2,26 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
+public static class ApproachUtils {
+    public static string GetDisplayText(this Technique.EApproach approach) {
+        string result = "";
+
+        switch (approach) {
+            case Technique.EApproach.Attack: {
+                result = "Advance & Attack";
+            } break;
+            case Technique.EApproach.Defense: {
+                result = "Defense & Maneuver";
+            } break;
+            case Technique.EApproach.Evade: {
+                result = "Evade & Observe";
+            } break;
+        }
+
+        return result;
+    }
+}
+
 public class Technique : IDataEntry {
     public enum EApproach {
         Attack,
@@ -32,8 +52,8 @@ public class Technique : IDataEntry {
     [JsonProperty("description")]
     public string Description;
 
-    [JsonProperty("rare")]
-    public bool Rare;
+    [JsonProperty("is_rare")]
+    public bool IsRare;
     
     private Action _onRefresh;
     public Action OnMoreInfo => null;
@@ -50,7 +70,7 @@ public class Technique : IDataEntry {
 
         result.Add(new InformationData {
             Prefix = "Approach",
-            Content = Approach.ToString(),
+            Content = Approach.GetDisplayText(),
         });
 
         if (!string.IsNullOrEmpty(Description)) {
@@ -62,7 +82,7 @@ public class Technique : IDataEntry {
 
         result.Add(new InformationData {
             Prefix = "Is Rare",
-            IsToggleOn = Rare
+            IsToggleOn = IsRare
         });
 
         return result;
@@ -73,17 +93,77 @@ public class Technique : IDataEntry {
     }
     
     public void ShowInfo() {
-        string infoContent = $"Mastery: {Mastery}\nApproach: {Approach}\n\n{Description}";
+        string infoContent = $"Mastery: {Mastery}\nApproach: {Approach.GetDisplayText()}\n\n{Description}";
 
-        if (Rare) {
+        if (IsRare) {
             infoContent += "\n\n(Rare Technique)";
         }
 
         MessagePopup.ShowMessage(infoContent, Name);
     }
     
-    
     public Filter GetFilterData() {
-        return null;
+        Filter filter = new Filter();
+        
+        var masteryFilter = new FilterChannelData(
+            nameof(Mastery),
+            entry => new List<int> { (int)(entry as Technique).Mastery }
+        );
+
+        string[] masteries = Enum.GetNames(typeof(EMastery));
+        masteryFilter.Elements = new List<FilterChannelEntryData>(masteries.Length);
+        for (int iMastery = 0; iMastery < masteries.Length; ++iMastery) {
+            masteryFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((EMastery)iMastery).ToString() });
+        }
+
+        filter.Filters.Add(masteryFilter);
+
+
+        var approachFilter = new FilterChannelData(
+            nameof(Approach),
+            entry => new List<int> { (int)(entry as Technique).Approach }
+        );
+
+        string[] approaches = Enum.GetNames(typeof(EApproach));
+        approachFilter.Elements = new List<FilterChannelEntryData>(approaches.Length);
+        for (int iApproach = 0; iApproach < approaches.Length; ++iApproach) {
+            approachFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((EApproach)iApproach).GetDisplayText() });
+        }
+
+        filter.Filters.Add(approachFilter);
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Is Rare",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list = list.FindAll(x => (x as Technique).IsRare);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Is Not Rare",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list = list.FindAll(x => !(x as Technique).IsRare);
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.Reverse();
+                }
+                return list;
+            }
+        ));
+
+        return filter;
     }
 }

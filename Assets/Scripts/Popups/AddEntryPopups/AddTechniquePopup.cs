@@ -32,11 +32,11 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             Options = masteryOptions
         });
 
-        string[] approaches = Enum.GetNames(typeof(Technique.EApproach));
+        Technique.EApproach[] approaches = Enum.GetValues(typeof(Technique.EApproach)) as Technique.EApproach[];
         List<string> approachOptions = new List<string>(approaches.Length);
 
         for (int iApproach = 0; iApproach < approaches.Length; ++iApproach) {
-            approachOptions.Add(approaches[iApproach]);
+            approachOptions.Add(approaches[iApproach].GetDisplayText());
         }
 
         _approachDropdown.Populate(new DropdownData {
@@ -49,7 +49,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             _descriptionInput.text = _editingEntry.Description;
             _approachDropdown.Value = (int)_editingEntry.Approach;
             _masteryDropdown.Value = (int)_editingEntry.Mastery;
-            _isRare.isOn = _editingEntry.Rare;
+            _isRare.isOn = _editingEntry.IsRare;
         }
     }
 
@@ -66,7 +66,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             Description = _descriptionInput.text,
             Mastery = (Technique.EMastery)_masteryDropdown.Value,
             Approach = (Technique.EApproach)_approachDropdown.Value,
-            Rare = _isRare.isOn
+            IsRare = _isRare.isOn
         };
 
         return technique;

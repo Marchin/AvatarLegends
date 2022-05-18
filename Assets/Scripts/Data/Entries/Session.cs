@@ -188,6 +188,18 @@ public class Session : IDataEntry {
     }
     
     public Filter GetFilterData() {
-        return null;
+        Filter filter = new Filter();
+        
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.Reverse();
+                }
+                return list;
+            }
+        ));
+
+        return filter;
     }
 }
