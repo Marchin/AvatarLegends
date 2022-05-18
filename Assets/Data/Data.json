@@ -71,5 +71,58 @@
             "description": "You’re ready for what’s coming—clear Prepared to take +1 to an appropriate roll (after the roll) or avoid marking a condition.",
             "is_positive": "true"
         }
+    },
+
+    "conditions": {
+        "Afraid": {
+            "name": "Afraid",
+            "effect": "-2 to intimidate and call someone out.",
+            "clearing_condition": "Run from danger or difficulty."
+        },
+        "Angry": {
+            "name": "Angry",
+            "effect": "-2 to guide and comfort and assess a situation.",
+            "clearing_condition": "Break something important or lash out at a friend."
+        },
+        "Guilty": {
+            "name": "Guilty",
+            "effect": "-2 to push your luck and +2 to deny a callout.",
+            "clearing_condition": "Make a personal sacrifice to absolve your guilt"
+        },
+        "Insecure": {
+            "name": "Insecure",
+            "effect": "-2 to trick and resist shifting your balance.",
+            "clearing_condition": "Take foolhardy action without talking to your companions."
+        },
+        "Troubled": {
+            "name": "Troubled",
+            "effect": "-2 to plead and rely on your skills or training.",
+            "clearing_condition": "Seek guidance from a mentor or powerful figure."
+        },
+        "Frustrated": {
+            "name": "Frustrated",
+            "effect": "-2 to push your luck and +1 to intimidate.",
+            "clearing_condition": "Lash out at someone or act decisively without consulting anyone."
+        },
+        "Jaded": {
+            "name": "Jaded",
+            "effect": "-2 to plead and +1 to trick.",
+            "clearing_condition": "Give in or give up in the face of meaningful opposition."
+        },
+        "Remorseful": {
+            "name": "Remorseful",
+            "effect": "-2 to the stance move and +1 to call someone out.",
+            "clearing_condition": "Attempt to make genuine amends for past wrongs."
+        },
+        "Shaken": {
+            "name": "Shaken",
+            "effect": "-2 to guide and comfort and +1 to assess a situation",
+            "clearing_condition": "Seek guidance from an old friend or mentor."
+        },
+        "Worried": {
+            "name": "Worried",
+            "effect": "-2 to deny a callout and +1 to rely on skills or training",
+            "clearing_condition": "Take control in a situation in which another should lead."
+        }
     }
 }
