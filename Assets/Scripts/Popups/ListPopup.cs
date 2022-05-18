@@ -30,6 +30,7 @@ public class ListPopup : Popup {
         _title.text = title;
         _data = data;
         _onConfirm = onConfirm;
+        _confirmButton.gameObject.SetActive(_onConfirm != null);
 
         _infoList.Populate(data);
     }

@@ -120,12 +120,16 @@ public class MainPopup : Popup {
                     npcsTabText,
                     onSetEntry: null,
                     onAddEntry: async () => {
+                        List<string> names = new List<string>(Data.NPCs.Keys);
+                        names.AddRange(SelectedCampaign.PCs.Keys);
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-                        addNPCPopup.Populate(OnEntryCreation, _entries.Keys, null);
+                        addNPCPopup.Populate(OnEntryCreation, names, null);
                     },
                     onEditEntry: async () => {
+                        List<string> names = new List<string>(Data.NPCs.Keys);
+                        names.AddRange(SelectedCampaign.PCs.Keys);
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
-                        addNPCPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as NPC);
+                        addNPCPopup.Populate(OnEntryEdition, names, _entries[_selectedEntry] as NPC);
                     },
                     isEditable: entry => Data.IsEditable(entry as NPC)
                 );
@@ -142,12 +146,16 @@ public class MainPopup : Popup {
                     pcsTabText,
                     onSetEntry: null,
                     onAddEntry: async () => {
+                        List<string> names = new List<string>(Data.NPCs.Keys);
+                        names.AddRange(SelectedCampaign.PCs.Keys);
                         var addPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddPCPopup>(restore: false);
-                        addPCPopup.Populate(OnEntryCreation, _entries.Keys, null);
+                        addPCPopup.Populate(OnEntryCreation, names, null);
                     },
                     onEditEntry: async () => {
+                        List<string> names = new List<string>(Data.NPCs.Keys);
+                        names.AddRange(SelectedCampaign.PCs.Keys);
                         var addPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddPCPopup>(restore: false);
-                        addPCPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as PC);
+                        addPCPopup.Populate(OnEntryEdition, names, _entries[_selectedEntry] as PC);
                     },
                     isEditable: entry => true
                 );
