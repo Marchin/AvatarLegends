@@ -65,4 +65,8 @@ public class PC : IDataEntry {
 
         return result;
     }
+
+    public Filter GetFilterData() {
+        return null;
+    }
 }

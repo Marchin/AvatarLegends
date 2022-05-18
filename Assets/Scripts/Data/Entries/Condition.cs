@@ -50,4 +50,8 @@ public class Condition : IDataEntry {
 
         MessagePopup.ShowMessage(infoContent, Name);
     }
+    
+    public Filter GetFilterData() {
+        return null;
+    }
 }

@@ -66,4 +66,8 @@ public class Playbook : IDataEntry {
 
         return result;
     }
+    
+    public Filter GetFilterData() {
+        return null;
+    }
 }

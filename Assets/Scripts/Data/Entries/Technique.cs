@@ -8,6 +8,7 @@ public class Technique : IDataEntry {
         Defense,
         Evade
     }
+
     public enum EMastery {
         Universal,
         Group,
@@ -79,5 +80,10 @@ public class Technique : IDataEntry {
         }
 
         MessagePopup.ShowMessage(infoContent, Name);
+    }
+    
+    
+    public Filter GetFilterData() {
+        return null;
     }
 }

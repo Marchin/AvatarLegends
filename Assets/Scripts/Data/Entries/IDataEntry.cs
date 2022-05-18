@@ -14,6 +14,8 @@ public interface IDataEntry {
     string Name { get; set; }
     List<InformationData> RetrieveData(Action refresh);
     Action OnMoreInfo { get; }
+    Filter GetFilterData();
+
 
     static async void AddEntry<T>(
         IReadOnlyCollection<string> current, 

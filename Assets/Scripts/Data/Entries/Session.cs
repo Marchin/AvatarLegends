@@ -186,4 +186,8 @@ public class Session : IDataEntry {
 
         return pcs;
     }
+    
+    public Filter GetFilterData() {
+        return null;
+    }
 }

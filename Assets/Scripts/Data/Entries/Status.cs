@@ -38,4 +38,8 @@ public class Status : IDataEntry {
     public void ShowDescription() {
         MessagePopup.ShowMessage(Description, nameof(Description));
     }
+    
+    public Filter GetFilterData() {
+        return null;
+    }
 }

@@ -65,12 +65,26 @@ public class Campaign : IDataEntry {
 
         List<InformationData> result = new List<InformationData>();
 
-        if (string.IsNullOrEmpty(Description)) {
-            result.Add(new InformationData {
-                Prefix = "Description",
-                OnMoreInfo = () => MessagePopup.ShowMessage(Description, nameof(Description), false),
-            });
-        }
+        result.Add(new InformationData {
+            Content = nameof(Description),
+            OnMoreInfo = !string.IsNullOrEmpty(Description) ?
+                () => MessagePopup.ShowMessage(Description, nameof(Description), false) :
+                null,
+            OnEdit = async () => {
+                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+                inputPopup.Populate(
+                    "",
+                    nameof(Description),
+                    input => {
+                        Description = input;
+                        PopupManager.Instance.Back();
+                        _onRefresh();
+                    },
+                    inputText: Description,
+                    multiLine: true
+                );
+            }
+        });
 
         result.Add(new InformationData {
             Content = nameof(Note),
@@ -85,6 +99,7 @@ public class Campaign : IDataEntry {
                     input => {
                         Note = input;
                         PopupManager.Instance.Back();
+                        _onRefresh();
                     },
                     inputText: Note,
                     multiLine: true
@@ -162,5 +177,9 @@ public class Campaign : IDataEntry {
         }
 
         return result;
+    }
+    
+    public Filter GetFilterData() {
+        return null;
     }
 }

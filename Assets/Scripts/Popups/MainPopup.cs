@@ -15,17 +15,21 @@ public class MainPopup : Popup {
     [SerializeField] private Button _deleteEntry = default;
     [SerializeField] private Button _deleteAll = default;
     [SerializeField] private Button _closeButton = default;
+    [SerializeField] private Button _filterButton = default;
+    [SerializeField] private Button _infoButton = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private ButtonList _tabsList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
     [SerializeField] private GameObject _infoContainer = default;
     [SerializeField] private GameObject _noEntryMsg = default;
+    [SerializeField] private GameObject _activeFilterIndicator = default;
     [SerializeField] private Color _selectedColor = default;
     [SerializeField] private Color _unselectedColor = default;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     private Dictionary<string, IDataEntry> _entries;
+    private List<IDataEntry> _filteredEntries;
     private string _selectedEntry;
     private string _selectedTab;
     private Action _record;
@@ -34,9 +38,10 @@ public class MainPopup : Popup {
     private Action<IDataEntry> _onSetEntry;
     private Func<IDataEntry, bool> _isEditable;
     private Action _onDeleteAll;
-    private Action<List<string>> _customSort;
+    private Action<List<IDataEntry>> _customSort;
     private GameObject _engagementTab;
     private Dictionary<string, string> _tabSelectedEntry = new Dictionary<string, string>();
+    private Dictionary<string, Filter> _tabFilter = new Dictionary<string, Filter>();
     
     private void Awake() {
         _addEntry.onClick.AddListener(() => _onAddEntry());
@@ -44,6 +49,19 @@ public class MainPopup : Popup {
         _deleteAll.onClick.AddListener(() => _onDeleteAll());
         _deleteEntry.onClick.AddListener(DeleteEntry);
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
+        _filterButton.onClick.AddListener(OnFilterPress);
+        _infoButton.onClick.AddListener(async () => {
+            var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+            RefreshPopup();
+
+            void RefreshPopup() {
+                listPopup.Populate(
+                    SelectedCampaign.RetrieveData(RefreshPopup), 
+                    SelectedCampaign.Name,
+                    Refresh
+                );
+            }
+        });
 
         List<ButtonData> tabs = new List<ButtonData>();
 
@@ -74,8 +92,8 @@ public class MainPopup : Popup {
                     },
                     isEditable: _ => true,
                     customSort: names => {
-                        names.Sort((x, y) => SelectedCampaign.Sessions[y].Number.CompareTo(
-                            SelectedCampaign.Sessions[x].Number
+                        names.Sort((x, y) => (y as Session).Number.CompareTo(
+                            (x as Session).Number
                         ));
                     }
                 );
@@ -268,8 +286,8 @@ public class MainPopup : Popup {
         Action onEditEntry,
         Func<IDataEntry, bool> isEditable,
         Action onDeleteAll = null,
-        Action<List<string>> customSort = null
-    ) where T : IDataEntry {
+        Action<List<IDataEntry>> customSort = null
+    ) where T : IDataEntry, new() {
         _record?.Invoke();
         _entries = new Dictionary<string, IDataEntry>(entries.Count);
         foreach (var entry in entries) {
@@ -293,6 +311,10 @@ public class MainPopup : Popup {
         _customSort = customSort;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
 
+        if (!_tabFilter.ContainsKey(tabName)) {
+            T aux = new T();
+            _tabFilter[tabName] = aux.GetFilterData() ?? new Filter();
+        }
 
         Refresh();
         _record = () => {
@@ -307,25 +329,39 @@ public class MainPopup : Popup {
     private void Refresh() {
         _record?.Invoke();
 
-        var names = new List<string>(_entries.Keys);
+        _filteredEntries = new List<IDataEntry>(_entries.Values);
 
+        _activeFilterIndicator.SetActive(_tabFilter[_selectedTab].IsOn);
+            
         if (_customSort != null) {
-            _customSort(names);
+            _customSort(_filteredEntries);
         } else {
-            names.Sort();
+            _filteredEntries.Sort((x, y) => x.Name.CompareTo(y.Name));
         }
         
+        foreach (var toggle in _tabFilter[_selectedTab].Toggles) {
+            _filteredEntries = toggle.Apply(_filteredEntries);
+        }
+
+        foreach (var filterChannel in _tabFilter[_selectedTab].Filters) {
+            _filteredEntries = filterChannel.Apply(_filteredEntries);
+        }
+
+        if (_filteredEntries.Find(x => x.Name == _selectedEntry) == null) {
+            _selectedEntry = null;
+        }
+
         List<ButtonData> buttons = new List<ButtonData>(_entries.Count);
-        foreach (var name in names) {
-            _selectedEntry = _selectedEntry ?? name;
+        foreach (var entry in _filteredEntries) {
+            _selectedEntry = _selectedEntry ?? entry.Name;
             buttons.Add(new ButtonData {
-                Text = name,
-                Callback = () => SetEntry(_entries[name])
+                Text = entry.Name,
+                Callback = () => SetEntry(entry)
             });
         }
         _nameList.Populate(buttons);
 
-        if (_entries.Count > 0) {
+        if (_filteredEntries.Count > 0) {
             _noEntryMsg.SetActive(false);
             _infoContainer.SetActive(true);
             _deleteAll.interactable = true;
@@ -387,6 +423,19 @@ public class MainPopup : Popup {
         Refresh();
     }
 
+    private async void OnFilterPress() {
+        var enumerator = _entries.Values.GetEnumerator();
+
+        if (enumerator.MoveNext()) {
+            var filterPopup = await PopupManager.Instance.GetOrLoadPopup<FilterPopup>(restore: false);
+            filterPopup.Populate(_tabFilter[_selectedTab], filter => {
+                _tabFilter[_selectedTab] = filter;
+                Refresh();
+            });
+        }
+    }
+
+            
     public override object GetRestorationData() {
         PopupData data = new PopupData {
             Selected = _selectedEntry
@@ -401,5 +450,9 @@ public class MainPopup : Popup {
                 SetEntry(_entries[popupData.Selected]);
             }
         }
+    }
+    
+    public Filter GetFilterData() {
+        return null;
     }
 }

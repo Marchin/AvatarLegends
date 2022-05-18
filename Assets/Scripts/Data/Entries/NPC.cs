@@ -487,4 +487,73 @@ public class NPC : IDataEntry {
             );
         }
     }
+
+    public Filter GetFilterData() {
+        Filter filter = new Filter();
+
+        var typeFilter = new FilterChannelData(
+            nameof(Type),
+            entry => new List<int> { (int)(entry as NPC).Type }
+        );
+
+        string[] types = Enum.GetNames(typeof(EType));
+        typeFilter.Elements = new List<FilterChannelEntryData>(types.Length);
+        for (int iType = 0; iType < types.Length; ++iType) {
+            typeFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((EType)iType).ToString() });
+        }
+
+        filter.Filters.Add(typeFilter);
+
+        var alignmentFilter = new FilterChannelData(
+            nameof(Alignment),
+            entry => new List<int> { (int)(entry as NPC).Alignment }
+        );
+
+        string[] alignments = Enum.GetNames(typeof(EAlignment));
+        alignmentFilter.Elements = new List<FilterChannelEntryData>(alignments.Length);
+        for (int iAlignment = 0; iAlignment < alignments.Length; ++iAlignment) {
+            alignmentFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((EAlignment)iAlignment).ToString() });
+        }
+
+        filter.Filters.Add(alignmentFilter);
+
+
+        var trainingFilter = new FilterChannelData(
+            nameof(Training),
+            entry => new List<int> { (int)(entry as NPC).Training }
+        );
+
+        string[] trainings = Enum.GetNames(typeof(ETraining));
+        trainingFilter.Elements = new List<FilterChannelEntryData>(trainings.Length);
+        for (int iTraining = 0; iTraining < trainings.Length; ++iTraining) {
+            trainingFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((ETraining)iTraining).ToString() });
+        }
+
+        filter.Filters.Add(trainingFilter);
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.Reverse();
+                }
+                return list;
+            }
+        ));
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Is Group",
+            action: (list, isOn) => {
+                if (isOn) {
+                    list.RemoveAll(x => !(x as NPC).IsGroup);
+                }
+                return list;
+            }
+        ));
+
+        return filter;
+    }
 }

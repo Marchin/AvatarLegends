@@ -144,4 +144,8 @@ public class Engagement : IDataEntry {
             _onRefresh();
         }
     }
+    
+    public Filter GetFilterData() {
+        return null;
+    }
 }

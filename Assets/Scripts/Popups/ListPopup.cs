@@ -20,7 +20,7 @@ public class ListPopup : Popup {
 
     private void Awake() {
         _confirmButton.onClick.AddListener(() => {
-            _onConfirm();
+            _onConfirm?.Invoke();
             PopupManager.Instance.Back();
         });
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
