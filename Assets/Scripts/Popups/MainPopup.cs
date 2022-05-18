@@ -1,5 +1,6 @@
 using TMPro;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,13 @@ public class MainPopup : Popup {
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private Button _filterButton = default;
     [SerializeField] private Button _infoButton = default;
+    [SerializeField] private Button _clearSearchButton = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private ButtonList _tabsList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
+    [SerializeField] private TMP_InputField _searchInput = default;
+    [SerializeField] private GameObject _searchIcon = default;
     [SerializeField] private GameObject _infoContainer = default;
     [SerializeField] private GameObject _noEntryMsg = default;
     [SerializeField] private GameObject _activeFilterIndicator = default;
@@ -30,6 +34,7 @@ public class MainPopup : Popup {
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     private Dictionary<string, IDataEntry> _entries;
     private List<IDataEntry> _filteredEntries;
+    private List<IDataEntry> _searchedEntries;
     private string _selectedEntry;
     private string _selectedTab;
     private Action _record;
@@ -50,6 +55,7 @@ public class MainPopup : Popup {
         _deleteEntry.onClick.AddListener(DeleteEntry);
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
         _filterButton.onClick.AddListener(OnFilterPress);
+        _clearSearchButton.onClick.AddListener(() => _searchInput.text = "");
         _infoButton.onClick.AddListener(async () => {
             var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
             RefreshPopup();
@@ -62,6 +68,10 @@ public class MainPopup : Popup {
                 );
             }
         });
+
+        _clearSearchButton.gameObject.SetActive(false);
+        _searchIcon.SetActive(true);
+        _searchInput.onValueChanged.AddListener(OnSearchInputChanged);
 
         List<ButtonData> tabs = new List<ButtonData>();
 
@@ -168,7 +178,7 @@ public class MainPopup : Popup {
                             onYes: () => {
                                 _entries.Clear();
                                 _selectedEntry = null;
-                                Refresh();
+                                Refresh(applyFilter: true);
                             },
                             restore: false
                         );
@@ -275,7 +285,7 @@ public class MainPopup : Popup {
         }
         
         _tabsList[0].Invoke();
-        Refresh();
+        Refresh(applyFilter: true);
     }
 
     private void SetEntryCollection<T>(Dictionary<string, T> entries, 
@@ -316,7 +326,7 @@ public class MainPopup : Popup {
             _tabFilter[tabName] = aux.GetFilterData() ?? new Filter();
         }
 
-        Refresh();
+        Refresh(applyFilter: true);
         _record = () => {
             entries = new Dictionary<string, T>(_entries.Count);
             foreach (var entry in _entries) {
@@ -327,32 +337,51 @@ public class MainPopup : Popup {
     }
 
     private void Refresh() {
+        Refresh(applyFilter: false);
+    }
+
+    private void Refresh(bool applyFilter) {
         _record?.Invoke();
 
-        _filteredEntries = new List<IDataEntry>(_entries.Values);
+        if (applyFilter) {
+            _filteredEntries = new List<IDataEntry>(_entries.Values);
 
-        _activeFilterIndicator.SetActive(_tabFilter[_selectedTab].IsOn);
+            _activeFilterIndicator.SetActive(_tabFilter[_selectedTab].IsOn);
+                
+            if (_customSort != null) {
+                _customSort(_filteredEntries);
+            } else {
+                _filteredEntries.Sort((x, y) => x.Name.CompareTo(y.Name));
+            }
             
-        if (_customSort != null) {
-            _customSort(_filteredEntries);
+            foreach (var toggle in _tabFilter[_selectedTab].Toggles) {
+                _filteredEntries = toggle.Apply(_filteredEntries);
+            }
+
+            foreach (var filterChannel in _tabFilter[_selectedTab].Filters) {
+                _filteredEntries = filterChannel.Apply(_filteredEntries);
+            }
+        }
+
+        if (string.IsNullOrEmpty(_searchInput.text)) {
+            _searchedEntries = _filteredEntries;
         } else {
-            _filteredEntries.Sort((x, y) => x.Name.CompareTo(y.Name));
-        }
-        
-        foreach (var toggle in _tabFilter[_selectedTab].Toggles) {
-            _filteredEntries = toggle.Apply(_filteredEntries);
-        }
-
-        foreach (var filterChannel in _tabFilter[_selectedTab].Filters) {
-            _filteredEntries = filterChannel.Apply(_filteredEntries);
+            _searchedEntries = new List<IDataEntry>(_filteredEntries.Count);
+            _searchedEntries.AddRange(
+                _filteredEntries.FindAll(x => x.Name.StartsWith(
+                    _searchInput.text, true, CultureInfo.InvariantCulture)));
+            _searchedEntries.AddRange(_filteredEntries.FindAll(x => 
+                (_searchedEntries.Find(y => y.Name == x.Name) == null) &&
+                x.Name.Contains(_searchInput.text, StringComparison.InvariantCultureIgnoreCase)));
         }
 
-        if (_filteredEntries.Find(x => x.Name == _selectedEntry) == null) {
+
+        if (_searchedEntries.Find(x => x.Name == _selectedEntry) == null) {
             _selectedEntry = null;
         }
 
         List<ButtonData> buttons = new List<ButtonData>(_entries.Count);
-        foreach (var entry in _filteredEntries) {
+        foreach (var entry in _searchedEntries) {
             _selectedEntry = _selectedEntry ?? entry.Name;
             buttons.Add(new ButtonData {
                 Text = entry.Name,
@@ -361,7 +390,7 @@ public class MainPopup : Popup {
         }
         _nameList.Populate(buttons);
 
-        if (_filteredEntries.Count > 0) {
+        if (_searchedEntries.Count > 0) {
             _noEntryMsg.SetActive(false);
             _infoContainer.SetActive(true);
             _deleteAll.interactable = true;
@@ -403,7 +432,7 @@ public class MainPopup : Popup {
                 names.Remove(_selectedEntry);
                 nextNameIndex = Mathf.Min(nextNameIndex, names.Count - 1);
                 _selectedEntry = (nextNameIndex >= 0) ? names[nextNameIndex] : null;
-                Refresh();
+                Refresh(applyFilter: true);
             }
         );
     }
@@ -411,7 +440,7 @@ public class MainPopup : Popup {
     private void OnEntryCreation(IDataEntry entry) {
         _entries.Add(entry.Name, (IDataEntry)entry);
         _selectedEntry = entry.Name;
-        Refresh();
+        Refresh(applyFilter: true);
     }
 
     private void OnEntryEdition(IDataEntry entry) {
@@ -420,21 +449,22 @@ public class MainPopup : Popup {
             _selectedEntry = entry.Name;
         }
         _entries[entry.Name] = entry;
-        Refresh();
+        Refresh(applyFilter: true);
     }
 
     private async void OnFilterPress() {
-        var enumerator = _entries.Values.GetEnumerator();
-
-        if (enumerator.MoveNext()) {
-            var filterPopup = await PopupManager.Instance.GetOrLoadPopup<FilterPopup>(restore: false);
-            filterPopup.Populate(_tabFilter[_selectedTab], filter => {
-                _tabFilter[_selectedTab] = filter;
-                Refresh();
-            });
-        }
+        var filterPopup = await PopupManager.Instance.GetOrLoadPopup<FilterPopup>(restore: false);
+        filterPopup.Populate(_tabFilter[_selectedTab], filter => {
+            _tabFilter[_selectedTab] = filter;
+            Refresh(applyFilter: true);
+        });
     }
-
+    
+    private void OnSearchInputChanged(string query) {
+        _clearSearchButton.gameObject.SetActive(!string.IsNullOrEmpty(query));
+        _searchIcon.SetActive(string.IsNullOrEmpty(query));
+        Refresh();
+    }
             
     public override object GetRestorationData() {
         PopupData data = new PopupData {
