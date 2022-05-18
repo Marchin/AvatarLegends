@@ -124,5 +124,20 @@
             "effect": "-2 to deny a callout and +1 to rely on skills or training",
             "clearing_condition": "Take control in a situation in which another should lead."
         }
+    },
+
+    "playbooks": {
+        "The Adamant": {
+            "name": "The Adamant",
+            "description": "Pragmatic, fervent, dangerous, self-sacrificing. The Adamant is deeply committed to a cause, to the point that they may break all the rules to achieve their end. Sometimes, they might even go a bit too far in their drive—they have no hesitation to push and push and push when it comes to the causes they think are just. That’s why the Adamant needs a lodestar, the one person they listen to who can rein them in, let them know that maybe they should cool it and hold off a bit.\nThe Adamant can sometimes be dismissive of others, especially if those others stand in the way of the Adamant’s goals… but they’re also aware of their tendency to go too far, and to make sure they listen to the right voices telling them to hold back. The distinction between heroism and villainy can be a fine line for the Adamant, with their focus on results over means. They want to stay on the right side of that line, and they need their friends to find the right path forward.",
+            "principles": "Restraint/Results",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        }
     }
 }

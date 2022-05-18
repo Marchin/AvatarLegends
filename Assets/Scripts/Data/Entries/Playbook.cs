@@ -27,8 +27,8 @@ public class Playbook : IDataEntry {
 
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
-                Prefix = nameof(Description),
-                Content = Description,
+                Content = nameof(Description),
+                OnMoreInfo = () => MessagePopup.ShowMessage(Description, nameof(Description))
             });
         }
 

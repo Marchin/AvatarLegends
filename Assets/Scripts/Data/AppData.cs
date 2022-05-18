@@ -6,7 +6,6 @@ public class AppData {
     const string UserDataPref= "user_data";
     [JsonIgnore] public UserData User { get; private set; }
 
-    // Playbooks
     [JsonProperty("ncps")]
     private Dictionary<string, NPC> _dataNPCs = new Dictionary<string, NPC>();
     [JsonIgnore] private Dictionary<string, NPC> _npcs;

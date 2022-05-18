@@ -41,7 +41,7 @@ public class Session : IDataEntry {
             Content = Number.ToString(),
         });
 
-        if (string.IsNullOrEmpty(Description)) {
+        if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Prefix = "Description",
                 OnMoreInfo = () => MessagePopup.ShowMessage(Description, "Description", false),
