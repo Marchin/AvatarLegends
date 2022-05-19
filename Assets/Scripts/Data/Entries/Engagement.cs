@@ -54,10 +54,10 @@ public class Engagement : IDataEntry {
         };
 
         result.Add(new InformationData {
-            Content = $"NPCs ({NPCs.Count}/{CurrentSession.NPCs.Count})",
+            Content = $"NPCs ({NPCs.Count}/{CurrentSession.NPCs.Count - CurrentSession.GetEngagedNPCs().Count + NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(NPCs, CurrentSession.GetNPCsData()).Count > 0) ?
-                () => IDataEntry.AddEntry<NPC>(NPCs, CurrentSession.GetNPCsData(), UpdateNPCs)  :
+            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(CurrentSession.GetEngagedNPCs(), CurrentSession.GetNPCsData()).Count > 0) ?
+                () => IDataEntry.AddEntry<NPC>(CurrentSession.GetEngagedNPCs(), CurrentSession.GetNPCsData(), UpdateNPCs)  :
                 (Action)null,
             Expanded = _showNPCs
         });
@@ -96,10 +96,10 @@ public class Engagement : IDataEntry {
         };
 
         result.Add(new InformationData {
-            Content = $"PCs ({PCs.Count}/{CurrentSession.PCs.Count})",
+            Content = $"PCs ({PCs.Count}/{CurrentSession.PCs.Count - CurrentSession.GetEngagedPCs().Count + PCs.Count})",
             OnDropdown = (PCs.Count > 0) ? onPCDropdown : null,
-            OnAdd = (IDataEntry.GetAvailableEntries<PC>(PCs, CurrentSession.GetPCsData()).Count > 0) ?
-                () => IDataEntry.AddEntry<PC>(PCs, CurrentSession.GetPCsData(), UpdatePCs)  :
+            OnAdd = (IDataEntry.GetAvailableEntries<PC>(CurrentSession.GetEngagedPCs(), CurrentSession.GetPCsData()).Count > 0) ?
+                () => IDataEntry.AddEntry<PC>(CurrentSession.GetEngagedPCs(), CurrentSession.GetPCsData(), UpdatePCs)  :
                 (Action)null,
             Expanded = _showPCs
         });

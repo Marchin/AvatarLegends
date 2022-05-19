@@ -186,6 +186,26 @@ public class Session : IDataEntry {
 
         return pcs;
     }
+
+    public List<string> GetEngagedNPCs() {
+        List<string> results = new List<string>(NPCs.Count);
+
+        foreach (var engagment in Engagements) {
+            results.AddRange(engagment.Value.NPCs);
+        }
+
+        return results;
+    }
+    
+    public List<string> GetEngagedPCs() {
+        List<string> results = new List<string>(PCs.Count);
+
+        foreach (var engagment in Engagements) {
+            results.AddRange(engagment.Value.PCs);
+        }
+
+        return results;
+    }
     
     public Filter GetFilterData() {
         Filter filter = new Filter();
