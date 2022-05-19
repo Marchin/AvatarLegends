@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AddSessionPopup : AddEntryPopup<Session> {
 
@@ -29,8 +30,11 @@ public class AddSessionPopup : AddEntryPopup<Session> {
 
         if (Editing) {
             session.NPCs = _editingEntry.NPCs;
+            session.PCs = _editingEntry.PCs;
             session.Engagements = _editingEntry.Engagements;
             session.Note = _editingEntry.Note;
+        } else {
+            session.PCs = new List<string>(ApplicationManager.Instance.Data.User.SelectedCampaign.PCs.Keys);
         }
 
         return session;
