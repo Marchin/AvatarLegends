@@ -35,7 +35,7 @@ public class FilterPopup : Popup {
 
             List<ToggleData> togglesData = new List<ToggleData>(_filter.Toggles.Count);
             foreach (var toggle in _filter.Toggles) {
-                toggle.IsOn = false;
+                toggle.On = false;
                 togglesData.Add(toggle);
             }
             _toggleList.Populate(togglesData);

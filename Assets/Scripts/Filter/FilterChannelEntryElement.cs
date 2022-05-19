@@ -40,12 +40,12 @@ public class FilterChannelEntryElement : MonoBehaviour, IDataUIElement<FilterCha
     }
 
     private void Awake() {
-        _requiredToggle.onValueChanged.AddListener(isOn => {
+        _requiredToggle.onValueChanged.AddListener(on => {
             if (_entryData == null) {
                 return;
             }
 
-            if (isOn) {
+            if (on) {
                 _entryData.State = FilterChannelState.Required;
             } else if (_excludeToggle.isOn) {
                 _entryData.State = FilterChannelState.Excluded;
@@ -55,12 +55,12 @@ public class FilterChannelEntryElement : MonoBehaviour, IDataUIElement<FilterCha
 
             _entryData.OnStateChange?.Invoke(_entryData.State);
         });
-        _excludeToggle.onValueChanged.AddListener(isOn => {
+        _excludeToggle.onValueChanged.AddListener(on => {
             if (_entryData == null) {
                 return;
             }
 
-            if (isOn) {
+            if (on) {
                 _entryData.State = FilterChannelState.Excluded;
             } else if (_requiredToggle.isOn) {
                 _entryData.State = FilterChannelState.Required;

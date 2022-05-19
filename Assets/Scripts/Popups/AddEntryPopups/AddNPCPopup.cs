@@ -12,12 +12,12 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         public ETraining Training;
         public string Principle;
         public string Description;
-        public bool IsGroup;
+        public bool Group;
     }
 
     [SerializeField] private DropdownElement _type = default;
     [SerializeField] private DropdownElement _alignment = default;
-    [SerializeField] private Toggle _isGroup = default;
+    [SerializeField] private Toggle _group = default;
     [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
@@ -47,10 +47,10 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Options = typeOptions,
             Callback = value => {
                 if ((NPC.EType)value == NPC.EType.Minor) {
-                    _isGroup.isOn = false;
-                    _isGroup.interactable = false;
+                    _group.isOn = false;
+                    _group.interactable = false;
                 } else {
-                    _isGroup.interactable = true;
+                    _group.interactable = true;
                 }
             }
         });
@@ -74,7 +74,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             _alignment.Value = (int)_editingEntry.Alignment;
             _type.Value = (int)_editingEntry.Type;
             _training.Value = (int)_editingEntry.Training;
-            _isGroup.isOn = _editingEntry.IsGroup;
+            _group.isOn = _editingEntry.Group;
         }
     }
 
@@ -84,7 +84,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         _alignment.Value = 0;
         _type.Value = 0;
         _training.Value = 0;
-        _isGroup.isOn = false;
+        _group.isOn = false;
     }
 
     protected override IDataEntry OnEntryCreation() {
@@ -95,7 +95,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Type = (NPC.EType)_type.Value,
             Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
-            IsGroup = _isGroup.isOn
+            Group = _group.isOn
         };
 
         if (Editing) {
@@ -131,7 +131,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Type = (NPC.EType)_type.Value,
             Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
-            IsGroup = _isGroup.isOn
+            Group = _group.isOn
         };
 
         return popupData;
@@ -145,7 +145,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             _type.Value = (int)popupData.Type;
             _training.Value = (int)popupData.Training;
             _principleInput.text = popupData.Principle;
-            _isGroup.isOn = popupData.IsGroup;
+            _group.isOn = popupData.Group;
         }
     }
 }

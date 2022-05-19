@@ -10,7 +10,7 @@ public class Filter {
     public List<FilterChannelData> Filters = new List<FilterChannelData>();
     public List<ToggleActionData> Toggles = new List<ToggleActionData>();
 
-    public bool IsOn => (Toggles.Find(t => t.IsOn) != null) || 
+    public bool Active => (Toggles.Find(t => t.On) != null) || 
             (Filters.Find(f => f.Elements.Find(e => e.State != FilterChannelState.None) != null) != null);
 }
 
@@ -97,7 +97,7 @@ public class ToggleActionData : ToggleData {
         for (int iElement = 0; iElement < list.Count; ++iElement) {
             entries.Add(list[iElement]);
         }
-        var processedList = _action?.Invoke(entries, IsOn);
+        var processedList = _action?.Invoke(entries, On);
         List<T> processedEntries = new List<T>(processedList.Count);
         for (int iElement = 0; iElement < processedList.Count; ++iElement) {
             processedEntries.Add((T)processedList[iElement]);

@@ -28,8 +28,8 @@ public class NPC : IDataEntry {
     [JsonProperty("alignment")]
     public EAlignment Alignment;
 
-    [JsonProperty("is_group")]
-    public bool IsGroup;
+    [JsonProperty("group")]
+    public bool Group;
 
     [JsonProperty("training")]
     public ETraining Training;
@@ -78,8 +78,8 @@ public class NPC : IDataEntry {
         });
 
         result.Add(new InformationData {
-            Content = "Is Group",
-            IsToggleOn = IsGroup,
+            Content = "Group",
+            IsToggleOn = Group,
         });
 
         result.Add(new InformationData {
@@ -156,8 +156,8 @@ public class NPC : IDataEntry {
                 ConditionState condition = Conditions[conditionName];
                 result.Add(new InformationData {
                     Content = conditionName,
-                    IsToggleOn = condition.IsOn,
-                    OnToggle = isOn => Conditions[conditionName].IsOn = isOn,
+                    IsToggleOn = condition.On,
+                    OnToggle = on => Conditions[conditionName].On = on,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
                             $"Remove {conditionName} condition?",
@@ -219,7 +219,7 @@ public class NPC : IDataEntry {
         if (_showStatuses) {
             foreach (var statusName in Statuses) {
                 Status status = Data.Statuses[statusName];
-                string effect = status.IsPositive ? "Positive" : "Negative";
+                string effect = status.Positive ? "Positive" : "Negative";
                 result.Add(new InformationData {
                     Content = $"{statusName} ({effect})",
                     OnMoreInfo = status.ShowDescription,
@@ -423,9 +423,9 @@ public class NPC : IDataEntry {
                 infoList.Add(new InformationData {
                     Content = technique.Name,
                     IsToggleOn = techniquesToAdd.Contains(technique.Name),
-                    OnToggle = async isOn => {
-                        if (!isOn || (techniquesToAdd.Count < GetMaxTechniques())) {
-                            if (isOn) {
+                    OnToggle = async on => {
+                        if (!on || (techniquesToAdd.Count < GetMaxTechniques())) {
+                            if (on) {
                                 techniquesToAdd.Add(technique.Name);
                             } else {
                                 techniquesToAdd.Remove(technique.Name);
@@ -496,7 +496,7 @@ public class NPC : IDataEntry {
                 result = true;
             } break;
             case Technique.EMastery.Group: {
-                result = IsGroup;
+                result = Group;
             } break;
             case Technique.EMastery.Air: {
                 result = (Training == ETraining.Air);
@@ -532,8 +532,8 @@ public class NPC : IDataEntry {
         }
 
         availableStatuses.Sort((x, y) => {
-            if (Data.Statuses[x].IsPositive != Data.Statuses[y].IsPositive) {
-                return Data.Statuses[x].IsPositive ? -1 : 1;
+            if (Data.Statuses[x].Positive != Data.Statuses[y].Positive) {
+                return Data.Statuses[x].Positive ? -1 : 1;
             } else {
                 return x.CompareTo(y);
             }
@@ -546,12 +546,12 @@ public class NPC : IDataEntry {
 
             foreach (var statusName in availableStatuses) {
                 Status status = Data.Statuses[statusName];
-                string effect = status.IsPositive ? "Positive" : "Negative";
+                string effect = status.Positive ? "Positive" : "Negative";
                 infoList.Add(new InformationData {
                     Content = statusName + $" ({effect})",
                     IsToggleOn = statusesToAdd.Contains(statusName),
-                    OnToggle = isOn => {
-                        if (isOn) {
+                    OnToggle = on => {
+                        if (on) {
                             statusesToAdd.Add(statusName);
                         } else {
                             statusesToAdd.Remove(statusName);
@@ -568,8 +568,8 @@ public class NPC : IDataEntry {
                 () => {
                     Statuses.AddRange(statusesToAdd);
                     Statuses.Sort((x, y) => {
-                        if (Data.Statuses[x].IsPositive != Data.Statuses[y].IsPositive) {
-                            return Data.Statuses[x].IsPositive ? -1 : 1;
+                        if (Data.Statuses[x].Positive != Data.Statuses[y].Positive) {
+                            return Data.Statuses[x].Positive ? -1 : 1;
                         } else {
                             return x.CompareTo(y);
                         }
@@ -601,8 +601,8 @@ public class NPC : IDataEntry {
                 infoList.Add(new InformationData {
                     Content = GetDisplayName(connection),
                     IsToggleOn = connectionsToAdd.ContainsKey(connection),
-                    OnToggle = isOn => {
-                        if (isOn) {
+                    OnToggle = on => {
+                        if (on) {
                             connectionsToAdd.Add(connection, "(No connection yet).");
                         } else {
                             connectionsToAdd.Remove(connection);
@@ -742,9 +742,9 @@ public class NPC : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Is Group",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list.RemoveAll(x => !(x as NPC).IsGroup);
+            action: (list, on) => {
+                if (on) {
+                    list.RemoveAll(x => !(x as NPC).Group);
                 }
                 return list;
             }
@@ -752,9 +752,9 @@ public class NPC : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Is Not Group",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list.RemoveAll(x => (x as NPC).IsGroup);
+            action: (list, on) => {
+                if (on) {
+                    list.RemoveAll(x => (x as NPC).Group);
                 }
                 return list;
             }
@@ -762,8 +762,8 @@ public class NPC : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
+            action: (list, on) => {
+                if (on) {
                     list.Reverse();
                 }
                 return list;

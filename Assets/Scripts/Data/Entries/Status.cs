@@ -9,8 +9,8 @@ public class Status : IDataEntry {
     [JsonProperty("description")]
     public string Description;
     
-    [JsonProperty("is_positive")]
-    public bool IsPositive;
+    [JsonProperty("positive")]
+    public bool Positive;
     private Action _onRefresh;
     public Action OnMoreInfo => null;
 
@@ -21,14 +21,14 @@ public class Status : IDataEntry {
         
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
-                Content = "Description",
+                Content = nameof(Description),
                 OnMoreInfo = ShowDescription,
             });
         }
 
         result.Add(new InformationData {
-            Prefix = "Is Positive",
-            IsToggleOn = IsPositive
+            Prefix = nameof(Positive),
+            IsToggleOn = Positive
         });
 
 
@@ -44,9 +44,9 @@ public class Status : IDataEntry {
         
         filter.Toggles.Add(new ToggleActionData(
             "Positive",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list = list.FindAll(x => (x as Status).IsPositive);
+            action: (list, on) => {
+                if (on) {
+                    list = list.FindAll(x => (x as Status).Positive);
                 }
                 return list;
             }
@@ -54,9 +54,9 @@ public class Status : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Negative",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list = list.FindAll(x => !(x as Status).IsPositive);
+            action: (list, on) => {
+                if (on) {
+                    list = list.FindAll(x => !(x as Status).Positive);
                 }
                 return list;
             }
@@ -64,8 +64,8 @@ public class Status : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
+            action: (list, on) => {
+                if (on) {
                     list.Reverse();
                 }
                 return list;

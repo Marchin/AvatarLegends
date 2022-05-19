@@ -10,13 +10,13 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
         public Technique.EMastery Mastery;
         public Technique.EApproach Approach;
         public string Description;
-        public bool IsRare;
+        public bool Rare;
     }
 
     [SerializeField] private DropdownElement _masteryDropdown = default;
     [SerializeField] private DropdownElement _approachDropdown = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
-    [SerializeField] private Toggle _isRare = default;
+    [SerializeField] private Toggle _rare = default;
 
     protected override void Awake() {
         base.Awake();
@@ -49,7 +49,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             _descriptionInput.text = _editingEntry.Description;
             _approachDropdown.Value = (int)_editingEntry.Approach;
             _masteryDropdown.Value = (int)_editingEntry.Mastery;
-            _isRare.isOn = _editingEntry.IsRare;
+            _rare.isOn = _editingEntry.Rare;
         }
     }
 
@@ -57,7 +57,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
         _descriptionInput.text = "";
         _approachDropdown.Value = 0;
         _masteryDropdown.Value = 0;
-        _isRare.isOn = false;
+        _rare.isOn = false;
     }
 
     protected override IDataEntry OnEntryCreation() {
@@ -66,7 +66,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             Description = _descriptionInput.text,
             Mastery = (Technique.EMastery)_masteryDropdown.Value,
             Approach = (Technique.EApproach)_approachDropdown.Value,
-            IsRare = _isRare.isOn
+            Rare = _rare.isOn
         };
 
         return technique;
@@ -79,7 +79,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             Description = _descriptionInput.text,
             Mastery = (Technique.EMastery)_masteryDropdown.Value,
             Approach = (Technique.EApproach)_approachDropdown.Value,
-            IsRare = _isRare.isOn
+            Rare = _rare.isOn
         };
 
         return popupData;
@@ -91,7 +91,7 @@ public class AddTechniquePopup : AddEntryPopup<Technique> {
             _descriptionInput.text = popupData.Description;
             _masteryDropdown.Value = (int)popupData.Mastery;
             _approachDropdown.Value = (int)popupData.Approach;
-            _isRare.isOn = popupData.IsRare;
+            _rare.isOn = popupData.Rare;
         }
     }
 }

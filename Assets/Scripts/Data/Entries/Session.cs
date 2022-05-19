@@ -192,8 +192,8 @@ public class Session : IDataEntry {
         
         filter.Toggles.Add(new ToggleActionData(
             "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
+            action: (list, on) => {
+                if (on) {
                     list.Reverse();
                 }
                 return list;

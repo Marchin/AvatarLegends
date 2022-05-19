@@ -35,8 +35,8 @@ public interface IDataEntry {
                 infoList.Add(new InformationData {
                     Content = entry.Name,
                     IsToggleOn = entriesToAdd.Contains(entry.Name),
-                    OnToggle = isOn => {
-                        if (isOn) {
+                    OnToggle = on => {
+                        if (on) {
                             entriesToAdd.Add(entry.Name);
                         } else {
                             entriesToAdd.Remove(entry.Name);

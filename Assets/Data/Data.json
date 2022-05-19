@@ -14,7 +14,7 @@
             "name": "Airflower",
             "mastery": "Air",
             "approach": "Evade",
-            "is_rare": true
+            "rare": true
         },
         "Techflower": {
             "name": "Techflower",
@@ -23,7 +23,7 @@
         "Weaponflower": {
             "name": "Weaponflower",
             "mastery": "Weapons",
-            "is_rare": true
+            "rare": true
         },
         "Earthflower": {
             "name": "Earthflower",
@@ -39,42 +39,42 @@
         "Doomed": {
             "name": "Doomed",
             "description": "You’re in grave danger—mark 1-fatigue every few seconds (or each exchange) until you free yourself.",
-            "is_positive": "false"
+            "positive": "false"
         },
         "Impaired": {
             "name": "Impaired",
             "description": "You’re slowed or off-balance—mark 1-fatigue or take a -2 to all physical actions (PCs) / choose one fewer technique (NPCs)",
-            "is_positive": "false"
+            "positive": "false"
         },
         "Trapped": {
             "name": "Trapped",
             "description": "You’re completely helpless—you must mark a combination of three conditions or fatigue to escape.",
-            "is_positive": "false"
+            "positive": "false"
         },
         "Stunned": {
             "name": "Stunned",
             "description": "You’re caught off-guard—you can’t act or respond for a few seconds until you steady yourself",
-            "is_positive": "false"
+            "positive": "false"
         },
         "Empowered": {
             "name": "Empowered",
             "description": "Your abilities are naturally stronger in this moment—clear 1-fatigue at the end of each exchange.",
-            "is_positive": "true"
+            "positive": "true"
         },
         "Favored": {
             "name": "Favored",
             "description": "You’re buoyed by circumstance—choose an additional basic or mastered technique in the next exchange, even on a miss.",
-            "is_positive": "true"
+            "positive": "true"
         },
         "Inspired": {
             "name": "Inspired",
             "description": "You’re ready to stand for something—clear Inspired to shift your balance toward a principle of your choice.",
-            "is_positive": "true"
+            "positive": "true"
         },
         "Prepared": {
             "name": "Prepared",
             "description": "You’re ready for what’s coming—clear Prepared to take +1 to an appropriate roll (after the roll) or avoid marking a condition.",
-            "is_positive": "true"
+            "positive": "true"
         }
     },
 

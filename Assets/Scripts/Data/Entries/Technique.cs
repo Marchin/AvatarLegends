@@ -52,8 +52,8 @@ public class Technique : IDataEntry {
     [JsonProperty("description")]
     public string Description;
 
-    [JsonProperty("is_rare")]
-    public bool IsRare;
+    [JsonProperty("rare")]
+    public bool Rare;
     
     private Action _onRefresh;
     public Action OnMoreInfo => null;
@@ -64,25 +64,25 @@ public class Technique : IDataEntry {
         var result = new List<InformationData>();
 
         result.Add(new InformationData {
-            Prefix = "Mastery",
+            Prefix = nameof(Mastery),
             Content = Mastery.ToString(),
         });
 
         result.Add(new InformationData {
-            Prefix = "Approach",
+            Prefix = nameof(Approach),
             Content = Approach.GetDisplayText(),
         });
 
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
-                Content = "Description",
+                Content = nameof(Description),
                 OnMoreInfo = ShowDescription,
             });
         }
 
         result.Add(new InformationData {
-            Prefix = "Is Rare",
-            IsToggleOn = IsRare
+            Prefix = nameof(Rare),
+            IsToggleOn = Rare
         });
 
         return result;
@@ -95,7 +95,7 @@ public class Technique : IDataEntry {
     public void ShowInfo() {
         string infoContent = $"Mastery: {Mastery}\nApproach: {Approach.GetDisplayText()}\n\n{Description}";
 
-        if (IsRare) {
+        if (Rare) {
             infoContent += "\n\n(Rare Technique)";
         }
 
@@ -135,20 +135,20 @@ public class Technique : IDataEntry {
         filter.Filters.Add(approachFilter);
 
         filter.Toggles.Add(new ToggleActionData(
-            "Is Rare",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list = list.FindAll(x => (x as Technique).IsRare);
+            "Rare",
+            action: (list, on) => {
+                if (on) {
+                    list = list.FindAll(x => (x as Technique).Rare);
                 }
                 return list;
             }
         ));
 
         filter.Toggles.Add(new ToggleActionData(
-            "Is Not Rare",
-            action: (list, isOn) => {
-                if (isOn) {
-                    list = list.FindAll(x => !(x as Technique).IsRare);
+            "Not Rare",
+            action: (list, on) => {
+                if (on) {
+                    list = list.FindAll(x => !(x as Technique).Rare);
                 }
                 return list;
             }
@@ -156,8 +156,8 @@ public class Technique : IDataEntry {
 
         filter.Toggles.Add(new ToggleActionData(
             "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
+            action: (list, on) => {
+                if (on) {
                     list.Reverse();
                 }
                 return list;

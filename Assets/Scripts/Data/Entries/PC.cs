@@ -156,8 +156,8 @@ public class PC : IDataEntry {
                 infoList.Add(new InformationData {
                     Content = GetDisplayName(connection),
                     IsToggleOn = connectionsToAdd.ContainsKey(connection),
-                    OnToggle = isOn => {
-                        if (isOn) {
+                    OnToggle = on => {
+                        if (on) {
                             connectionsToAdd.Add(connection, "(No connection yet).");
                         } else {
                             connectionsToAdd.Remove(connection);

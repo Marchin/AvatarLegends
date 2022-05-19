@@ -6,8 +6,8 @@ public class ConditionState {
     [JsonProperty("name")]
     public string Name;
 
-    [JsonProperty("is_on")]
-    public bool IsOn;
+    [JsonProperty("on")]
+    public bool On;
 }
 
 public class Condition : IDataEntry {
@@ -56,8 +56,8 @@ public class Condition : IDataEntry {
         
         filter.Toggles.Add(new ToggleActionData(
             "Reverse",
-            action: (list, isOn) => {
-                if (isOn) {
+            action: (list, on) => {
+                if (on) {
                     list.Reverse();
                 }
                 return list;

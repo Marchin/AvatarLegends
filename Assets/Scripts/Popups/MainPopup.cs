@@ -354,7 +354,7 @@ public class MainPopup : Popup {
         if (applyFilter) {
             _filteredEntries = new List<IDataEntry>(_entries.Values);
 
-            _activeFilterIndicator.SetActive(_tabFilter[_selectedTab].IsOn);
+            _activeFilterIndicator.SetActive(_tabFilter[_selectedTab].Active);
                 
             if (_customSort != null) {
                 _customSort(_filteredEntries);
