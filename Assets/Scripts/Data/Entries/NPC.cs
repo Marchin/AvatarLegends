@@ -32,7 +32,7 @@ public class NPC : IDataEntry {
     public bool Group;
 
     [JsonProperty("training")]
-    public ETraining Training;
+    public List<ETraining> Trainings = new List<ETraining>();
 
     [JsonProperty("principle")]
     public string Principle;
@@ -59,7 +59,8 @@ public class NPC : IDataEntry {
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
     private bool _showConditions;
-    private bool _showTechinques;
+    private bool _showTrainings;
+    private bool _showTechniques;
     private bool _showStatuses;
     private bool _showConnections;
     private Action _refresh;
@@ -89,7 +90,7 @@ public class NPC : IDataEntry {
 
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
-                Content = "Description",
+                Content = nameof(Description),
                 OnMoreInfo = ShowDescription,
             });
         }
@@ -116,11 +117,6 @@ public class NPC : IDataEntry {
         });
 
         result.Add(new InformationData {
-            Prefix = "Training",
-            Content = Training.ToString(),
-        });
-
-        result.Add(new InformationData {
             Prefix = "Principle",
             Content = string.IsNullOrEmpty(Principle) ? "(none)" : Principle,
             InitValue = Balance,
@@ -134,6 +130,36 @@ public class NPC : IDataEntry {
             MaxValue = GetMaxFatigue(),
             OnValueChange = ChangeFatigue
         });
+
+        Action onTrainingDropdown = () => {
+            _showTrainings = !_showTrainings;
+            _refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = nameof(Trainings),
+            OnDropdown = (Trainings.Count > 0) ? onTrainingDropdown : null,
+            OnAdd = (Trainings.Count < Enum.GetValues(typeof(ETraining)).Length) ?
+                AddTraining :
+                (Action)null,
+            Expanded = _showTrainings
+        });
+
+        if (_showTrainings) {
+            foreach (var training in Trainings) {
+                result.Add(new InformationData {
+                    Content = training.ToString(),
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {training} training?",
+                            onYes: () => Trainings.Remove(training)
+                        );
+                        _refresh();
+                    },
+                    IndentLevel = 1
+                });
+            }
+        }
 
         Action onConditionDropdown = () => {
             _showConditions = !_showConditions;
@@ -171,7 +197,7 @@ public class NPC : IDataEntry {
         }
 
         Action onTechniqueDropdown = () => {
-            _showTechinques = !_showTechinques;
+            _showTechniques = !_showTechniques;
             _refresh();
         };
 
@@ -181,10 +207,10 @@ public class NPC : IDataEntry {
             OnAdd = (Techniques.Count < GetMaxTechniques()) ?
                 AddTechnique :
                 (Action)null,
-            Expanded = _showTechinques
+            Expanded = _showTechniques
         });
 
-        if (_showTechinques) {
+        if (_showTechniques) {
             foreach (var techniqueName in Techniques) {
                 Technique technique = Data.Techniques[techniqueName];
                 result.Add(new InformationData {
@@ -348,6 +374,44 @@ public class NPC : IDataEntry {
         return result;
     }
 
+    private async void AddTraining() {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        var trainings = Enum.GetValues(typeof(ETraining)) as ETraining[];
+        Refresh();
+
+        void Refresh() {
+            List<InformationData> data = new List<InformationData>();
+            List<ETraining> trainingsToAdd = new List<ETraining>();
+
+            foreach (var training in trainings) {
+                if (!Trainings.Contains(training)) {
+                    data.Add(new InformationData {
+                        Content = training.ToString(),
+                        IsToggleOn = trainingsToAdd.Contains(training),
+                        OnToggle = isOn => {
+                            if (isOn) {
+                                trainingsToAdd.Add(training);
+                            } else {
+                                trainingsToAdd.Remove(training);
+                            }
+                        }
+                    });
+                }
+            }
+            
+            listPopup.Populate(data, "Training", () => {
+                 Trainings.AddRange(trainingsToAdd);
+
+                var learnableTechniques = GetLearnableTechniques();
+                foreach (var technique in Techniques) {
+                    if (!learnableTechniques.Contains(technique)) {
+                        Techniques.Remove(technique);
+                    }
+                }
+            });
+        }
+    }
+
     public void ChangeFatigue(int value) {
         int maxFatigue = GetMaxFatigue();
         UnityEngine.Debug.Assert((value >= 0) && (value <= maxFatigue), "Invalid Balance");
@@ -499,22 +563,22 @@ public class NPC : IDataEntry {
                 result = Group;
             } break;
             case Technique.EMastery.Air: {
-                result = (Training == ETraining.Air);
+                result = Trainings.Contains(ETraining.Air);
             } break;
             case Technique.EMastery.Earth: {
-                result = (Training == ETraining.Earth);
+                result = Trainings.Contains(ETraining.Earth);
             } break;
             case Technique.EMastery.Water: {
-                result = (Training == ETraining.Water);
+                result = Trainings.Contains(ETraining.Water);
             } break;
             case Technique.EMastery.Fire: {
-                result = (Training == ETraining.Fire);
+                result = Trainings.Contains(ETraining.Fire);
             } break;
             case Technique.EMastery.Weapons: {
-                result = (Training == ETraining.Weapons);
+                result = Trainings.Contains(ETraining.Weapons);
             } break;
             case Technique.EMastery.Tech: {
-                result = (Training == ETraining.Tech);
+                result = Trainings.Contains(ETraining.Tech);
             } break;
         }
 
@@ -724,10 +788,18 @@ public class NPC : IDataEntry {
 
         filter.Filters.Add(alignmentFilter);
 
-
         var trainingFilter = new FilterChannelData(
-            nameof(Training),
-            entry => new List<int> { (int)(entry as NPC).Training }
+            nameof(Trainings),
+            entry => {
+                NPC npc = entry as NPC;
+                List<int> trainings = new List<int>(npc.Trainings.Count);
+
+                foreach (var training in npc.Trainings) {
+                    trainings.Add((int)training);
+                }
+                
+                return trainings;
+            }
         );
 
         string[] trainings = Enum.GetNames(typeof(ETraining));

@@ -48,7 +48,6 @@ public class AddPCPopup : AddEntryPopup<PC> {
         if (Editing) {
             _playerInput.text = _editingEntry.Player;
             _backstoryInput.text = _editingEntry.Backstory;
-            _playbook.Value = (int)_editingEntry.Training;
 
             List<string> playbooks = new List<string>(Data.Playbooks.Keys);
             _training.Value = playbooks.IndexOf(_editingEntry.Playbook);
@@ -60,12 +59,12 @@ public class AddPCPopup : AddEntryPopup<PC> {
             Name = NewName,
             Player = _playerInput.text,
             Backstory = _backstoryInput.text,
-            Training = (ETraining)_training.Value,
             Playbook = _playbook.SelectedOption
         };
 
         if (Editing) {
             pc.Connections = _editingEntry.Connections;
+            pc.Trainings = _editingEntry.Trainings;
         }
 
         return pc;

@@ -15,7 +15,7 @@ public class PC : IDataEntry {
     public string Backstory;
 
     [JsonProperty("training")]
-    public ETraining Training;
+    public List<ETraining> Trainings = new List<ETraining>();
 
     [JsonProperty("playbook")]
     public string Playbook;
@@ -24,6 +24,7 @@ public class PC : IDataEntry {
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
     private bool _showConnections;
+    private bool _showTrainings;
     public Action OnMoreInfo => null;
     private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
@@ -48,11 +49,6 @@ public class PC : IDataEntry {
             });
         }
 
-        result.Add(new InformationData {
-            Prefix = nameof(Training),
-            Content = Training.ToString(),
-        });
-
         if (Data.Playbooks.ContainsKey(Playbook)) {
             result.Add(new InformationData {
                 Prefix = nameof(Playbook),
@@ -66,6 +62,36 @@ public class PC : IDataEntry {
                     }
                 }
             });
+        }
+
+        Action onTrainingDropdown = () => {
+            _showTrainings = !_showTrainings;
+            _refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = nameof(Trainings),
+            OnDropdown = (Trainings.Count > 0) ? onTrainingDropdown : null,
+            OnAdd = (Trainings.Count < Enum.GetValues(typeof(ETraining)).Length) ?
+                AddTraining :
+                (Action)null,
+            Expanded = _showTrainings
+        });
+
+        if (_showTrainings) {
+            foreach (var training in Trainings) {
+                result.Add(new InformationData {
+                    Content = training.ToString(),
+                    OnDelete = async () => {
+                        await MessagePopup.ShowConfirmationPopup(
+                            $"Remove {training} training?",
+                            onYes: () => Trainings.Remove(training)
+                        );
+                        _refresh();
+                    },
+                    IndentLevel = 1
+                });
+            }
         }
 
         Action onConnectionDropdown = () => {
@@ -134,6 +160,37 @@ public class PC : IDataEntry {
         }
 
         return result;
+    }
+
+    private async void AddTraining() {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        var trainings = Enum.GetValues(typeof(ETraining)) as ETraining[];
+        Refresh();
+
+        void Refresh() {
+            List<InformationData> data = new List<InformationData>();
+            List<ETraining> trainingsToAdd = new List<ETraining>();
+
+            foreach (var training in trainings) {
+                if (!Trainings.Contains(training)) {
+                    data.Add(new InformationData {
+                        Content = training.ToString(),
+                        IsToggleOn = trainingsToAdd.Contains(training),
+                        OnToggle = isOn => {
+                            if (isOn) {
+                                trainingsToAdd.Add(training);
+                            } else {
+                                trainingsToAdd.Remove(training);
+                            }
+                        }
+                    });
+                }
+            }
+            
+            listPopup.Populate(data, "Training", () => {
+                 Trainings.AddRange(trainingsToAdd);
+            });
+        }
     }
 
     public async void AddConnection() {
@@ -248,6 +305,41 @@ public class PC : IDataEntry {
     }
 
     public Filter GetFilterData() {
-        return null;
+        Filter filter = new Filter();
+        
+        var trainingFilter = new FilterChannelData(
+            nameof(Trainings),
+            entry => {
+                PC pc = entry as PC;
+                List<int> trainings = new List<int>(pc.Trainings.Count);
+
+                foreach (var training in pc.Trainings) {
+                    trainings.Add((int)training);
+                }
+                
+                return trainings;
+            }
+        );
+
+        string[] trainings = Enum.GetNames(typeof(ETraining));
+        trainingFilter.Elements = new List<FilterChannelEntryData>(trainings.Length);
+        for (int iTraining = 0; iTraining < trainings.Length; ++iTraining) {
+            trainingFilter.Elements.Add(
+                new FilterChannelEntryData { Name = ((ETraining)iTraining).ToString() });
+        }
+
+        filter.Filters.Add(trainingFilter);
+
+        filter.Toggles.Add(new ToggleActionData(
+            "Reverse",
+            action: (list, on) => {
+                if (on) {
+                    list.Reverse();
+                }
+                return list;
+            }
+        ));
+
+        return filter;
     }
 }

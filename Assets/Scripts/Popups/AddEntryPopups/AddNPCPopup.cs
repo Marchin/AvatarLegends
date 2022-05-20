@@ -18,7 +18,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
     [SerializeField] private DropdownElement _type = default;
     [SerializeField] private DropdownElement _alignment = default;
     [SerializeField] private Toggle _group = default;
-    [SerializeField] private DropdownElement _training = default;
     [SerializeField] private TMP_InputField _principleInput = default;
     [SerializeField] private TMP_InputField _descriptionInput = default;
 
@@ -54,17 +53,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
                 }
             }
         });
-
-        string[] trainings = Enum.GetNames(typeof(ETraining));
-        List<string> trainingOptions = new List<string>(trainings.Length);
-
-        for (int iTraining = 0; iTraining < trainings.Length; ++iTraining) {
-            trainingOptions.Add(trainings[iTraining]);
-        }
-
-        _training.Populate(new DropdownData {
-            Options = trainingOptions
-        });
     }
 
     protected override void OnPopulated() {
@@ -73,7 +61,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             _principleInput.text = _editingEntry.Principle;
             _alignment.Value = (int)_editingEntry.Alignment;
             _type.Value = (int)_editingEntry.Type;
-            _training.Value = (int)_editingEntry.Training;
             _group.isOn = _editingEntry.Group;
         }
     }
@@ -83,7 +70,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         _principleInput.text = "";
         _alignment.Value = 0;
         _type.Value = 0;
-        _training.Value = 0;
         _group.isOn = false;
     }
 
@@ -93,7 +79,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
-            Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
             Group = _group.isOn
         };
@@ -102,6 +87,8 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             npc.Balance = Math.Min(_editingEntry.Balance, npc.GetMaxBalance());
             npc.Fatigue = Math.Min(_editingEntry.Balance, npc.GetMaxFatigue());
             npc.Statuses = _editingEntry.Statuses;
+            npc.Trainings = _editingEntry.Trainings;
+            npc.Techniques = _editingEntry.Techniques;
             npc.Conditions = new Dictionary<string, ConditionState>(_editingEntry.Conditions);
             npc.Connections = _editingEntry.Connections;
 
@@ -109,14 +96,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             List<string> keys = new List<string>(npc.Conditions.Keys);
             for (int iKey = 0; iKey < amountToRemove; ++iKey) {
                 npc.Conditions.Remove(keys[keys.Count - iKey - 1]);
-            }
-            
-            var learnableTechniques = npc.GetLearnableTechniques();
-
-            foreach (var technique in _editingEntry.Techniques) {
-                if (learnableTechniques.Contains(technique)) {
-                    npc.Techniques.Add(technique);
-                }
             }
         }
 
@@ -129,7 +108,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             Description = _descriptionInput.text,
             Alignment = (NPC.EAlignment)_alignment.Value,
             Type = (NPC.EType)_type.Value,
-            Training = (ETraining)_training.Value,
             Principle = _principleInput.text,
             Group = _group.isOn
         };
@@ -143,7 +121,6 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             _descriptionInput.text = popupData.Description;
             _alignment.Value = (int)popupData.Alignment;
             _type.Value = (int)popupData.Type;
-            _training.Value = (int)popupData.Training;
             _principleInput.text = popupData.Principle;
             _group.isOn = popupData.Group;
         }
