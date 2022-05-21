@@ -12,7 +12,7 @@ public enum ETraining {
 
 public interface IDataEntry {
     string Name { get; set; }
-    List<InformationData> RetrieveData(Action refresh);
+    List<InformationData> RetrieveData(Action refresh, Action reload);
     Action OnMoreInfo { get; }
     Filter GetFilterData();
 

@@ -20,7 +20,10 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
     private ICollection<string> _names;
     protected T _editingEntry;
     protected bool Editing => _editingEntry != null;
-    protected string NewName => _nameInput.text;
+    protected string NewName {
+        get => _nameInput.text;
+        set => _nameInput.text = value;
+    }
 
     protected virtual void Awake() {
         _confirmButton.onClick.AddListener(CreateEntry);
@@ -38,6 +41,8 @@ public abstract class AddEntryPopup<T> : Popup where T : IDataEntry {
         if (Editing) {
             _nameInput.text = _editingEntry.Name;
         }
+
+        _nameInput.Select();
 
         OnPopulated();
     }

@@ -3,8 +3,14 @@ public class AddEngagementPopup : AddEntryPopup<Engagement> {
         public BasePopupData BasePopupData;
     }
 
+    private AppData Data => ApplicationManager.Instance.Data;
+    private Session CurrentSession => Data.User.CurrentSession;
+
 
     protected override void OnPopulated() {
+        if (!Editing) {
+            NewName = $"Engagement {(CurrentSession.Engagements.Count + 1)}";
+        }
     }
 
     protected override void OnClear() {

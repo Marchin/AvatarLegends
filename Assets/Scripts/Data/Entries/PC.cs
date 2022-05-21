@@ -30,7 +30,7 @@ public class PC : IDataEntry {
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
@@ -58,7 +58,7 @@ public class PC : IDataEntry {
                     Refresh();
 
                     void Refresh() {
-                        listPopup.Populate(Data.Playbooks[Playbook].RetrieveData(Refresh), Playbook, null);
+                        listPopup.Populate(Data.Playbooks[Playbook].RetrieveData(Refresh, Refresh), Playbook, null);
                     }
                 }
             });
@@ -245,10 +245,10 @@ public class PC : IDataEntry {
 
                     void RefreshInfo() {
                         if (Data.NPCs.ContainsKey(connection)) {
-                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo), connection, null);
+                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
                         } else if (SelectedCampaign.PCs.ContainsKey(connection)) {
                             listPopup.Populate(
-                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo),
+                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
                                 connection,
                                 null);
                         } else {

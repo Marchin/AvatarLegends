@@ -68,7 +68,7 @@ public class NPC : IDataEntry {
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
@@ -697,10 +697,10 @@ public class NPC : IDataEntry {
 
                     void RefreshInfo() {
                         if (Data.NPCs.ContainsKey(connection)) {
-                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo), connection, null);
+                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
                         } else if (SelectedCampaign.PCs.ContainsKey(connection)) {
                             listPopup.Populate(
-                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo),
+                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
                                 connection,
                                 null);
                         } else {

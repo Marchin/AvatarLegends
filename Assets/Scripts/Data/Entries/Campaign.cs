@@ -60,7 +60,7 @@ public class Campaign : IDataEntry {
     public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
@@ -135,7 +135,7 @@ public class Campaign : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(npc.RetrieveData(Refresh), npc.Name, null);
+                            listPopup.Populate(npc.RetrieveData(Refresh, Refresh), npc.Name, null);
                         }
                     }
                 });
@@ -169,7 +169,7 @@ public class Campaign : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(session.Value.RetrieveData(Refresh), session.Key, null);
+                            listPopup.Populate(session.Value.RetrieveData(Refresh, Refresh), session.Key, null);
                         }
                     }
                 });

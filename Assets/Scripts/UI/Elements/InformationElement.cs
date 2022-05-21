@@ -15,7 +15,9 @@ public class InformationData {
     public string Content;
     public int IndentLevel;
     public int InitValue;
+    public int MinValue;
     public int MaxValue;
+    public bool LoopValue;
     public bool? IsToggleOn;
     public bool Expanded;
 }
@@ -41,18 +43,32 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
 
     private void Start() {
         _decreaseButton.onClick.AddListener(() => {
-            if (_counterValue > 0) {
-                --_counterValue;
-                _info.OnValueChange(_counterValue);
-                RefreshCounter();
+            if (!_info.LoopValue && (_counterValue <= _info.MinValue)) {
+                return;
             }
+            
+            --_counterValue;
+
+            if (_counterValue < _info.MinValue) {
+                _counterValue = _info.MaxValue;
+            }
+
+            _info.OnValueChange(_counterValue);
+            RefreshCounter();
         });
         _increaseButton.onClick.AddListener(() => {
-            if (_counterValue < _info.MaxValue) {
-                ++_counterValue;
-                _info.OnValueChange(_counterValue);
-                RefreshCounter();
+            if (!_info.LoopValue && (_counterValue >= _info.MaxValue)) {
+                return;
             }
+
+            ++_counterValue;
+
+            if (_counterValue > _info.MaxValue) {
+                _counterValue = _info.MinValue;
+            }
+
+            _info.OnValueChange(_counterValue);
+            RefreshCounter();
         });
         _dropdownButton.onClick.AddListener(() => {
             _info.OnDropdown();
@@ -65,8 +81,8 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     }
 
     private void RefreshCounter() {
-        _decreaseButton.interactable = _counterValue > 0;
-        _increaseButton.interactable = _counterValue < _info.MaxValue;
+        _decreaseButton.interactable = _info.LoopValue || (_counterValue > _info.MinValue);
+        _increaseButton.interactable = _info.LoopValue || (_counterValue < _info.MaxValue);
         _counter.text = $"{_counterValue}/{_info.MaxValue}";
     }
 

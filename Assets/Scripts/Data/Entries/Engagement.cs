@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 public class Engagement : IDataEntry {
+    public int Number => CurrentSession.Engagements.IndexOf(this) + 1;
+
     [JsonProperty("name")]
     public string Name { get; set; }
 
@@ -15,18 +17,33 @@ public class Engagement : IDataEntry {
     [JsonProperty("note")]
     public string Note;
 
-    private Action _onRefresh;
+    private Action _refresh;
+    private Action _reload;
     private bool _showNPCs;
     private bool _showPCs;
     public Action OnMoreInfo => null;
-    private AppData Data => ApplicationManager.Instance.Data;
-    private Campaign SelectedCampaign => Data.User.SelectedCampaign;
-    private Session CurrentSession => Data.User.CurrentSession;
+    private static AppData Data => ApplicationManager.Instance.Data;
+    private static Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    private static Session CurrentSession => Data.User.CurrentSession;
 
-    public List<InformationData> RetrieveData(Action refresh) {
-        _onRefresh = refresh;
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
+        _refresh = refresh;
+        _reload = reload;
 
         var result = new List<InformationData>();
+
+        result.Add(new InformationData {
+            Prefix = nameof(Number),
+            InitValue = Number,
+            MinValue = 1,
+            MaxValue = CurrentSession.Engagements.Count,
+            LoopValue = true,
+            OnValueChange = value => {
+                CurrentSession.Engagements.Remove(this);
+                CurrentSession.Engagements.Insert(value - 1, this);
+                _reload?.Invoke();
+            }
+        });
 
         result.Add(new InformationData {
             Content = nameof(Note),
@@ -50,7 +67,7 @@ public class Engagement : IDataEntry {
 
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -76,14 +93,14 @@ public class Engagement : IDataEntry {
                             $"Remove {npcName} from the engagement?",
                             onYes: () => NPCs.Remove(npcName)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(npc.RetrieveData(Refresh), npcName, null);
+                            listPopup.Populate(npc.RetrieveData(Refresh, Refresh), npcName, null);
                         }
                     }
                 });
@@ -92,7 +109,7 @@ public class Engagement : IDataEntry {
 
         Action onPCDropdown = () => {
             _showPCs = !_showPCs;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -118,14 +135,14 @@ public class Engagement : IDataEntry {
                             $"Remove {pcName} from the engagement?",
                             onYes: () => PCs.Remove(pcName)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(pc.RetrieveData(Refresh), pcName, null);
+                            listPopup.Populate(pc.RetrieveData(Refresh, Refresh), pcName, null);
                         }
                     }
                 });
@@ -136,13 +153,42 @@ public class Engagement : IDataEntry {
 
         void UpdateNPCs(List<string> newNPCs) {
             NPCs = newNPCs;
-            _onRefresh();
+            _refresh();
         }
 
         void UpdatePCs(List<string> newPCs) {
             PCs = newPCs;
-            _onRefresh();
+            _refresh();
         }
+    }
+
+    public static List<ButtonData> GetControllerButtons(Action refresh) {
+        List<ButtonData> buttonData = new List<ButtonData>();
+
+        buttonData.Add(new ButtonData {
+            Text = $"Previous ({CurrentSession.PreviousEngagementIndex})",
+            Callback = () => {
+                --CurrentSession.CurrentEngagementIndex;
+                refresh?.Invoke();
+            }
+        });
+
+        buttonData.Add(new ButtonData {
+            Text = $"Current ({CurrentSession.CurrentEngagementIndex})",
+            Callback = () => {
+                refresh?.Invoke();
+            }
+        });
+
+        buttonData.Add(new ButtonData {
+            Text = $"Next ({CurrentSession.NextEngagementIndex})",
+            Callback = () => {
+                ++CurrentSession.CurrentEngagementIndex;
+                refresh?.Invoke();
+            }
+        });
+
+        return buttonData;
     }
     
     public Filter GetFilterData() {

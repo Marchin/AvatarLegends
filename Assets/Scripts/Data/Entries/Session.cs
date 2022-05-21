@@ -22,7 +22,34 @@ public class Session : IDataEntry {
     public List<string> PCs = new List<string>();
 
     [JsonProperty("engagement")]
-    public Dictionary<string, Engagement> Engagements = new Dictionary<string, Engagement>();
+    public List<Engagement> Engagements = new List<Engagement>();
+    public Dictionary<string, Engagement> EngagementsByName {
+        get {
+            Dictionary<string, Engagement> engagements = new Dictionary<string, Engagement>(Engagements.Count);
+
+            foreach (var engagement in Engagements) {
+                engagements.Add(engagement.Name, engagement);
+            }
+
+            return engagements;
+        }
+        set {
+            Engagements.Clear();
+            
+            foreach (var engagement in value) {
+                Engagements.Add(engagement.Value);
+            }
+        }
+    }
+
+    private int _currentEngagementIndex;
+    public int PreviousEngagementIndex => UnityUtils.Repeat(_currentEngagementIndex - 1, Engagements.Count) + 1;
+    public int NextEngagementIndex => UnityUtils.Repeat(_currentEngagementIndex + 1, Engagements.Count) + 1;
+    public int CurrentEngagementIndex {
+        get => _currentEngagementIndex + 1;
+        set => _currentEngagementIndex = UnityUtils.Repeat(value - 1, Engagements.Count);
+    }
+    public Engagement CurrentEngagement => (Engagements.Count > 0) ? Engagements[_currentEngagementIndex] : null;
 
     public Action OnMoreInfo => null;
     private Action _onRefresh;
@@ -31,13 +58,13 @@ public class Session : IDataEntry {
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
-            Prefix = "Number",
+            Prefix = nameof(Number),
             Content = Number.ToString(),
         });
 
@@ -102,7 +129,7 @@ public class Session : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(Data.NPCs[npc].RetrieveData(Refresh), npc, null);
+                            listPopup.Populate(Data.NPCs[npc].RetrieveData(Refresh, Refresh), npc, null);
                         }
                     }
                 });
@@ -143,7 +170,7 @@ public class Session : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(SelectedCampaign.PCs[pc].RetrieveData(Refresh), pc, null);
+                            listPopup.Populate(SelectedCampaign.PCs[pc].RetrieveData(Refresh, Refresh), pc, null);
                         }
                     }
                 });
@@ -191,7 +218,7 @@ public class Session : IDataEntry {
         List<string> results = new List<string>(NPCs.Count);
 
         foreach (var engagment in Engagements) {
-            results.AddRange(engagment.Value.NPCs);
+            results.AddRange(engagment.NPCs);
         }
 
         return results;
@@ -201,7 +228,7 @@ public class Session : IDataEntry {
         List<string> results = new List<string>(PCs.Count);
 
         foreach (var engagment in Engagements) {
-            results.AddRange(engagment.Value.PCs);
+            results.AddRange(engagment.PCs);
         }
 
         return results;

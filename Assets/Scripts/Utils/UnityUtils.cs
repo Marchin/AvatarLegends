@@ -58,9 +58,13 @@ public static class UnityUtils {
     }
 
     public static int Repeat(int n, int count) {
-        int result = n % count;
-        if (result < 0) {
-            result = count + result;
+        int result = n;
+
+        if (count != 0) {
+            result %= count;
+            if (result < 0) {
+                result = count + result;
+            }
         }
         return result;
     }

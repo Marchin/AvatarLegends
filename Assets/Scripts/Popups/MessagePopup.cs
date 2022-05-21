@@ -146,18 +146,18 @@ public class MessagePopup : Popup {
         List<ButtonData> buttonList = new List<ButtonData>(2);
 
         buttonList.Add(new ButtonData {
-            Text = "Yes",
+            Text = "No",
             Callback = () => {
-                onYes?.Invoke();
-                hasConfirmed = true;
+                onNo?.Invoke();
                 PopupManager.Instance.Back();
             }
         });
 
         buttonList.Add(new ButtonData {
-            Text = "No",
+            Text = "Yes",
             Callback = () => {
-                onNo?.Invoke();
+                onYes?.Invoke();
+                hasConfirmed = true;
                 PopupManager.Instance.Back();
             }
         });

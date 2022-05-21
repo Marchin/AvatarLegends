@@ -23,7 +23,7 @@ public class Condition : IDataEntry {
     private Action _onRefresh;
     public Action OnMoreInfo => null;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
 
         List<InformationData> result = new List<InformationData>();

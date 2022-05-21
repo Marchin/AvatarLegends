@@ -14,7 +14,7 @@ public class Status : IDataEntry {
     private Action _onRefresh;
     public Action OnMoreInfo => null;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
 
         var result = new List<InformationData>();

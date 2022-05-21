@@ -20,7 +20,7 @@ public class Playbook : IDataEntry {
     private bool _showConditions;
     private AppData Data => ApplicationManager.Instance.Data;
 
-    public List<InformationData> RetrieveData(Action refresh) {
+    public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();

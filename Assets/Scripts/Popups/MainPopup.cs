@@ -21,6 +21,7 @@ public class MainPopup : Popup {
     [SerializeField] private Button _clearSearchButton = default;
     [SerializeField] private ButtonList _nameList = default;
     [SerializeField] private ButtonList _tabsList = default;
+    [SerializeField] private ButtonList _buttonsList = default;
     [SerializeField] private TextMeshProUGUI _name = default;
     [SerializeField] private InformationList _infoList = default;
     [SerializeField] private TMP_InputField _searchInput = default;
@@ -30,13 +31,17 @@ public class MainPopup : Popup {
     [SerializeField] private GameObject _activeFilterIndicator = default;
     [SerializeField] private Color _selectedColor = default;
     [SerializeField] private Color _unselectedColor = default;
+    [SerializeField] private Color _highlightedColor = default;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    private Session CurrentSession => Data.User.CurrentSession;
     private Dictionary<string, IDataEntry> _entries;
     private List<IDataEntry> _filteredEntries;
     private List<IDataEntry> _searchedEntries;
+    private string _highlightedEntry;
     private string _selectedEntry;
     private string _selectedTab;
+    private Action _reload;
     private Action _record;
     private Action _onAddEntry;
     private Action _onEditEntry;
@@ -44,6 +49,7 @@ public class MainPopup : Popup {
     private Func<IDataEntry, bool> _isEditable;
     private Action _onDeleteAll;
     private Action<List<IDataEntry>> _customSort;
+    private Func<List<ButtonData>> _getButtons;
     private GameObject _engagementTab;
     private Dictionary<string, string> _tabSelectedEntry = new Dictionary<string, string>();
     private Dictionary<string, Filter> _tabFilter = new Dictionary<string, Filter>();
@@ -62,7 +68,7 @@ public class MainPopup : Popup {
 
             void RefreshPopup() {
                 listPopup.Populate(
-                    SelectedCampaign.RetrieveData(RefreshPopup), 
+                    SelectedCampaign.RetrieveData(RefreshPopup, RefreshPopup), 
                     SelectedCampaign.Name,
                     Refresh
                 );
@@ -80,7 +86,7 @@ public class MainPopup : Popup {
             Text = sessionsTabText,
             Callback = () => {
                 SetEntryCollection<Session>(
-                    Data.User.SelectedCampaign.Sessions,
+                    () => Data.User.SelectedCampaign.Sessions,
                     val => Data.User.SelectedCampaign.Sessions = val,
                     sessionsTabText,
                     onSetEntry: entry => {
@@ -101,8 +107,8 @@ public class MainPopup : Popup {
                         addSessionPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Session);
                     },
                     isEditable: _ => true,
-                    customSort: names => {
-                        names.Sort((x, y) => (y as Session).Number.CompareTo(
+                    customSort: entries => {
+                        entries.Sort((x, y) => (y as Session).Number.CompareTo(
                             (x as Session).Number
                         ));
                     }
@@ -115,7 +121,7 @@ public class MainPopup : Popup {
             Text = npcsTabText,
             Callback = () => {
                 SetEntryCollection<NPC>(
-                    Data.NPCs,
+                    () => Data.NPCs,
                     val => Data.NPCs = val,
                     npcsTabText,
                     onSetEntry: null,
@@ -141,7 +147,7 @@ public class MainPopup : Popup {
             Text = pcsTabText,
             Callback = () => {
                 SetEntryCollection<PC>(
-                    SelectedCampaign.PCs,
+                    () => SelectedCampaign.PCs,
                     val => SelectedCampaign.PCs = val,
                     pcsTabText,
                     onSetEntry: null,
@@ -166,9 +172,10 @@ public class MainPopup : Popup {
         tabs.Add(new ButtonData {
             Text = engagementsTabText,
             Callback = () => {
+                _highlightedEntry = CurrentSession.CurrentEngagement?.Name;
                 SetEntryCollection<Engagement>(
-                    Data.User.CurrentSession.Engagements,
-                    val => Data.User.CurrentSession.Engagements = val,
+                    () => Data.User.CurrentSession.EngagementsByName,
+                    val => Data.User.CurrentSession.EngagementsByName = val,
                     engagementsTabText,
                     onSetEntry: null,
                     onAddEntry: async () => {
@@ -190,7 +197,16 @@ public class MainPopup : Popup {
                             },
                             restore: false
                         );
-                    }
+                    },
+                    customSort: entries => {
+                        entries.Sort((x, y) => 
+                            (x as Engagement).Number.CompareTo((y as Engagement).Number)
+                        );
+                    },
+                    getButtons: () => Engagement.GetControllerButtons(() => {
+                        _selectedEntry = _highlightedEntry = CurrentSession.CurrentEngagement?.Name;
+                        Refresh();
+                    })
                 );
             }
         });
@@ -200,7 +216,7 @@ public class MainPopup : Popup {
             Text = techniquesTabText,
             Callback = () => {
                 SetEntryCollection<Technique>(
-                    Data.Techniques,
+                    () => Data.Techniques,
                     val => Data.Techniques = val,
                     techniquesTabText,
                     onSetEntry: null,
@@ -222,7 +238,7 @@ public class MainPopup : Popup {
             Text = statusesTabText,
             Callback = () => {
                 SetEntryCollection<Status>(
-                    Data.Statuses,
+                    () => Data.Statuses,
                     val => Data.Statuses = val,
                     statusesTabText,
                     onSetEntry: null,
@@ -244,7 +260,7 @@ public class MainPopup : Popup {
             Text = playbooksTabText,
             Callback = () => {
                 SetEntryCollection<Playbook>(
-                    Data.Playbooks,
+                    () => Data.Playbooks,
                     val => Data.Playbooks = val,
                     playbooksTabText,
                     onSetEntry: null,
@@ -266,7 +282,7 @@ public class MainPopup : Popup {
             Text = conditionsTabText,
             Callback = () => {
                 SetEntryCollection<Condition>(
-                    Data.Conditions,
+                    () => Data.Conditions,
                     val => Data.Conditions = val,
                     conditionsTabText,
                     onSetEntry: null,
@@ -296,7 +312,7 @@ public class MainPopup : Popup {
         Refresh(applyFilter: true);
     }
 
-    private void SetEntryCollection<T>(Dictionary<string, T> entries, 
+    private void SetEntryCollection<T>(Func<Dictionary<string, T>> entriesFunc, 
         Action<Dictionary<string, T>> onSave,
         string tabName,
         Action<IDataEntry> onSetEntry,
@@ -304,9 +320,11 @@ public class MainPopup : Popup {
         Action onEditEntry,
         Func<IDataEntry, bool> isEditable,
         Action onDeleteAll = null,
-        Action<List<IDataEntry>> customSort = null
+        Action<List<IDataEntry>> customSort = null,
+        Func<List<ButtonData>> getButtons = null
     ) where T : IDataEntry, new() {
         _record?.Invoke();
+        Dictionary<string, T> entries = entriesFunc?.Invoke();
         _entries = new Dictionary<string, IDataEntry>(entries.Count);
         foreach (var entry in entries) {
             _entries.Add(entry.Key, entry.Value);
@@ -327,7 +345,18 @@ public class MainPopup : Popup {
         _isEditable = isEditable;
         _onDeleteAll = onDeleteAll;
         _customSort = customSort;
+        _getButtons = getButtons;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
+
+        _reload = () => {
+            _record = null;
+            SetEntryCollection<T>(
+                entriesFunc, onSave, tabName, 
+                onSetEntry, onAddEntry, onEditEntry, 
+                isEditable, onDeleteAll, customSort, 
+                getButtons
+            );
+        };
 
         if (!_tabFilter.ContainsKey(tabName)) {
             T aux = new T();
@@ -342,6 +371,11 @@ public class MainPopup : Popup {
             }
             onSave(entries);
         };
+    }
+
+    private void RefreshButtons() {
+        _buttonsList.Populate(_getButtons?.Invoke());
+        _buttonsList.gameObject.SetActive(_buttonsList.Elements.Count > 0);
     }
 
     private void Refresh() {
@@ -410,13 +444,14 @@ public class MainPopup : Popup {
         }
 
         _engagementTab.SetActive(Data.User.CurrentSession != null);
+        RefreshButtons();
     }
 
     private void SetEntry(IDataEntry entry) {
         _name.text = entry.Name;
         _entries[entry.Name] = entry;
         _tabSelectedEntry[_selectedTab] = entry.Name;
-        _infoList.Populate(_entries[entry.Name].RetrieveData(Refresh));
+        _infoList.Populate(_entries[entry.Name].RetrieveData(Refresh, _reload));
         _selectedEntry = entry.Name;
         _editEntry.interactable = _isEditable(entry);
         _deleteEntry.interactable = _isEditable(entry);
@@ -424,7 +459,9 @@ public class MainPopup : Popup {
         foreach (var element in _nameList.Elements) {
             element.ButtonImage.color = (element.Text == entry.Name) ?
                 _selectedColor :
-                _unselectedColor;
+                (element.Text == _highlightedEntry) ?
+                    _highlightedColor :
+                    _unselectedColor;
         }
 
         _onSetEntry?.Invoke(entry);
@@ -488,9 +525,5 @@ public class MainPopup : Popup {
                 SetEntry(_entries[popupData.Selected]);
             }
         }
-    }
-    
-    public Filter GetFilterData() {
-        return null;
     }
 }
