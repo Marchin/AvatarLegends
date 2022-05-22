@@ -11,6 +11,8 @@ public class InformationData {
     public Action OnAdd;
     public Action OnDelete;
     public Action OnEdit;
+    public Action OnHoverIn;
+    public Action OnHoverOut;
     public string Prefix;
     public string Content;
     public int IndentLevel;
@@ -35,6 +37,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     [SerializeField] private Button _dropdownButton = default;
     [SerializeField] private Button _addButton = default;
     [SerializeField] private Button _deleteButton = default;
+    [SerializeField] private PointerDetector _onHover = default;
     [SerializeField] private Toggle _toggle = default;
     [SerializeField] private LayoutGroup _layoutGroup = default;
     [SerializeField] private ScrollContent _scrollContent = default;
@@ -77,6 +80,8 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _moreInfoButton.onClick.AddListener(() => _info.OnMoreInfo());
         _onEditButton.onClick.AddListener(() => _info.OnEdit());
         _addButton.onClick.AddListener(() => _info.OnAdd());
+        _onHover.OnPointerEnterEvent += () => _info.OnHoverIn?.Invoke();
+        _onHover.OnPointerExitEvent += () => _info.OnHoverOut?.Invoke();
         _toggle.onValueChanged.AddListener(value => _info?.OnToggle?.Invoke(value));
     }
 
@@ -129,6 +134,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _toggle.gameObject.SetActive((data.OnToggle != null) || data.IsToggleOn.HasValue);
         _toggle.isOn = data.IsToggleOn ?? false;
         _toggle.interactable = (data.OnToggle != null);
+        _onHover.gameObject.SetActive((data.OnHoverIn != null) || (data.OnHoverOut != null));
         _counterValue = data.InitValue;
         RefreshCounter();
     }

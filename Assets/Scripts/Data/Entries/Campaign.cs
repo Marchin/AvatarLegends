@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Campaign : IDataEntry {
     [JsonProperty("name")]
     public string Name { get; set; }
@@ -21,9 +22,9 @@ public class Campaign : IDataEntry {
     [JsonProperty("sesions")]
     public Dictionary<string, Session> Sessions = new Dictionary<string, Session>();
 
-    [JsonIgnore] private string _currentSessionName;
+    private string _currentSessionName;
 
-    [JsonIgnore] public Session CurrentSession
+    public Session CurrentSession
     {
         get {
             if (!string.IsNullOrEmpty(_currentSessionName) && Sessions.ContainsKey(_currentSessionName)) {
@@ -39,7 +40,7 @@ public class Campaign : IDataEntry {
         }
     }
 
-    [JsonIgnore] public Session LastSession {
+    public Session LastSession {
         get {
             List<Session> sessions = new List<Session>(Sessions.Values);
 
@@ -57,8 +58,9 @@ public class Campaign : IDataEntry {
     private bool _showNPCs;
     private bool _showPCs;
     private bool _showSessions;
-    public Action OnMoreInfo => null;
     private AppData Data => ApplicationManager.Instance.Data;
+    public string DescriptionDisplay => !string.IsNullOrEmpty(Description) ? Description : "(Empty)";
+    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
@@ -67,9 +69,8 @@ public class Campaign : IDataEntry {
 
         result.Add(new InformationData {
             Content = nameof(Description),
-            OnMoreInfo = !string.IsNullOrEmpty(Description) ?
-                () => MessagePopup.ShowMessage(Description, nameof(Description), false) :
-                null,
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(DescriptionDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -88,9 +89,8 @@ public class Campaign : IDataEntry {
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
-                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
-                null,
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(

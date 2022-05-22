@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class ConditionState {
     [JsonProperty("name")]
     public string Name;
@@ -10,6 +11,7 @@ public class ConditionState {
     public bool On;
 }
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Condition : IDataEntry {
     [JsonProperty("name")]
     public string Name { get; set; }
@@ -21,7 +23,8 @@ public class Condition : IDataEntry {
     public string ClearingCondition;
 
     private Action _onRefresh;
-    public Action OnMoreInfo => null;
+    
+    public string InfoDisplay => $"Effect: {Effect}\n\nClearing Condition: {ClearingCondition}";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
@@ -31,25 +34,22 @@ public class Condition : IDataEntry {
         if (!string.IsNullOrEmpty(Effect)) {
             result.Add(new InformationData {
                 Content = nameof(Effect),
-                OnMoreInfo = () => MessagePopup.ShowMessage(Effect, nameof(Effect))
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Effect),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
         if (!string.IsNullOrEmpty(ClearingCondition)) {
             result.Add(new InformationData {
                 Content = "Clearing Condition",
-                OnMoreInfo = () => MessagePopup.ShowMessage(ClearingCondition, nameof(ClearingCondition))
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(ClearingCondition),
+                OnHoverOut = TooltipManager.Instance.Hide
             });
         }
 
         return result;
     }
 
-    public void ShowInfo() {
-        string infoContent = $"Effect: {Effect}\n\nClearing Condition: {ClearingCondition}";
-
-        MessagePopup.ShowMessage(infoContent, Name);
-    }
     
     public Filter GetFilterData() {
         Filter filter = new Filter();

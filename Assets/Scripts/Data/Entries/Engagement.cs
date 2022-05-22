@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Engagement : IDataEntry {
     public int Number => CurrentSession.Engagements.IndexOf(this) + 1;
 
@@ -21,10 +22,10 @@ public class Engagement : IDataEntry {
     private Action _reload;
     private bool _showNPCs;
     private bool _showPCs;
-    public Action OnMoreInfo => null;
     private static AppData Data => ApplicationManager.Instance.Data;
     private static Campaign SelectedCampaign => Data.User.SelectedCampaign;
     private static Session CurrentSession => Data.User.CurrentSession;
+    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -47,9 +48,8 @@ public class Engagement : IDataEntry {
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
-                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
-                null,
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(

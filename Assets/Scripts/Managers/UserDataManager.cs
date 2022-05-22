@@ -7,6 +7,7 @@
 // using Cysharp.Threading.Tasks;
 // using Newtonsoft.Json;
 
+// [JsonObject(MemberSerialization.OptIn)]
 // public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
 //     private const int Version = 2;
 //     private const string FileHeader = "DIGIDEX";

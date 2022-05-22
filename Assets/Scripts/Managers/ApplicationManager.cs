@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
     [SerializeField] private GameObject _loadingScreen = default;
     [SerializeField] private GameObject _loadingWheel = default;

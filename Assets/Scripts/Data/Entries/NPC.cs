@@ -2,7 +2,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-public class NPC : IDataEntry {
+[JsonObject(MemberSerialization.OptIn)]
+public class NPC : IDataEntry, IOnMoreInfo {
     public enum EType {
         Minor,
         Major,
@@ -64,9 +65,10 @@ public class NPC : IDataEntry {
     private bool _showStatuses;
     private bool _showConnections;
     private Action _refresh;
-    public Action OnMoreInfo => !string.IsNullOrEmpty(Description) ? ShowDescription : null;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
+    public Action OnMoreInfo => ShowNPCData;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -91,15 +93,15 @@ public class NPC : IDataEntry {
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Content = nameof(Description),
-                OnMoreInfo = ShowDescription,
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
-                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
-                null,
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -215,7 +217,8 @@ public class NPC : IDataEntry {
                 Technique technique = Data.Techniques[techniqueName];
                 result.Add(new InformationData {
                     Content = techniqueName,
-                    OnMoreInfo = technique.ShowInfo,
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
                             $"Remove {techniqueName} technique?",
@@ -248,7 +251,8 @@ public class NPC : IDataEntry {
                 string effect = status.Positive ? "Positive" : "Negative";
                 result.Add(new InformationData {
                     Content = $"{statusName} ({effect})",
-                    OnMoreInfo = status.ShowDescription,
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                     OnDelete = async () => {
                         await MessagePopup.ShowConfirmationPopup(
                             $"Remove {statusName} status?",
@@ -281,7 +285,8 @@ public class NPC : IDataEntry {
             foreach (var connectionName in connectionNames) {
                 result.Add(new InformationData {
                     Content = connectionName,
-                    OnMoreInfo = () => MessagePopup.ShowMessage(Connections[connectionName], connectionName, false),
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(Connections[connectionName]),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                     OnEdit = async () => {
                         var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                         inputPopup.Populate(
@@ -327,6 +332,15 @@ public class NPC : IDataEntry {
         }
 
         return result;
+    }
+
+    public async void ShowNPCData() {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        RefreshInfo();
+
+        void RefreshInfo() {
+            listPopup.Populate(RetrieveData(RefreshInfo, RefreshInfo), Name, null);
+        }
     }
 
     private void AddCondition() {
@@ -504,7 +518,8 @@ public class NPC : IDataEntry {
                             );
                         }
                     },
-                    OnMoreInfo = technique.ShowInfo
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                 });
             }
 
@@ -623,7 +638,8 @@ public class NPC : IDataEntry {
 
                         Refresh();
                     },
-                    OnMoreInfo = status.ShowDescription
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                 });
             }
 

@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Status : IDataEntry {
     [JsonProperty("name")]
     public string Name { get; set; }
@@ -12,7 +13,6 @@ public class Status : IDataEntry {
     [JsonProperty("positive")]
     public bool Positive;
     private Action _onRefresh;
-    public Action OnMoreInfo => null;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
@@ -22,7 +22,8 @@ public class Status : IDataEntry {
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Content = nameof(Description),
-                OnMoreInfo = ShowDescription,
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
@@ -35,10 +36,6 @@ public class Status : IDataEntry {
         return result;
     }
 
-    public void ShowDescription() {
-        MessagePopup.ShowMessage(Description, nameof(Description));
-    }
-    
     public Filter GetFilterData() {
         Filter filter = new Filter();
         

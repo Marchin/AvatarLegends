@@ -17,7 +17,7 @@ public class UserData {
     [JsonProperty("playbook")]
     public Dictionary<string, Playbook> Playbooks = new Dictionary<string, Playbook>();
 
-    [JsonIgnore] public string SelectedCampaignName;
-    [JsonIgnore] public Campaign SelectedCampaign => Campaigns[SelectedCampaignName];
-    [JsonIgnore] public Session CurrentSession => SelectedCampaign.CurrentSession;
+    public string SelectedCampaignName;
+    public Campaign SelectedCampaign => Campaigns[SelectedCampaignName];
+    public Session CurrentSession => SelectedCampaign.CurrentSession;
 }

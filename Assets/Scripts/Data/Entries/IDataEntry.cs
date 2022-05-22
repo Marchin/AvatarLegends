@@ -10,10 +10,13 @@ public enum ETraining {
     Tech
 }
 
+public interface IOnMoreInfo {
+    Action OnMoreInfo { get; }
+}
+
 public interface IDataEntry {
     string Name { get; set; }
     List<InformationData> RetrieveData(Action refresh, Action reload);
-    Action OnMoreInfo { get; }
     Filter GetFilterData();
 
 
@@ -44,7 +47,7 @@ public interface IDataEntry {
 
                         Refresh();
                     },
-                    OnMoreInfo = entry.OnMoreInfo
+                    OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo
                 });
             }
 

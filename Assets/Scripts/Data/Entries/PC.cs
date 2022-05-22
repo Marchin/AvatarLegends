@@ -2,7 +2,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-public class PC : IDataEntry {
+[JsonObject(MemberSerialization.OptIn)]
+public class PC : IDataEntry, IOnMoreInfo {
     public const int ConditionsAmount = 4;
 
     [JsonProperty("name")]
@@ -20,15 +21,19 @@ public class PC : IDataEntry {
     [JsonProperty("playbook")]
     public string Playbook;
 
+    [JsonProperty("note")]
+    public string Note;
+    
     [JsonProperty("connections")]
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
     private bool _showConnections;
     private bool _showTrainings;
-    public Action OnMoreInfo => null;
     private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
+    public Action OnMoreInfo => ShowPCData;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -45,7 +50,8 @@ public class PC : IDataEntry {
         if (!string.IsNullOrEmpty(Backstory)) {
             result.Add(new InformationData {
                 Prefix = nameof(Backstory),
-                Content = Backstory,
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Backstory),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
@@ -63,6 +69,26 @@ public class PC : IDataEntry {
                 }
             });
         }
+
+        result.Add(new InformationData {
+            Content = nameof(Note),
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
+            OnEdit = async () => {
+                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+                inputPopup.Populate(
+                    "",
+                    nameof(Note),
+                    input => {
+                        Note = input;
+                        PopupManager.Instance.Back();
+                        _refresh();
+                    },
+                    inputText: Note,
+                    multiLine: true
+                );
+            }
+        });
 
         Action onTrainingDropdown = () => {
             _showTrainings = !_showTrainings;
@@ -114,7 +140,8 @@ public class PC : IDataEntry {
             foreach (var connectionName in connectionNames) {
                 result.Add(new InformationData {
                     Content = connectionName,
-                    OnMoreInfo = () => MessagePopup.ShowMessage(Connections[connectionName], connectionName, false),
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(Connections[connectionName]),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                     OnEdit = async () => {
                         var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                         inputPopup.Populate(
@@ -160,6 +187,15 @@ public class PC : IDataEntry {
         }
 
         return result;
+    }
+
+    public async void ShowPCData() {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        RefreshInfo();
+
+        void RefreshInfo() {
+            listPopup.Populate(RetrieveData(RefreshInfo, RefreshInfo), Name, null);
+        }
     }
 
     private async void AddTraining() {

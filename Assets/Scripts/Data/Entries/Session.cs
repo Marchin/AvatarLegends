@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Session : IDataEntry {
     [JsonProperty("number")]
     public int Number;
@@ -51,12 +52,12 @@ public class Session : IDataEntry {
     }
     public Engagement CurrentEngagement => (Engagements.Count > 0) ? Engagements[_currentEngagementIndex] : null;
 
-    public Action OnMoreInfo => null;
     private Action _onRefresh;
     private bool _showNPCs;
     private bool _showPCs;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
+    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _onRefresh = refresh;
@@ -71,15 +72,15 @@ public class Session : IDataEntry {
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Prefix = "Description",
-                OnMoreInfo = () => MessagePopup.ShowMessage(Description, "Description", false),
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnMoreInfo = !string.IsNullOrEmpty(Note) ?
-                () => MessagePopup.ShowMessage(Note, nameof(Note), false) :
-                null,
+            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
+            OnHoverOut = TooltipManager.Instance.Hide,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(

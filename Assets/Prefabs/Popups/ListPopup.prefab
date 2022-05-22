@@ -499,7 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _template: {fileID: 2990520123930937485, guid: 01b6c55f7aea73d41ba8f19b0ee1b845, type: 3}
   _root: {fileID: 6482966868697237381}
-  _maxDisplayCount: 12
+  _maxDisplayCount: 24
   _overflowDisplay: {fileID: 0}
   _scroll: {fileID: 5455031067930022489}
   _layoutGroup: {fileID: 6750915846147971904}

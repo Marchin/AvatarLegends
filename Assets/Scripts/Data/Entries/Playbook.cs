@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Playbook : IDataEntry {
     [JsonProperty("name")]
     public string Name { get; set; }
@@ -15,7 +16,6 @@ public class Playbook : IDataEntry {
     [JsonProperty("conditions")]
     public List<string> Conditions;
 
-    public Action OnMoreInfo => null;
     private Action _refresh;
     private bool _showConditions;
     private AppData Data => ApplicationManager.Instance.Data;
@@ -28,7 +28,8 @@ public class Playbook : IDataEntry {
         if (!string.IsNullOrEmpty(Description)) {
             result.Add(new InformationData {
                 Content = nameof(Description),
-                OnMoreInfo = () => MessagePopup.ShowMessage(Description, nameof(Description))
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
+                OnHoverOut = TooltipManager.Instance.Hide,
             });
         }
 
@@ -58,7 +59,8 @@ public class Playbook : IDataEntry {
 
                 result.Add(new InformationData {
                     Content = conditionName,
-                    OnMoreInfo = Data.Conditions[conditionName].ShowInfo,
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(Data.Conditions[conditionName].InfoDisplay),
+                    OnHoverOut = TooltipManager.Instance.Hide,
                     IndentLevel = 1
                 });
             }

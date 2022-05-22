@@ -2,14 +2,15 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class AppData {
     const string UserDataPref= "user_data";
-    [JsonIgnore] public UserData User { get; private set; }
+    public UserData User { get; private set; }
 
     [JsonProperty("ncps")]
     private Dictionary<string, NPC> _dataNPCs = new Dictionary<string, NPC>();
-    [JsonIgnore] private Dictionary<string, NPC> _npcs;
-    [JsonIgnore] public Dictionary<string, NPC> NPCs
+    private Dictionary<string, NPC> _npcs;
+    public Dictionary<string, NPC> NPCs
     {
         get {
             if (_npcs == null) {
@@ -43,8 +44,8 @@ public class AppData {
 
     [JsonProperty("conditions")]
     private Dictionary<string, Condition> _dataConditions = new Dictionary<string, Condition>();
-    [JsonIgnore] private Dictionary<string, Condition> _conditions;
-    [JsonIgnore] public Dictionary<string, Condition> Conditions
+    private Dictionary<string, Condition> _conditions;
+    public Dictionary<string, Condition> Conditions
     {
         get {
             if (_conditions == null) {
@@ -78,8 +79,8 @@ public class AppData {
 
     [JsonProperty("techniques")]
     private Dictionary<string, Technique> _dataTechniques = new Dictionary<string, Technique>();
-    [JsonIgnore] private Dictionary<string, Technique> _techniques;
-    [JsonIgnore] public Dictionary<string, Technique> Techniques
+    private Dictionary<string, Technique> _techniques;
+    public Dictionary<string, Technique> Techniques
     {
         get {
             if (_techniques == null) {
@@ -113,8 +114,8 @@ public class AppData {
 
     [JsonProperty("statuses")]
     private Dictionary<string, Status> _dataStatuses = new Dictionary<string, Status>();
-    [JsonIgnore] private Dictionary<string, Status> _statuses;
-    [JsonIgnore] public Dictionary<string, Status> Statuses
+    private Dictionary<string, Status> _statuses;
+    public Dictionary<string, Status> Statuses
     {
         get {
             if (_statuses == null) {
@@ -148,8 +149,8 @@ public class AppData {
     
     [JsonProperty("playbooks")]
     private Dictionary<string, Playbook> _dataPlaybooks = new Dictionary<string, Playbook>();
-    [JsonIgnore] private Dictionary<string, Playbook> _playbooks;
-    [JsonIgnore] public Dictionary<string, Playbook> Playbooks
+    private Dictionary<string, Playbook> _playbooks;
+    public Dictionary<string, Playbook> Playbooks
     {
         get {
             if (_playbooks == null) {
