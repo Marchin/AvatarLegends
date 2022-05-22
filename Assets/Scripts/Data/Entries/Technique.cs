@@ -11,7 +11,7 @@ public static class ApproachUtils {
             case Technique.EApproach.Attack: {
                 result = "Advance & Attack";
             } break;
-            case Technique.EApproach.Defense: {
+            case Technique.EApproach.Defend: {
                 result = "Defense & Maneuver";
             } break;
             case Technique.EApproach.Evade: {
@@ -26,7 +26,7 @@ public static class ApproachUtils {
 public class Technique : IDataEntry {
     public enum EApproach {
         Attack,
-        Defense,
+        Defend,
         Evade
     }
 
