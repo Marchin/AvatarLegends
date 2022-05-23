@@ -44,10 +44,9 @@ public class CampaignSelectionPopup : Popup {
     }
 
     public override object GetRestorationData() {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override void Restore(object data) {
-        throw new System.NotImplementedException();
     }
 }

@@ -40,6 +40,11 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
             onAllFinished: () => _inputLock.SetActive(false)
         );
 
+        JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         await Addressables.InitializeAsync();
 
         var data = await Addressables.LoadAssetAsync<TextAsset>("Data");
