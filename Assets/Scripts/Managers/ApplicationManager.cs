@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
@@ -47,8 +45,7 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
         var data = await Addressables.LoadAssetAsync<TextAsset>("Data");
         Data = JsonConvert.DeserializeObject<AppData>(data.text) ?? new AppData();
 
-        // UserDataManager.Instance.Sync().Forget();
-        await PopupManager.Instance.GetOrLoadPopup<CampaignSelectionPopup>();
+        UserDataManager.Instance.Sync().Forget();
 
         Initialized = true;
     }
@@ -57,9 +54,5 @@ public class ApplicationManager : MonoBehaviourSingleton<ApplicationManager> {
         if (!DisableBackButton.IsRunning && Input.GetKeyDown(KeyCode.Escape)) {
             PopupManager.Instance.Back();
         }
-    }
-
-    private void OnDestroy() {
-        Data?.RecordData();
     }
 }

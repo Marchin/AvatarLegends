@@ -23,7 +23,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - popup
   - m_GUID: 76341c28074edd649be679c975e4d323
-    m_Address: MainPopup
+    m_Address: CampaignViewPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - popup

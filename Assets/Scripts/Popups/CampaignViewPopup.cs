@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainPopup : Popup {
+public class CampaignViewPopup : Popup {
     public class PopupData {
         public string Selected;
         public int TabIndex;
@@ -187,8 +187,8 @@ public class MainPopup : Popup {
                         addEngagementPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Engagement);
                     },
                     isEditable: _ => true,
-                    onDeleteAll: async () => {
-                        bool confirmed = await MessagePopup.ShowConfirmationPopup(
+                    onDeleteAll: () => {
+                        MessagePopup.ShowConfirmationPopup(
                             "Delete all engagements?",
                             onYes: () => {
                                 _entries.Clear();
@@ -468,7 +468,7 @@ public class MainPopup : Popup {
     }
 
     private void DeleteEntry() {
-        _ = MessagePopup.ShowConfirmationPopup(
+        MessagePopup.ShowConfirmationPopup(
             $"Do you want to delete {_selectedEntry}?",
             onYes: () => {
                 var names = new List<string>(_entries.Keys);

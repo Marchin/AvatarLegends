@@ -61,3 +61,4 @@ crashlytics-build.properties
 .vscode
 Assets/AddressableAssetsData/Windows
 Assets/AddressableAssetsData/Windows.meta
+Assets/UnityGoogleDrive/Resources/GoogleDriveSettings.asset

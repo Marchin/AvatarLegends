@@ -151,8 +151,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
             foreach (var training in Trainings) {
                 result.Add(new InformationData {
                     Content = training.ToString(),
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {training} training?",
                             onYes: () => Trainings.Remove(training)
                         );
@@ -186,8 +186,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     Content = conditionName,
                     IsToggleOn = condition.On,
                     OnToggle = on => Conditions[conditionName].On = on,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {conditionName} condition?",
                             onYes: () => Conditions.Remove(conditionName)
                         );
@@ -219,8 +219,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     Content = techniqueName,
                     OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
                     OnHoverOut = TooltipManager.Instance.Hide,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {techniqueName} technique?",
                             onYes: () => Techniques.Remove(techniqueName)
                         );
@@ -253,8 +253,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     Content = $"{statusName} ({effect})",
                     OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
                     OnHoverOut = TooltipManager.Instance.Hide,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {statusName} status?",
                             onYes: () => Statuses.Remove(statusName)
                         );
@@ -301,8 +301,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
                             multiLine: true
                         );
                     },
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {connectionName} connection?",
                             onYes: () => {
                                 Connections.Remove(connectionName);

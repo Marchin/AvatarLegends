@@ -20,4 +20,10 @@ public class UserData {
     public string SelectedCampaignName;
     public Campaign SelectedCampaign => Campaigns[SelectedCampaignName];
     public Session CurrentSession => SelectedCampaign.CurrentSession;
+
+    public bool IsClear =>
+        (Campaigns.Count == 0) &&
+        (Conditions.Count == 0) &&
+        (Statuses.Count == 0) &&
+        (Playbooks.Count == 0);
 }

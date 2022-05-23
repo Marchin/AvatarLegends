@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class CampaignSelectionPopup : Popup {
     [SerializeField] private ButtonList _campaignsList = default;
     [SerializeField] private Button _addCampaign = default;
+    [SerializeField] private Button _closeButton = default;
     private UserData userData => ApplicationManager.Instance.Data.User;
     private Dictionary<string, Campaign> campaigns => userData.Campaigns;
 
     private void Awake() {
+        _closeButton.onClick.AddListener(PopupManager.Instance.Back);
         _addCampaign.onClick.AddListener(async () => {
             var addCampaignPopup = await PopupManager.Instance.GetOrLoadPopup<AddCampaignPopup>(restore: false);
             addCampaignPopup.Populate(
@@ -34,7 +36,7 @@ public class CampaignSelectionPopup : Popup {
                     userData.SelectedCampaignName = campaign.Key;
                     var selectedCampaign = userData.SelectedCampaign;
                     selectedCampaign.CurrentSession = selectedCampaign.LastSession;
-                    _ = PopupManager.Instance.GetOrLoadPopup<MainPopup>(restore: false);
+                    _ = PopupManager.Instance.GetOrLoadPopup<CampaignViewPopup>(restore: false);
                 }
             });
         }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [JsonObject(MemberSerialization.OptIn)]
 public class AppData {
     const string UserDataPref= "user_data";
-    public UserData User { get; private set; }
+    public UserData User => UserDataManager.Instance.Data;
 
     [JsonProperty("ncps")]
     private Dictionary<string, NPC> _dataNPCs = new Dictionary<string, NPC>();
@@ -182,13 +182,13 @@ public class AppData {
         return !_dataPlaybooks.ContainsKey(status.Name);
     }
     
-    public AppData() {
-        string data = PlayerPrefs.GetString(UserDataPref, "{}");
-        User = JsonConvert.DeserializeObject<UserData>(data) ?? new UserData();
-    }
+    // public AppData() {
+    //     string data = PlayerPrefs.GetString(UserDataPref, "{}");
+    //     User = JsonConvert.DeserializeObject<UserData>(data) ?? new UserData();
+    // }
     
-    public void RecordData() {
-        string data = JsonConvert.SerializeObject(User);
-        PlayerPrefs.SetString(UserDataPref, data);
-    }
+    // public void RecordData() {
+    //     string data = JsonConvert.SerializeObject(User);
+    //     PlayerPrefs.SetString(UserDataPref, data);
+    // }
 }

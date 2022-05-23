@@ -123,8 +123,8 @@ public class Campaign : IDataEntry {
                 NPC npc = npcKVP.Value;
                 result.Add(new InformationData {
                     Content = $"{npc.Name} ({npc.Alignment})",
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {npc.Name} from the engagement?",
                             onYes: () => NPCs.Remove(npcKVP.Key)
                         );
@@ -157,8 +157,8 @@ public class Campaign : IDataEntry {
             foreach (var session in Sessions) {
                 result.Add(new InformationData {
                     Content = session.Key,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {session.Key} from the engagement?",
                             onYes: () => Sessions.Remove(session.Key)
                         );

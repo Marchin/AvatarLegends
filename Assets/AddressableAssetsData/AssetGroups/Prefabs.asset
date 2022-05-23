@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Prefabs
+  m_EditorClassIdentifier: 
+  m_GroupName: Prefabs
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e194097cc495e8c448e59b8c21f5019b
+  m_SerializeEntries:
+  - m_GUID: eaa800ddd99b57b458d17884c44448aa
+    m_Address: Button
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d83604be80d4e554f923b58591452dfd
+    m_Address: DropdownElement
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 01b6c55f7aea73d41ba8f19b0ee1b845
+    m_Address: InformationElement
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4bc37b5a76f8c7741a2c7c55a58f6096
+    m_Address: InputField
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: cc15466b08cd12045bcfcc544009f5c9
+    m_Address: InputWithTitle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d11cbc1673d27604191ab68bab1abdd3
+    m_Address: Loading Wheel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 34e7ae88c94cdfc418bccacec9aa40a2
+    m_Address: Scroll
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 09aee04af2a721342977bb8055cfa01f
+    m_Address: ScrollingText
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b6a1d64e4ed1f404fa6d5e37ac393e68
+    m_Address: TextButton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d7c32f1ca693b66439ade3d4969ea916
+    m_Address: Toggle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 175e0a3fe0ef9904bb0f326b1ffbc288
+    m_Address: ToggleWithText
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f72df2c3674752d459857653e6a474e5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 51826989eb8d956429b68c68187a2cb7, type: 2}
+    - {fileID: 11400000, guid: 37b5c51f810393849bc9fb5cc78341c1, type: 2}

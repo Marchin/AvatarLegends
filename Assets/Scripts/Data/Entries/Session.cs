@@ -118,8 +118,8 @@ public class Session : IDataEntry {
 
                 result.Add(new InformationData {
                     Content = $"{npc} ({Data.NPCs[npc].Alignment})",
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {npc} from the engagement?",
                             onYes: () => NPCs.Remove(npc)
                         );
@@ -159,8 +159,8 @@ public class Session : IDataEntry {
 
                 result.Add(new InformationData {
                     Content = pc,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {pc} from the engagement?",
                             onYes: () => PCs.Remove(pc)
                         );

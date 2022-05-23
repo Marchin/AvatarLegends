@@ -138,11 +138,9 @@ public class MessagePopup : Popup {
         await UniTask.WaitWhile(() => (msgPopup != null) && msgPopup.gameObject.activeInHierarchy);
     }
     
-    public static async UniTask<bool> ShowConfirmationPopup(
+    public static async void ShowConfirmationPopup(
         string msg, Action onYes = null, Action onNo = null, bool restore = true
     ) {
-        bool hasConfirmed = false;
-
         List<ButtonData> buttonList = new List<ButtonData>(2);
 
         buttonList.Add(new ButtonData {
@@ -157,16 +155,11 @@ public class MessagePopup : Popup {
             Text = "Yes",
             Callback = () => {
                 onYes?.Invoke();
-                hasConfirmed = true;
                 PopupManager.Instance.Back();
             }
         });
 
         var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(restore);
         msgPopup.Populate(msg, "Confirm", buttonList);
-
-        await UniTask.WaitWhile(() => (msgPopup != null) && msgPopup.gameObject.activeInHierarchy);
-
-        return hasConfirmed;
     }
 }

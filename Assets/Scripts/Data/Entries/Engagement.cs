@@ -88,8 +88,8 @@ public class Engagement : IDataEntry {
                 NPC npc = Data.NPCs[npcName];
                 result.Add(new InformationData {
                     Content = $"{npcName} ({npc.Alignment})",
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {npcName} from the engagement?",
                             onYes: () => NPCs.Remove(npcName)
                         );
@@ -130,8 +130,8 @@ public class Engagement : IDataEntry {
                 PC pc = SelectedCampaign.PCs[pcName];
                 result.Add(new InformationData {
                     Content = pcName,
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {pcName} from the engagement?",
                             onYes: () => PCs.Remove(pcName)
                         );

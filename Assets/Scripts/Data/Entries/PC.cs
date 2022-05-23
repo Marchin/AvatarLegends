@@ -108,8 +108,8 @@ public class PC : IDataEntry, IOnMoreInfo {
             foreach (var training in Trainings) {
                 result.Add(new InformationData {
                     Content = training.ToString(),
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {training} training?",
                             onYes: () => Trainings.Remove(training)
                         );
@@ -156,8 +156,8 @@ public class PC : IDataEntry, IOnMoreInfo {
                             multiLine: true
                         );
                     },
-                    OnDelete = async () => {
-                        await MessagePopup.ShowConfirmationPopup(
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
                             $"Remove {connectionName} connection?",
                             onYes: () => {
                                 Connections.Remove(connectionName);

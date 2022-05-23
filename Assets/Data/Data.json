@@ -1,37 +1,186 @@
 {
     "techniques": {
-        "Sunflower": {
-            "name": "Sunflower",
-            "mastery": "Fire",
-            "approach": "Attack"
+        "Attack Weakness": {
+            "name": "Attack Weakness",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Strike an enemy at a weak point where they’ve already been injured. Mark 1-fatigue to target an engaged, Impaired enemy in reach; they suffer fatigue equal to however many conditions they already have marked.",
+            "rare": false
         },
-        "Waterflower": {
-            "name": "Waterflower",
-            "mastery": "Water",
-            "approach": "Defense"
+        "Charge": {
+            "name": "Charge",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Advance straight at an enemy to strike them full force. Mark 1-fatigue to close the distance and engage with an enemy you aren’t currently engaged with, inflicting one condition or 2-fatigue (their choice). Become Favored for the next exchange.",
+            "rare": false
         },
-        "Airflower": {
-            "name": "Airflower",
-            "mastery": "Air",
+        "Duck And Twist": {
+            "name": "Duck And Twist",
+            "mastery": "Universal",
             "approach": "Evade",
+            "description": "Rely on your fast movement to help keep you out of the worst of harm’s way. Mark 1-fatigue to clear one condition and become Favored.",
+            "rare": false
+        },
+        "Forceful Blow": {
+            "name": "Forceful Blow",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Swing at an enemy with all your might, sending them flying. Mark 1-fatigue and inflict 2-fatigue or one condition on your target (your choice). Then push them to a new position of your choice unless they mark 2-fatigue.",
+            "rare": false
+        },
+        "Furious Assault": {
+            "name": "Furious Assault",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Make an unbalanced, impassioned strike. Become Impaired due to your overwhelming passion, shift your balance away from center, and  inflict conditions equal to your Passion on an enemy; NPCs instead inflict conditions equal to their current balance. You may only removeImpaired when your balance is at your center",
             "rare": true
         },
-        "Techflower": {
-            "name": "Techflower",
-            "mastery": "Tech"
-        },
-        "Weaponflower": {
-            "name": "Weaponflower",
-            "mastery": "Weapons",
+        "Pounce": {
+            "name": "Pounce",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Press the advantage against an enemy who is off-balance. Mark 1-fatigue to inflict Impaired on a foe, or inflict Stunned on an Impaired foe, or inflict 5-fatigue on a Stunned foe.",
             "rare": true
         },
-        "Earthflower": {
-            "name": "Earthflower",
-            "mastery": "Earth"
+        "Protect": {
+            "name": "Protect",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Protect an ally within reach. Mark 1-fatigue to intercept and stop an attack made against them in this exchange; if no attack is made against them in this exchange, you both become Inspired",
+            "rare": false
         },
-        "Groupflower": {
-            "name": "Groupflower",
-            "mastery": "Group"
+        "Rapid Assessment": {
+            "name": "Rapid Assessment",
+            "mastery": "Universal",
+            "approach": "Evade",
+            "description": "Quickly take in your situation far faster than normal. Ask one question about the situation at hand. Become Prepared to act on the answer, and you may call out your plan to an ally to make them Prepared as well.",
+            "rare": false
+        },
+        "Seek Vulnerabilities": {
+            "name": "Seek Vulnerabilities",
+            "mastery": "Universal",
+            "approach": "Evade",
+            "description": "Examine your foe for weak points. The next time you inflict a condition or fatigue on them, you may also shift their balance. If you know what their principle is, then you may mark 1-fatigue to shift their balance a second time.",
+            "rare": false
+        },
+        "Sense Environment": {
+            "name": "Sense Environment",
+            "mastery": "Universal",
+            "approach": "Evade",
+            "description": "Look for opportunities to usefully reshape your environment. The next time you advance and attack or defend and maneuver, you may use Smash or Ready, as appropriate, in addition to any other techniques you use, even on a miss. When you use Smash or Ready this way, do not mark fatigue.",
+            "rare": false
+        },
+        "Stand Strong": {
+            "name": "Stand Strong",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Plant your feet and prepare yourself for incoming blows. Become Prepared, and you automatically block or avoid any negative statuses inflicted on you this exchange.",
+            "rare": false
+        },
+        "Suck It Up": {
+            "name": "Suck It Up",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Focus and absorb a blow, readying yourself to act immediately after. For each attack that inflicts fatigue, conditions, or balance shifts on you this exchange, choose one additional technique next exchange even if you roll a miss on the stance move).",
+            "rare": false
+        },
+        "Take Cover": {
+            "name": "Take Cover",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Swerve and maneuver into cover. The first attack on you this exchange strikes your cover, damaging or destroying it, but leaving you unharmed.",
+            "rare": false
+        },
+        "Attend To Commands": {
+            "name": "Attend To Commands",
+            "mastery": "Group",
+            "approach": "Evade",
+            "description": "A leading voice in the group takes a moment to organize it effectively. The group clears Impaired, becomes Inspired, and inflicts an additional 1-fatigue on all attacks made next exchange.",
+            "rare": false
+        },
+        "Coordination": {
+            "name": "Coordination",
+            "mastery": "Group",
+            "approach": "Evade",
+            "description": "The group sets itself up to launch a concerted, skilled attack upon its targets next exchange. The group becomes Prepared and Favored and may clear 2-fatigue or a condition (in addition to the normal 1-fatigue for evade and observe).",
+            "rare": false
+        },
+        "Draw Foe": {
+            "name": "Draw Foe",
+            "mastery": "Group",
+            "approach": "Evade",
+            "description": "The group misleads foes into overextending themselves. The group targets an engaged foe who chose the advance and attack approach this exchange. That foe must mark 1-fatigue, becomes Impaired, and is moved out of reach of allies.",
+            "rare": false
+        },
+        "Engulf": {
+            "name": "Engulf",
+            "mastery": "Group",
+            "approach": "Defend",
+            "description": "The whole group shifts forward en masse, engulfing their target and engaging them. An engulfed target becomes Impaired and cannot escape or disengage this exchange. The group automatically uses Strike against each Impaired foe within reach.",
+            "rare": false
+        },
+        "Focused Fire": {
+            "name": "Focused Fire",
+            "mastery": "Group",
+            "approach": "Attack",
+            "description": "The group pours out all of its attacks simultaneously, in synchronized fashion, against the same target. Mark 1-fatigue to inflict 2-fatigue and a condition. If the group was Prepared for this attack, inflict an additional 2-fatigue and another condition.",
+            "rare": false
+        },
+        "Overwhelm": {
+            "name": "Overwhelm",
+            "mastery": "Group",
+            "approach": "Attack",
+            "description": "Strike at every combatant in reach. All foes engaged with the group must mark 2-fatigue or one condition, their choice.",
+            "rare": false
+        },
+        "Scatter And Regroup": {
+            "name": "Scatter And Regroup",
+            "mastery": "Group",
+            "approach": "Evade",
+            "description": "The group splits apart and reforms nearby. The group clears one condition. Any foe engaged with the group is no longer engaged with the group, and the group can advance and engage with foes as it chooses; any foes the group engages with are Impaired.",
+            "rare": false
+        },
+        "Shield Wall": {
+            "name": "Shield Wall",
+            "mastery": "Group",
+            "approach": "Defend",
+            "description": "The group together forms a barricade. The group becomes Favored, and ignores the first 2-fatigue and one condition it would mark this exchange. Next exchange, all movement or maneuvering past the shield wall is automatically blocked.",
+            "rare": false
+        },
+        "Spread Out": {
+            "name": "Spread Out",
+            "mastery": "Group",
+            "approach": "Defend",
+            "description": "The group spreads itself out to cover more ground and avoid large-scale attacks. The group cannot suffer more than 1-fatigue, one condition, or one balance shift from any individual attack—the attacker chooses which if necessary. The group can also engage with any foes in a much wider reach, and pays no cost to keep an engaged foe from escaping",
+            "rare": false
+        },
+        "Surround": {
+            "name": "Surround",
+            "mastery": "Group",
+            "approach": "Attack",
+            "description": "The group closes around a single foe. Every additional attack made on that foe during this exchange inflicts an additional 1-fatigue. Every attack made by a surrounded foe forces them to suffer 1-fatigue.",
+            "rare": false
+        },
+        "Swarm": {
+            "name": "Swarm",
+            "mastery": "Group",
+            "approach": "Attack",
+            "description": "The group throws itself upon a foe with no heed to its own safety. Mark 1-fatigue to inflict 2-fatigue on a single target. This technique may be chosen multiple times. Each time it is chosen after the first, it inflicts an additional 1-fatigue.",
+            "rare": false
+        },
+        "Test Defenses": {
+            "name": "Test Defenses",
+            "mastery": "Group",
+            "approach": "Evade",
+            "description": "The group slowly probes the defenses of a foe, one or two members attacking individually to determine the foe’s abilities. The group becomes Prepared, Favored, Inspired, and learns the balance principle of its target; the chosen foe may immediately use Strike on the group in turn.",
+            "rare": false
+        },
+        "Project Objective": {
+            "name": "Project Objective",
+            "mastery": "Group",
+            "approach": "Defend",
+            "description": "The group surrounds a person, place, or object with their backs to it, to protect it from attack, disruption, or seizure. The group marks 2-fatigue and becomes Prepared. All foes near or engaged with the protected target become disengaged and pushed back from the target and are now engaged with the group. No foe can reach the protected target until the group is scattered or loses Prepared.",
+            "rare": false
         }
     },
     
@@ -39,42 +188,42 @@
         "Doomed": {
             "name": "Doomed",
             "description": "You’re in grave danger—mark 1-fatigue every few seconds (or each exchange) until you free yourself.",
-            "positive": "false"
+            "positive": false
         },
         "Impaired": {
             "name": "Impaired",
             "description": "You’re slowed or off-balance—mark 1-fatigue or take a -2 to all physical actions (PCs) / choose one fewer technique (NPCs)",
-            "positive": "false"
+            "positive": false
         },
         "Trapped": {
             "name": "Trapped",
             "description": "You’re completely helpless—you must mark a combination of three conditions or fatigue to escape.",
-            "positive": "false"
+            "positive": false
         },
         "Stunned": {
             "name": "Stunned",
             "description": "You’re caught off-guard—you can’t act or respond for a few seconds until you steady yourself",
-            "positive": "false"
+            "positive": false
         },
         "Empowered": {
             "name": "Empowered",
             "description": "Your abilities are naturally stronger in this moment—clear 1-fatigue at the end of each exchange.",
-            "positive": "true"
+            "positive": true
         },
         "Favored": {
             "name": "Favored",
             "description": "You’re buoyed by circumstance—choose an additional basic or mastered technique in the next exchange, even on a miss.",
-            "positive": "true"
+            "positive": true
         },
         "Inspired": {
             "name": "Inspired",
             "description": "You’re ready to stand for something—clear Inspired to shift your balance toward a principle of your choice.",
-            "positive": "true"
+            "positive": true
         },
         "Prepared": {
             "name": "Prepared",
             "description": "You’re ready for what’s coming—clear Prepared to take +1 to an appropriate roll (after the roll) or avoid marking a condition.",
-            "positive": "true"
+            "positive": true
         }
     },
 
