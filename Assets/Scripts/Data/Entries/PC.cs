@@ -28,6 +28,7 @@ public class PC : IDataEntry, IOnMoreInfo {
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
     private bool _showConnections;
+    private bool _showConditions;
     private bool _showTrainings;
     private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
@@ -117,6 +118,33 @@ public class PC : IDataEntry, IOnMoreInfo {
                     },
                     IndentLevel = 1
                 });
+            }
+        }
+
+        if (Data.Playbooks.ContainsKey(Playbook)) {
+            Action onConditionDropdown = () => {
+                _showConditions = !_showConditions;
+                _refresh();
+            };
+
+            result.Add(new InformationData {
+                Content = "Conditions",
+                OnDropdown = (Data.Playbooks[Playbook].Conditions.Count > 0) ? onConditionDropdown : null,
+            });
+
+            if (_showConditions) {
+                foreach (var conditionName in Data.Playbooks[Playbook].Conditions) {
+                    if (!Data.Conditions.ContainsKey(conditionName)) {
+                        continue;
+                    }
+
+                    result.Add(new InformationData {
+                        Content = conditionName,
+                        OnHoverIn = () => TooltipManager.Instance.ShowMessage(Data.Conditions[conditionName].InfoDisplay),
+                        OnHoverOut = TooltipManager.Instance.Hide,
+                        IndentLevel = 1
+                    });
+                }
             }
         }
 
