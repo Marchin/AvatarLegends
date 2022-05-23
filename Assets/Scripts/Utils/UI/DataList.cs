@@ -280,9 +280,11 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
         float delta = Mathf.Abs(pos - ElementReuseScrollPoint);
         int count = Mathf.CeilToInt(delta / _elementNormalizedLength);
 
-        bool isScrollingForwards = ((pos - _prevScrollPos) != 0f) ?
-            ((pos - _prevScrollPos) > 0f) :
-            _wasScrollingDown;
+        bool isScrollingForwards = ((pos - _prevScrollPos) == 0f) ?
+            _wasScrollingDown :
+            (_direction == Direction.Horizontal) ?
+                ((pos - _prevScrollPos) > 0f) :
+                ((pos - _prevScrollPos) < 0f);
         bool pastScrollForwardPoint = (_direction == Direction.Horizontal) ?
             (pos > (1f - ElementReuseScrollPoint)) :
             (pos < ElementReuseScrollPoint);
