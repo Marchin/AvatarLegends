@@ -181,6 +181,538 @@
             "approach": "Defend",
             "description": "The group surrounds a person, place, or object with their backs to it, to protect it from attack, disruption, or seizure. The group marks 2-fatigue and becomes Prepared. All foes near or engaged with the protected target become disengaged and pushed back from the target and are now engaged with the group. No foe can reach the protected target until the group is scattered or loses Prepared.",
             "rare": false
+        },
+        "Blood Twisting": {
+            "name": "Blood Twisting",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "[Blood] Use bloodbending to move and twist a foe’s body in painful ways. You must be Empowered to use this technique. Inflict a condition on your foe. If they are already Impaired, Trapped, or Doomed, inflict an additional condition. If this is your first, second, or third time ever using this technique, mark a condition.",
+            "rare": true
+        },
+        "Breath Of Ice": {
+            "name": "Breath Of Ice",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Become ready to breathe shivering cold upon any foe who gets close to you. Any foe engaged with you at any point in this exchange becomes Impaired until they clear the ice from their limbs.",
+            "rare": false
+        },
+        "Creeping Ice": {
+            "name": "Creeping Ice",
+            "mastery": "Water",
+            "approach": "Evade",
+            "description": "Carefully and stealthily extend a sheet of ice out beneath foes of your choice; they become Impaired as long as they remain on the ice, and you become Prepared to engage with them.",
+            "rare": false
+        },
+        "Crushing Grip Of Seas": {
+            "name": "Crushing Grip Of Seas",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "Throw a tendril of water that wraps around a foe’s limb and holds it in place. Mark 1-fatigue and inflict Impaired on a foe; mark an additional 2-fatigue to inflict Trapped on that foe with a second tendril. If the foe is already Impaired, you only need to pay 2-fatigue for Trapped.",
+            "rare": true
+        },
+        "Flow As Water": {
+            "name": "Flow As Water",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Use a jet of water to propel you smoothly around obstacles. Mark 1-fatigue and move to a new location. If you engage with or disengage from a foe, they are Impaired.",
+            "rare": false
+        },
+        "Freeze Blood": {
+            "name": "Freeze Blood",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "[Blood] Use bloodbending to seize a target and hold them in place. You must be Empowered to use this technique. Mark 1-fatigue; your target becomes Trapped and/or Doomed, your choice. If this is your first, second, or third time ever using this technique, mark a condition",
+            "rare": true
+        },
+        "Ice Gauntlet": {
+            "name": "Ice Gauntlet",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Cover your hand with a sheathe of ice. Become Prepared. When you next make an attack, inflict an additional 1-fatigue.",
+            "rare": false
+        },
+        "Ice Prison": {
+            "name": "Ice Prison",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "Aggressively wrap a foe in ice. Mark 2-fatigue to inflict Trapped on a foe standing in water or on ice.",
+            "rare": true
+        },
+        "Refresh": {
+            "name": "Refresh",
+            "mastery": "Water",
+            "approach": "Evade",
+            "description": "[Heal] Apply water to reinvigorate and close wounds on a willing target. Mark 1-fatigue to heal an ally in reach who is evading and observing. Clear an appropriate status from them, and clear 3-fatigue or two conditions.",
+            "rare": false
+        },
+        "Stream The Water": {
+            "name": "Stream The Water",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "Push a high-powered stream of water from a significant source. Mark fatigue to inflict a condition on a foe within reach of the water source; they are pinned against something and cannot shift positions or engage foes other than you until they break the stream or you drop it. Mark 1-fatigue at the end of each exchange to continue the stream.",
+            "rare": false
+        },
+        "Slip Over ice": {
+            "name": "Slip Over Ice",
+            "mastery": "Water",
+            "approach": "Evade",
+            "description": "Use ice and water to slip around your environment with ease while putting foes off-balance. Clear 1-fatigue (in addition to clearing 1-fatigue via evade and observe) and reposition foes within reach, deciding who is engaged with whom unless they are willing to mark 1-fatigue and become Impaired to remain where they are.",
+            "rare": false
+        },
+        "Water Cloak": {
+            "name": "Water Cloak",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Surround yourself with water; mark fatigue and hold 3. Spend your hold 1-for-1 to reduce the 1-fatigue or conditions inflicted by an incoming attack by 1; to become Favored for the next exchange, as long as you use waterbending techniques; or to throw water into the environment, affecting it and possibly inflicting a status. Mark 1-fatigue at he end of each exchange to maintain the hold to the next exchange.",
+            "rare": true
+        },
+        "Water Whip": {
+            "name": "Water Whip",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Lash out with a tendril of water. Mark 1-fatigue to inflict a condition or 2-fatigue, your choice.",
+            "rare": false
+        },
+        "Detect Heavy Step": {
+            "name": "Detect Heavy Step",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "[Sesmic Sense] Use seismic sense to detect the instant an enemy is about to move against you. Become Prepared, and at any time during this exchange, you may lose your Prepared status and mark 1-fatigue to interrupt an enemy as they use a technique; they must mark an additional 3-fatigue or you disrupt their attempt to act, canceling the technique.",
+            "rare": true
+        },
+        "Dust Stepping": {
+            "name": "Dust Stepping",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Step up into the air on thin pillars of dust and stone. Advance to a higher position and become Favored and Prepared. Any foe engaged with you can mark 2-fatigue to block this effect.",
+            "rare": false
+        },
+        "Earth Armor": {
+            "name": "Earth Armor",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Gather earth, crystal, or other available material around you to create armor. Hold 3. Spend one hold to negate one condition or 2-fatigue inflicted upon you. While you have hold, you are Favored. You must spend hold—at least one—whenever an incoming attack would inflict fatigue or conditions.",
+            "rare": false
+        },
+        "Earth Gauntlet": {
+            "name": "Earth Gauntlet",
+            "mastery": "Earth",
+            "approach": "Attack",
+            "description": "Wrap your arm or fist in rock and strike! Mark 1-fatigue; inflict one condition or 2-fatigue. you can also knock your foe out of reach and disengage; they must mark an additional fatigue to resist.",
+            "rare": false
+        },
+        "Earth Launch": {
+            "name": "Earth Launch",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Throw yourself into the air with a massive burst of force. Mark 1-fatigue and become Favored. You disengage with all foes who can’t reach you high in the air for the rest of this exchange, but you come right back down into their midst at the end of this exchange.",
+            "rare": false
+        },
+        "Earth Sinking": {
+            "name": "Earth Sinking",
+            "mastery": "Earth",
+            "approach": "Attack",
+            "description": "Sink a foe into the earth itself. Mark 2-fatigue to trap an enemy standing on the ground in the earth; they become Trapped.",
+            "rare": true
+        },
+        "Eat Dirt": {
+            "name": "Eat Dirt",
+            "mastery": "Earth",
+            "approach": "Evade",
+            "description": "Even the smallest pebble can cause a gator-phant to stumble. Cause a foe to lose their footing. Your target is Impaired and unable to choose defend and maneuver in the next exchange.",
+            "rare": false
+        },
+        "Ground Shift": {
+            "name": "Ground Shift",
+            "mastery": "Earth",
+            "approach": "Evade",
+            "description": "Twist the ground itself to displace or unbalance foes. Target an individual foe or an area. If you target an area, mark 1-fatigue. All affected foes become Impaired for an exchange, or Stunned if they are already Impaired.",
+            "rare": false
+        },
+        "Lava Star": {
+            "name": "Lava Star",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "[Lava] Create a floating, spinning star of lava that can cut through nearly anything. Mark 1-fatigue and become favored as long as the star is active. every time you use the star as part of an attack, you can also cut through or destroy part of the scenery as if you had used the smash basic technique, at no additional cost. you may mark 1-fatigue at the end of each exchange to keep the star active.",
+            "rare": true
+        },
+        "Metal Bindings": {
+            "name": "Metal Bindings",
+            "mastery": "Earth",
+            "approach": "Evade",
+            "description": "[Metal] Catch an enemy’s limbs in metal you control. They become Impaired and cannot remove the status unless they are able to metalbend or the fight ends. While they are Impaired and you are engaged with them, you are Favored.",
+            "rare": true
+        },
+        "Rock Column": {
+            "name": "Rock Column",
+            "mastery": "Earth",
+            "approach": "Attack",
+            "description": "Pin a foe with a column of earth. Inflict Impaired on a single combatant. If they are already Impaired, inflict Trapped. If they are already Trapped, inflict Doomed.",
+            "rare": false
+        },
+        "Stone Shield": {
+            "name": "Stone Shield",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Raise a defensive shield of stone that protects you or someone else. Mark 1-fatigue to raise the shield. anyone protected by the stone shield gains impaired—it’s tough to move inside. this shield blocks the first attack directed toward it each exchange. the stone shield cannot move and is not destroyed by an attack—it remains in place until you decide it comes down. you can elect to use the raw material in the wall for an earthbending technique, reducing its cost by 1-fatigue and removing the stone shield.",
+            "rare": true
+        },
+        "Thick Mud": {
+            "name": "Thick Mud",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Transform the earth and stone around you into sticky, sucking mud. Any foes engaged with and acting against you in this exchange become stuck and Impaired; you may use Strike against each stuck foe in the next exchange, regardless of your chosen approach and in addition to y0ur normal techniques.",
+            "rare": false
+        },
+        "A Single Spark": {
+            "name": "A Single Spark",
+            "mastery": "Fire",
+            "approach": "Evade",
+            "description": "Unleash your emotions into the flames around you. Mark 1-fatigue to hold 1 for each condition you have marked. Spend your hold 1-for-1 in the next exchange to pay the costs of techniques as if it was fatigue, to inflict Doomed on a foe you target with firebending, or to use Seize a Position—no matter what approach you used—in addition to your other techniques.",
+            "rare": false
+        },
+        "Arc Lighting": {
+            "name": "Arc Lighting",
+            "mastery": "Fire",
+            "approach": "Evade",
+            "description": "[Lighting] Channel lightning through your body against a closely engaged foe. Mark 1-fatigue to inflict a condition on an engaged foe who used an advance and attack technique against you this exchange; if they already have two conditions marked, they are also Stunned.",
+            "rare": true
+        },
+        "Breath Of Fire": {
+            "name": "Breath Of Fire",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Breathe fire in a massive gout. Mark 1-fatigue to set alight as much or as little of your surroundings as you choose and try to set aflame any foes within reach. Those foes must either retreat and disengage with you, becoming Impaired, or suffer 2-fatigue and become Doomed as they catch fire.",
+            "rare": false
+        },
+        "Explosive Blast": {
+            "name": "Explosive Blast",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "[Combustion] Fire a sparking, spitting beam of focused energy that explodes when it reaches its target. Your target must either dive for cover or take the blow. If they dive for cover, they mark 2-fatigue and become Impaired; if they are already Impaired, they cannot dive for cover. If they take the blow, they mark 4-fatigue.",
+            "rare": true
+        },
+        "Fire Blade": {
+            "name": "Fire Blade",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Swipe your surroundings with a blade of flame. Mark 1-fatigue to slice through a piece of your surroundings and destabilize your foe’s footing, inflicting 2-fatigue and Impaired on them.",
+            "rare": false
+        },
+        "Fire Pinwheel": {
+            "name": "Fire Pinwheel",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Throw a spinning disc of pure flame. Mark 1-fatigue; your target must either mark 2 conditions, or mark 1-fatigue and dodge the disc and allow it to set everything around them aflame (possibly inflicting negative statuses).",
+            "rare": true
+        },
+        "Fire Stream": {
+            "name": "Fire Stream",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Pour fire upon a target. Mark 1-fatigue to inflict Impaired on them. Mark 3-fatigue to inflict doomed and impaired. mark 5-fatigue to inflict Trapped, Doomed, and Impaired.",
+            "rare": false
+        },
+        "Fire Whip": {
+            "name": "Fire Whip",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Lash out from a distance. Mark 1-fatigue to inflict 2-fatigue or a condition (target’s choice), and enemies must mark 1-fatigue to get close enough to attack you this exchange.",
+            "rare": false
+        },
+        "Flame Knives": {
+            "name": "Flame Knives",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Mark up to 3-fatigue. Hold an equal number of flames. Lose 1-flame at the end of each exchange after this one. when you inflict fatigue or conditions on a foe, inflict an additional 1-fatigue for each remaining flame.",
+            "rare": false
+        },
+        "Jet Stepping": {
+            "name": "Jet Stepping",
+            "mastery": "Fire",
+            "approach": "Evade",
+            "description": "Advance to a higher position and become Favored and Prepared for the next exchange. Any foe engaged with you can mark 2-fatigue to block this technique.",
+            "rare": false
+        },
+        "Lighting Blast": {
+            "name": "Lighting Blast",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "[Lighting] Hurl a bolt of lightning at a target. Mark up to 3-fatigue. For each fatigue you mark, your target must mark 2-fatigue.",
+            "rare": true
+        },
+        "Spiral Flare Kick": {
+            "name": "Spiral Flare Kick",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Spin skyward on jets of flame as you lash out with your legs. Mark 1-fatigue to target two individual foes or one group with this attack. Individual foes must each mark 2-fatigue or one condition, their choice; the group must mark 4-fatigue or two conditions, their choice.",
+            "rare": true
+        },
+        "Wall Of Fiery Breath": {
+            "name": "Wall Of Fiery Breath",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Breathe a gout of flame that keeps foes back as you maneuver away from them. Mark one condition and move to a new position. Foes must keep their distance and become disengaged, or push through the flame and suffer 4-fatigue.",
+            "rare": false
+        },
+        "Air Cushion": {
+            "name": "Air Cushion",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Soften the blows an ally takes and get them back on their feet faster. Mark 1-fatigue to clear 2-fatigue, one condition, or any one status from an ally within reach who was struck by an attack this exchange.",
+            "rare": false
+        },
+        "Air Scooter": {
+            "name": "Air Scooter",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Summon a ball or ring of air under yourself. While riding it, you are Favored. You can sacrifice your air scooter to avoid marking fatigue or conditions when you are struck by an attack.",
+            "rare": false
+        },
+        "Air Swipe": {
+            "name": "Air Swipe",
+            "mastery": "Air",
+            "approach": "Defend",
+            "description": "Prepare to cast an arc of pressurized air to knock away incoming attacks and throw enemies off-balance. If any enemy attacks you, you may mark 1-fatigue to cast the arc and block or divert the strike. If no enemy has attacked you by the end of the exchange, you may cast the arc to inflict 2-fatigue on up to three enemies.",
+            "rare": false
+        },
+        "Breath Of Wind": {
+            "name": "Breath Of Wind",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "Exhale mightily via pursed lips. Mark 1-fatigue to knock down a single target and inflict Stunned on them unless they mark 4-fatigue.",
+            "rare": true
+        },
+        "Cannonball": {
+            "name": "Cannonball",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "Rush forward with the might of the wind behind you and crash into a foe. Mark 1-fatigue to target a foe you aren’t currently engaged with and rush at them. You become engaged with them (disengaging with other current foes) and inflict a condition on them.",
+            "rare": false
+        },
+        "Cushion The Forceful Fist": {
+            "name": "Cushion The Forceful Fist",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Put a cushion of twisting air around your body that keeps physical strikes at bay. Mark 2-fatigue to become Favored; you are immune to hard, physical, forceful attacks and blows (a hurled rock, a direct and forceful blast of flame, a jet of water) until the end of the next exchange.",
+            "rare": true
+        },
+        "Directed Funnel": {
+            "name": "Directed Funnel",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "Create a spinning funnel of air that can fire objects at high speed. Mark 1-fatigue; each ally in reach can mark 1-fatigue to toss an appropriate small object into the funnel—inflict 2-fatigue on a target within reach for each ally who does.",
+            "rare": false
+        },
+        "Reed In The Wind": {
+            "name": "Reed In The Wind",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Adjust your movements to perfectly match and avoid the movements of a foe. Mark 2-fatigue and secretly name the approach you believe your foe will use in the next exchange; reveal it after approaches are chosen in the next exchange. If you were incorrect, you may shift your chosen approach. If you were correct, you become immediately Favored for that exchange, and they cannot target you with any techniques.",
+            "rare": true
+        },
+        "Shockwave": {
+            "name": "Shockwave",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Leap into the air and hurtle back to the ground, sending a massive burst of pressurized air all around you. Mark 2-fatigue; everyone in the area, including allies, is thrown away, disengaging and becoming Stunned unless they mark 4-fatigue.",
+            "rare": true
+        },
+        "Small Vortex": {
+            "name": "Small Vortex",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Spin a single enemy off the ground on a small vortex. Mark 3-fatigue; your target becomes Impaired and Stunned.",
+            "rare": false
+        },
+        "Suction": {
+            "name": "Suction",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Snatch a small object off the ground or from a foe’s hand with a sucking wind. The object snaps to your hand unless someone marks 2-fatigue to hold it or block its movement.",
+            "rare": false
+        },
+        "Twisting Wind": {
+            "name": "Twisting Wind",
+            "mastery": "Air",
+            "approach": "Defend",
+            "description": "Effortlessly flow around blows like the wind itself. For each foe engaged with you who chose an advance and attack approach, clear 1-fatigue and hold 1-momentum. If you advance and attack next exchange, you may spend your momentum instead of fatigue.",
+            "rare": false
+        },
+        "Wind Run": {
+            "name": "Wind Run",
+            "mastery": "Air",
+            "approach": "Defend",
+            "description": "Race at high speeds, dodging attacks and seeking escape. Mark 1-fatigue to slip to a particular point of escape, disengaging from foes; you don’t engage any new foes. If no one re-engages with you or blocks your retreat by the end of the exchange, you escape the scene.",
+            "rare": false
+        },
+        "Boom!": {
+            "name": "Boom!",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Throw a small prepared explosive into the midst of your foes. Mark 2-fatigue or clear Prepared to toss the explosive into your enemies’ midst. Everyone in range (including allies in the area) must either mark 3-fatigue to dive away, or mark a condition and become Stunned, their choice.",
+            "rare": true
+        },
+        "Chi Blocking Jabs": {
+            "name": "Chi Blocking Jabs",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Pinpoint weapon or hand strikes to block a foe’s chi. Mark 1-fatigue to block a foe’s chi with your strikes, inflicting a condition and rendering a limb useless (and blocking bending with that limb). An enemy with one fewer useful limb chooses 1 fewer technique to use each exchange. Limbs become usable again when combat ends or three exchanges pass.",
+            "rare": true
+        },
+        "Chart A Course": {
+            "name": "Chart A Course",
+            "mastery": "Weapons",
+            "approach": "Evade",
+            "description": "Plan a clear and perfect path of action. Secretly choose your approach and up to two techniques you plan to use in the next exchange (noting them in advance). If you use those techniques in the next exchange, reveal your planning; those techniques cost no fatigue and cannot be canceled or blocked. Anyone engaged with you can mark 1-fatigue to look at the note.",
+            "rare": true
+        },
+        "Counterstrike": {
+            "name": "Counterstrike",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Using impeccable timing, read your foe’s movement and lash out with blinding speed. Execute a Strike as if you had marked 1-fatigue against an engaged foe who chose advance and attack as their approach. You cannot use this technique if you have any negative statuses.",
+            "rare": false
+        },
+        "Disarm": {
+            "name": "Disarm",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Target your foe’s ability to fight by breaking, removing, or limiting a particular style. Mark 2-fatigue to name any advanced advance and attack technique your foe has—they are unable to use that technique for the remainder of this encounter.",
+            "rare": false
+        },
+        "Feint": {
+            "name": "Feint",
+            "mastery": "Weapons",
+            "approach": "Evade",
+            "description": "Trick your foes into overextending themselves against you. If you were targeted by any attacks this exchange, you may mark 1-fatigue to immediately inflict a condition on each of your attackers.",
+            "rare": false
+        },
+        "Parry": {
+            "name": "Parry",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Stop a foe’s attack before it connects. Choose a foe who used advance and attack this exchange; during advance and attack, mark fatigue—1-for-1—to cancel an attack they use against you after they pay the costs.",
+            "rare": false
+        },
+        "Pin A Fly To A Tree": {
+            "name": "Pin A Fly To A Tree",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Fire arrows with perfect accuracy to pin a foe in place. Mark 1-fatigue to inflict Impaired on a target, or 3-fatigue to inflict Impaired and Trapped.",
+            "rare": true
+        },
+        "Pinpoint Thrust": {
+            "name": "Pinpoint Thrust",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Using a thrusting or stabbing weapon, go straight for the target with precision and accuracy. Mark 1-fatigue and inflict 2-fatigue and Impaired on your foe. You may mark an additional 1-fatigue to move yourself to a new position within reach immediately; any foes engaged with you may mark 1-fatigue to block this movement.",
+            "rare": false
+        },
+        "Switch It Up": {
+            "name": "Switch It Up",
+            "mastery": "Weapons",
+            "approach": "Evade",
+            "description": "Switch up your style, footwork, weapon, or bearing, causing your foe to second-guess your next move. Mark 1-fatigue to become Prepared and force an engaged foe to reveal their choice of approach before you choose yours during the next exchange.",
+            "rare": false
+        },
+        "Take The High Ground": {
+            "name": "Take The High Ground",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Move to an advantageous position above your foe. Mark 1-fatigue, become Favored, and ignore all fatigue, conditions, and negative statuses inflicted on you by attacks they make against you this exchange.",
+            "rare": false
+        },
+        "Turn The Tables": {
+            "name": "Turn The Tables",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Make careful strikes to undermine your foe’s advantageous position. Mark 1-fatigue to knock your foe from their position to a new, disadvantageous location, inflicting 1-fatigue. If your foe was Favored or Prepared at the start of the exchange, you do not mark fatigue, you inflict an additional 1-fatigue, and they lose all appropriate positive statuses. These costs and consequences cannot be canceled or avoided by another technique.",
+            "rare": true
+        },
+        "Better, Faster, Stronger": {
+            "name": "Better, Faster, Stronger",
+            "mastery": "Tech",
+            "approach": "Defend",
+            "description": "You push your equipment to its limits to move fast and charge up. Mark 1-fatigue to use Seize a Position, but no foe can block you. You may mark an additional 1-fatigue to gain Empowered for as long as you maintain the new position, or to move to an unsafe, unstable area and make it safe.",
+            "rare": false
+        },
+        "Blinded By Science": {
+            "name": "Blinded By Science",
+            "mastery": "Tech",
+            "approach": "Attack",
+            "description": "Use your gadgets and gizmos in a way that confuses and dazzles even the most tech-savvy foe. Mark up to 3-fatigue as you throw out your devices. If you mark 1-fatigue, inflict 1-fatigue and Impaired on your foe. If you mark 2-fatigue, inflict Trapped or Stunned on your foe, as well. If you mark 3-fatigue, inflict both Trapped and Stunned in addition to the 1-fatigue effects.",
+            "rare": false
+        },
+        "Collect Material": {
+            "name": "Collect Material",
+            "mastery": "Tech",
+            "approach": "Evade",
+            "description": "Scrounge up bits and bobs from the area around you that you can use to your advantage. Take 3-gears and become Prepared. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
+            "rare": false
+        },
+        "Entangler": {
+            "name": "Entangler",
+            "mastery": "Tech",
+            "approach": "Attack",
+            "description": "Entangle a foe with a weapon or device. Mark 1-fatigue to wrap the entangling object around your foe; they are Trapped. They break free automatically after they are Trapped for two full exchanges.",
+            "rare": false
+        },
+        "Full-Power Attack": {
+            "name": "Full-Power Attack",
+            "mastery": "Tech",
+            "approach": "Attack",
+            "description": "Discharge your batteries, release the high-tension coils, and otherwise unleash the full charge of your equipment! Become Impaired and inflict 2-fatigue on a targeted foe. Spend all gears you currently hold 1-for-1 to inflict 1 additional fatigue. If you spend 3 or more gears in this way, inflict 2 additional fatigue. You cannot earn gears for the rest of this scene—your equipment is too damaged, depleted, or otherwise used up.",
+            "rare": true
+        },
+        "Jolt": {
+            "name": "Jolt",
+            "mastery": "Tech",
+            "approach": "Attack",
+            "description": "Launch a disruptive attack on a target within reach in an attempt to control or slow them. Mark 1-fatigue to target a person or object. If you target a person, they must shift their balance away from center; if they are a technology user or covered in metal, they become Stunned; if you target an object, it is temporarily slowed or shut down.",
+            "rare": false
+        },
+        "Jury Rig": {
+            "name": "Jury Rig",
+            "mastery": "Tech",
+            "approach": "Attack",
+            "description": "Create a new device on the fly. You gain Favored, hold 1-gear, and name one basic technique from any approach. As long as you hold this device, you can use that technique as if it was part of your current approach by spending 1-gear. Otherwise, spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
+            "rare": true
+        },
+        "Pinpoint Flows": {
+            "name": "Pinpoint Flows",
+            "mastery": "Tech",
+            "approach": "Evade",
+            "description": "Identify weak points in your environment. Name a status you wish to inflict on a foe next exchange; the GM will tell you what you need to break in your environment to inflict that status. Next exchange, you may use Smash in addition to any other techniques you use, no matter what approach you choose.",
+            "rare": false
+        },
+        "Plant Trap": {
+            "name": "Plant Trap",
+            "mastery": "Tech",
+            "approach": "Evade",
+            "description": "Place a snare or triggered explosive into your environment. Mark 1-fatigue; the next enemy who enters the trapped area must mark a condition and shift their balance away from center.",
+            "rare": false
+        },
+        "Rebuild": {
+            "name": "Rebuild",
+            "mastery": "Tech",
+            "approach": "Defend",
+            "description": "Using your technological know-how, you improve your situation by quickly tuning, repairing, and adjusting your available equipment. Mark 1-fatigue, clear a condition, and gain 3-gears. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
+            "rare": false
+        },
+        "Smoke Bomb": {
+            "name": "Smoke Bomb",
+            "mastery": "Tech",
+            "approach": "Defend",
+            "description": "Throw a smoke bomb to cover your escape from the combat. Mark 1-fatigue to immediately Impair every other combatant in the area. You escape at the end of this exchange. Any foe who is engaged with you and not Impaired may mark 1-fatigue to block your escape.",
+            "rare": false
+        },
+        "Wind Up": {
+            "name": "Wind Up",
+            "mastery": "Tech",
+            "approach": "Defend",
+            "description": "Wind up a technological device to build tension and charge! Gain 1-gear and become Favored; then, mark up to 2-fatigue, and hold 2 additional gears for each fatigue you mark. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
+            "rare": true
         }
     },
     
@@ -285,6 +817,162 @@
             "name": "The Adamant",
             "description": "Pragmatic, fervent, dangerous, self-sacrificing. The Adamant is deeply committed to a cause, to the point that they may break all the rules to achieve their end. Sometimes, they might even go a bit too far in their drive—they have no hesitation to push and push and push when it comes to the causes they think are just. That’s why the Adamant needs a lodestar, the one person they listen to who can rein them in, let them know that maybe they should cool it and hold off a bit.\nThe Adamant can sometimes be dismissive of others, especially if those others stand in the way of the Adamant’s goals… but they’re also aware of their tendency to go too far, and to make sure they listen to the right voices telling them to hold back. The distinction between heroism and villainy can be a fine line for the Adamant, with their focus on results over means. They want to stay on the right side of that line, and they need their friends to find the right path forward.",
             "principles": "Restraint/Results",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Bold": {
+            "name": "The Bold",
+            "description": "Self-doubting, boastful, clever, curious. The Bold is sure that they have it in them to be someone great—a great warrior, an exceptional artist, a master bender—even if they aren’t really there yet, even if others make sure that the Bold knows they aren’t there yet. They will be, someday. They just need to work up to it, okay? They’re working up to it!\nThe Bold is trying to prove themselves. They may present to the world a confident, capable face, may even boast about their excellence—but that’s nearly always a facade, an attempt to sell themselves on their own skills as much as to convince anyone else. But at the same time, the Bold isn’t all talk—they are committed to making the world better, and especially for their friends, their family, and the people they care about. ",
+            "principles": "Loyalty/Confidence",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Guardian": {
+            "name": "The Guardian",
+            "description": "Tough, cynical, protective, devoted. The Guardian is a protector of one other person—their ward—utterly determined to keep them safe and sound against all threats and dangers. Whether or not that person wants protection is not always as important to the Guardian as it should be!\nThe Guardian knows how dangerous the world can be and is determined to keep someone else safe from that danger. It’s an altruistic impulse and a selfish one at the same time—they want to help someone, protect them…but that desire comes from feeling no one else is trustworthy except the Guardian.",
+            "principles": "Self-Reliance/Trust",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Hammer": {
+            "name": "The Hammer",
+            "description": "Brash, daring, forceful, foolhardy. The Hammer is a powerful fighter, a dangerous enemy, and a blunt object—they don’t really have that many additional strategies or approaches beyond “punch it hard.” They constantly face the difficulty of wanting to make the world better, to serve real justice and protect the innocent…all without a particularly versatile toolset.\nThe Hammer is, at heart, a hero. They’re trying to do good! They’re not just a bully or a fighter—they serve a strong belief in right and wrong! They’ve just found punching a useful or appropriate response to badness, and they got real good at it! But now that they’ve joined this group and are pursuing an important, larger purpose, they are encountering problems they can’t punch into submission—foes against whom combat isn’t even an option, let alone the right option.",
+            "principles": "Force/Care",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Icon": {
+            "name": "The Icon",
+            "description": "Torn, fun-loving, anxious, dutiful. The Icon was raised to fulfill a particular duty and role in their society—an important role, an honored role, a role that so many others, from adults to children, envy. But the Icon isn’t sure they want the role. They weren’t given any real choice in the matter; it’s their role according to destiny, tradition, prophecy, or some other impulse that guided the hands of their parents, mentors, or guardians.\nThe Icon’s role is tied to some culture or tradition, so be sure to think about exactly what their role is and how it connects to them when making the character. Tying the Icon into the scope of your game is a good idea—if your scope is the whole of the world, then the Icon’s role and associated cultural tradition can be world-span-ning, but if the scope of your game is Republic City, the Icon’s role can be much more restricted to the city’s limits.\nThe Icon has had the massive import of their role impressed upon them from a young age; they have always known how important the duties were. Now, they have all of that responsibility foisted upon them, and where once they could be themselves and live their life, everyone expects them to be something else now.",
+            "principles": "Role/Freedom",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Idealist": {
+            "name": "The Idealist",
+            "description": "Noble, pained, kind, committed. The Idealist has suffered some tragedy in their past, something terrible that left them with pain and anger…but also, with hope. Even in the face of tragedy, they felt and pursued a belief that people could be great, that the world could be better. The Idealist pursues that belief, taking action to help people, connect them, and solve problems.\nThe Idealist still has an edge to them, however, and a capacity for unforgiveness. After all, something terrible happened to them, and it can be hard not to crave vengeance against those responsible. At their best, the Idealist can turn that drive into a push to change the world for the better. At their worst, it can drive the Idealist to extreme, dangerous action.",
+            "principles": "Forgiveness/Action",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Pillar": {
+            "name": "The Pillar",
+            "description": "Supportive, self-assured, quiet, tactical. The Pillar comes from a background in which they worked with, even led, a larger team. They know what it takes to work well with a group, and they bring that skillset to this new group of companions. Of course, they can’t just take charge and demand everyone act the way they want…right?\nThe Pillar is exactly that to the group, a “pillar” to hold up the rest, to support, help, and guide them. Sometimes that means the Pillar can be a quiet presence in the background; other times, it means the Pillar moves to the forefront and takes charge. The difficulty for the Pillar comes in figuring out which time is which, and what this group needs from them!",
+            "principles": "Support/Leadership",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Prodigy": {
+            "name": "The Prodigy",
+            "description": "Arrogant, extraordinary, stubborn, masterful. The Prodigy is more than just capable or skilled—they are truly extraordinary, and their skillset blows others—even with equivalent age or training—out of the water. They can do things that some believe are straight-up impossible. And what’s more…they know it.\nThe Prodigy excels at their skills and training, to an extent that likely drove any number of their teachers or peers to hate them. The Prodigy has at least one teacher who genuinely helped them find the full extent of what they could do, but they’ve had to become tough developing their abilities. They know how capable they are and they know what they can do; they have grown tired of being told what they can or can’t do. They find it tough to form a connection with others, especially when no one else.",
+            "principles": "Excellence/Community",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Rogue": {
+            "name": "The Rogue",
+            "description": "Troublemaking, lonely, attention-seeking, selfish. The Rogue is an outsider and a miscreant, whatever their background or training might be. If they’re from a Privileged or Military upbringing, they might look like a different kind of delinquent than one from an Outlaw or Urban background…but in either case, they’re known as a troublemaker even among their own people. Someone with an Outlaw background might be stereotyped as being a criminal by people from other backgrounds, but a Rogue with an Outlaw background is trouble even for other criminals.\nThe Rogue became such a scoundrel and rulebreaker out of a need to survive. Something in their circumstances and background threatened their life, perhaps outright, perhaps metaphorically. For some Rogues, they became rulebreakers because they needed food; for others, they became rulebreakers because life threatened to drain them of personality or hope or will. Whatever the case, they didn’t just start causing trouble for the heck of it—or rather, causing trouble for the heck of it helped them survive in the first place.",
+            "principles": "Friendship/Survival",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Succesor": {
+            "name": "The Succesor",
+            "description": "Prestigious, redemptive, pigeonholed, rebellious. The Successor comes from a powerful family, group, order, or lineage—they’re the inheritor of real power, in one way or another, and everyone in the group believes the Successor belongs to it. But the lineage of the Successor is mired in corruption, or tragedy, or dark rumors. It’s not an unequivocally noble inheritance; it’s characterized by a tradition of destructive or cruel decisions and practices.\nThe Successor is a bit like the Icon; this identity has been foisted upon them. But unlike the Icon, this isn’t some specific, honored role that the Successor faces; it has the weight of an entire legacy with its own enemies, allies, responsibilities, and benefits. What’s more, nearly every NPC knows of the lineage, because the lineage holds power over or changed the scope in a significant way. If the scope of the game is the Northern Water Tribe, then the lineage is one of the most important families in the entire Northern Water Tribe, a name known to every Waterbender and ice fisher alike. Getting out from under that name, its weight, and its borne assumptions is quite the challenge for the Successor.",
+            "principles": "Tradition/Progress",
+            "conditions": [
+                "Frustrated",
+                "Jaded",
+                "Remorseful",
+                "Shaken",
+                "Worried"
+            ]
+        },
+        "The Destined": {
+            "name": "The Destined",
+            "description": "Aware, fated, strange, thoughtful. The Destined has been singled out by some strange circumstance surrounding them, be it otherworldly knowledge, a star atlas, the sensation of nature’s pain, or a mark from a great spirit. Whatever separates them from their peers, no one contests that the Destined has a significant fate, to perform feats worthy of song and story. Or at least, so everyone believes; so far the Destined hasn’t fulfilled any grand fate, but they still have a deep ingrained sense that their destiny awaits them down the line.\nThe Destined isn’t afraid of their destiny, per se—they might be nervous about its arrival, what it really means, but their destiny is ultimately positive in bent. The Destined is important! They just don’t fully understand their importance yet, or what they are fated to actually do. As a result, the Destined is torn between waiting patiently for their destiny to come to them—after all, it is fated to arrive—and seeking it out actively and determinedly.",
+            "principles": "Patience/Determination",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Elder": {
+            "name": "The Elder",
+            "description": "Experienced, esteemed, studious, guiding. The Elder is distinct from most other playbooks and PCs in Avatar Legends: The Roleplaying Game because they are always mid-30s or older, and they are experienced, successful, and even respected. Whereas most other PCs are proving themselves, establishing themselves, becoming heroes for the first time, the Elder has already seen and done so much. But crucially, the Elder has not finished learning, growing, or changing. They can guide others along the path with their own hard-won experience, but they will never stop walking down that very same road of learning and being a student.\nThe Elder has achieved much that earns them praise and respect throughout the scope of your game, but they are not currently in a position of power. To be a PC in the game, working and traveling with the companions, the Elder has moved away from their static position. Once, they might have been an important general or the leader of a monastic order; now, they have set that position aside, if only temporarily, to join the other PCs.",
+            "principles": "Experience/Humility",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Foundling": {
+            "name": "The Foundling",
+            "description": "Dualistic, torn, innovative, exploring. The Foundling is a child of two different heritages, each with their own traditions, their own practices, their own trainings. The Foundling might be an Earthbender raised by Air Nomads, or a sword-wielding Fire Nation orphan raised in the Southern Water Tribe. Both of their heritages have a place in the Foundling’s life and identity, and they struggle to find ways to belong to either heritage or to combine both. The struggle between belonging and owning one heritage and uniquely mixing both defines the Foundling’s path.\nA Foundling can’t bend two different elements—no one can do that except the Avatar! But they are always stronger for incorporating elements of another culture and training. A Waterbender who knows how to use firebending forms with waterbending is that much more effective! With their unique perspective, the Foundling can pick up skills that no other character can, adapting them and building a new style all their own.",
+            "principles": "Unity/Heritage",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Razor": {
+            "name": "The Razor",
+            "description": "Hardened, sharp, guilty, regretful. The Razor was forged into a dangerous weapon by their masters. Those masters might’ve been the rulers of a nation, the commanders of a military group, bandit chiefs, even the Razor’s own family. They taught the Razor to be tough, to act harshly, to do terrible things. But now, the Razor has moved away from that path and seeks redemption, finding forgiveness both externally and internally for the things they have done.\nCrucially, the Razor is dangerous and powerful, but not always in an overt fashion like the Prodigy (see page 194 of the core book). Where the Prodigy is just plain exceptional at their training in all its forms, the Razor might only be good at destructive or harmful aspects of their training…or they might be defined by an indomitable will more than skill. Regardless, however, the Razor’s restraint and disinterest in continuing to be a weapon both temper how they act more than anything—the Razor might be able to dispatch entire roomfuls of guards if they cut loose, but they try to hold themselves back to avoid harming anyone.",
+            "principles": "Control/Connection",
             "conditions": [
                 "Afraid",
                 "Angry",
