@@ -38,7 +38,12 @@ public class MainMenu : MonoBehaviour {
 
         buttons.Add(new ButtonData {
             Text = "Quit",
-            Callback = UnityUtils.Quit
+            Callback = async () => {
+                var loadingWheel = ApplicationManager.Instance.ShowLoadingScreen.Subscribe();
+                await UserDataManager.Instance.SaveAllDataAsync();
+                loadingWheel.Finish();
+                UnityUtils.Quit();
+            }
         });
 
         _buttonList.Populate(buttons);

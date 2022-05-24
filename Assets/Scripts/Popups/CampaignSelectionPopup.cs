@@ -6,8 +6,9 @@ public class CampaignSelectionPopup : Popup {
     [SerializeField] private ButtonList _campaignsList = default;
     [SerializeField] private Button _addCampaign = default;
     [SerializeField] private Button _closeButton = default;
-    private UserData userData => ApplicationManager.Instance.Data.User;
-    private Dictionary<string, Campaign> campaigns => userData.Campaigns;
+    private AppData Data => ApplicationManager.Instance.Data;
+    private UserData UserData => Data.User;
+    private Dictionary<string, Campaign> Campaigns => UserData.Campaigns;
 
     private void Awake() {
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
@@ -15,10 +16,10 @@ public class CampaignSelectionPopup : Popup {
             var addCampaignPopup = await PopupManager.Instance.GetOrLoadPopup<AddCampaignPopup>(restore: false);
             addCampaignPopup.Populate(
                 entry => {
-                    campaigns.Add(entry.Name, entry as Campaign);
+                    Campaigns.Add(entry.Name, entry as Campaign);
                     RefreshCampaignButtons();
                 },
-                campaigns.Keys,
+                Campaigns.Keys,
                 null
             );
         });
@@ -27,14 +28,16 @@ public class CampaignSelectionPopup : Popup {
     }
 
     private void RefreshCampaignButtons() {
-        List<ButtonData> buttons = new List<ButtonData>(campaigns.Count);
+        List<ButtonData> buttons = new List<ButtonData>(Campaigns.Count);
 
-        foreach (var campaign in campaigns) {
+        foreach (var campaign in Campaigns) {
             buttons.Add(new ButtonData {
                 Text = campaign.Key,
                 Callback = () => {
-                    userData.SelectedCampaignName = campaign.Key;
-                    var selectedCampaign = userData.SelectedCampaign;
+                    PopupManager.Instance.Back();
+                    Data.ClearCache();
+                    UserData.SelectedCampaignName = campaign.Key;
+                    var selectedCampaign = UserData.SelectedCampaign;
                     selectedCampaign.CurrentSession = selectedCampaign.LastSession;
                     _ = PopupManager.Instance.GetOrLoadPopup<CampaignViewPopup>(restore: false);
                 }

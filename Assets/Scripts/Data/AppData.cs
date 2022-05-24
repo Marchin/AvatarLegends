@@ -181,14 +181,12 @@ public class AppData {
     public bool IsEditable(Playbook status) {
         return !_dataPlaybooks.ContainsKey(status.Name);
     }
-    
-    // public AppData() {
-    //     string data = PlayerPrefs.GetString(UserDataPref, "{}");
-    //     User = JsonConvert.DeserializeObject<UserData>(data) ?? new UserData();
-    // }
-    
-    // public void RecordData() {
-    //     string data = JsonConvert.SerializeObject(User);
-    //     PlayerPrefs.SetString(UserDataPref, data);
-    // }
+
+    public void ClearCache() {
+        _npcs = null;
+        _techniques = null;
+        _conditions = null;
+        _statuses = null;
+        _playbooks = null;
+    }
 }

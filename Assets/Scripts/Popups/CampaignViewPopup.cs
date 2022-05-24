@@ -370,6 +370,7 @@ public class CampaignViewPopup : Popup {
                 entries.Add(entry.Key, (T)entry.Value);
             }
             onSave(entries);
+            UserDataManager.Instance.SaveAllData(localOnly: true);
         };
     }
 

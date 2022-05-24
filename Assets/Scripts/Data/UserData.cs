@@ -18,8 +18,10 @@ public class UserData {
     public Dictionary<string, Playbook> Playbooks = new Dictionary<string, Playbook>();
 
     public string SelectedCampaignName;
-    public Campaign SelectedCampaign => Campaigns[SelectedCampaignName];
-    public Session CurrentSession => SelectedCampaign.CurrentSession;
+    public Campaign SelectedCampaign => 
+        (!string.IsNullOrEmpty(SelectedCampaignName) && Campaigns.ContainsKey(SelectedCampaignName)) ?
+            Campaigns[SelectedCampaignName] : null;
+    public Session CurrentSession => SelectedCampaign?.CurrentSession;
 
     public bool IsClear =>
         (Campaigns.Count == 0) &&

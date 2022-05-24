@@ -431,7 +431,6 @@ public class NPC : IDataEntry, IOnMoreInfo {
         UnityEngine.Debug.Assert((value >= 0) && (value <= maxFatigue), "Invalid Balance");
 
         Fatigue = UnityEngine.Mathf.Clamp(value, 0, maxFatigue);
-        _refresh();
     }
 
     public int GetMaxFatigue() {

@@ -32,6 +32,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     private string _dataOnLoad;
     private bool _userConfirmedData;
     private bool _isSaving;
+    private bool _prendingSync;
     private bool _keepLocalCopy = true;
     private bool KeepLocalCopy {
         get => _keepLocalCopy;
@@ -103,12 +104,13 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
         if (IsUserLoggedIn) {
             return;
         }
-        OperationBySubscription.Subscription loadingWheelHandle = null;
+        // OperationBySubscription.Subscription loadingWheelHandle = null;
         OperationBySubscription.Subscription loadingScreenHandle = null;
         try {
             IsLoggingIn = true;
             OnAuthChanged?.Invoke();
-            loadingWheelHandle = ApplicationManager.Instance.ShowLoadingWheel.Subscribe();
+            // loadingWheelHandle = ApplicationManager.Instance.ShowLoadingWheel.Subscribe();
+            loadingScreenHandle = ApplicationManager.Instance.ShowLoadingScreen.Subscribe();
             var aboutRequest = UnityGoogleDrive.GoogleDriveAbout.Get();
             aboutRequest.Fields = new List<string> { "user" };
             await aboutRequest.Send();
@@ -140,7 +142,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                         long localModifiedTime = long.Parse(PlayerPrefs.GetString(LastLocalSavePref, "0"));
                         if (Data.IsClear || saveFileLocation.ModifiedTime.Value.Ticks != localModifiedTime) {
                             long lastLocalUploadTime = long.Parse(PlayerPrefs.GetString(LastLocalSaveUploadedPref, "0"));
-                            if (Data.IsClear && (localModifiedTime > lastLocalUploadTime)) {
+                            if (!Data.IsClear && (localModifiedTime > lastLocalUploadTime)) {
                                 var popup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
                                 ToggleData keepCopyToggle = new ToggleData { Name = "Keep a copy", On = KeepLocalCopy };
                                 Action keepLocal = async () => {
@@ -159,7 +161,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                         Name = SaveFileName,
                                         Content = Encoding.ASCII.GetBytes(jsonData)
                                     };
-                                    loadingWheelHandle.Finish();
+                                    // loadingWheelHandle.Finish();
                                     loadingScreenHandle = ApplicationManager.Instance.ShowLoadingScreen.Subscribe();
                                     var updateRequest = UnityGoogleDrive.GoogleDriveFiles.Update(_fileID, file);
                                     updateRequest.Fields = FileFieldsQuery;
@@ -192,9 +194,11 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                     IsLoggingIn = false;
                                     OnAuthChanged?.Invoke();
                                     OnLocalDataOverriden?.Invoke();
-                                    loadingWheelHandle.Finish();
+                                    // loadingWheelHandle.Finish();
                                 };
 
+
+                                loadingScreenHandle.Finish();
                                 List<ButtonData> buttons = new List<ButtonData>(2);
                                 buttons.Add(new ButtonData { Text = "Local", Callback = keepLocal });
                                 buttons.Add(new ButtonData { Text = "Cloud", Callback = keepCloud });
@@ -218,37 +222,42 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                 IsLoggingIn = false;
                                 OnAuthChanged?.Invoke();
                                 OnLocalDataOverriden?.Invoke();
-                                loadingWheelHandle.Finish();
+                                loadingScreenHandle?.Finish();
+                                // loadingWheelHandle.Finish();
                             }
                         } else {
                             _userConfirmedData = true;
                             IsLoggingIn = false;
                             OnAuthChanged?.Invoke();
-                            loadingWheelHandle.Finish();
+                            loadingScreenHandle?.Finish();
+                            // loadingWheelHandle.Finish();
                         }
                     } else {
                         _userConfirmedData = true;
                         IsLoggingIn = false;
                         SaveAllData(forceSave: true);
-                        loadingWheelHandle.Finish();
+                        loadingScreenHandle?.Finish();
+                        // loadingWheelHandle.Finish();
                     }
                 } else {
                     Debug.LogWarning("File Location not found");
                     _userConfirmedData = true;
                     IsLoggingIn = false;
                     SaveAllData(forceSave: true);
-                    loadingWheelHandle.Finish();
+                    loadingScreenHandle?.Finish();
+                    // loadingWheelHandle.Finish();
                 }
             } else {
                 var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
                 msgPopup.Populate("Failed to authenticate your google account", "Authentication Fail");
                 IsLoggingIn = false;
-                loadingWheelHandle.Finish();
+                loadingScreenHandle?.Finish();
+                // loadingWheelHandle.Finish();
             }
         } catch (Exception ex) {
             Debug.LogError($"{ex.Message} \n {ex.StackTrace}");
             IsLoggingIn = false;
-            loadingWheelHandle?.Finish();
+            // loadingWheelHandle?.Finish();
             loadingScreenHandle?.Finish();
             OnAuthChanged?.Invoke();
         }
@@ -272,7 +281,11 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     }
 
     
-    public async void SaveAllData(bool forceSave = false) {
+    public void SaveAllData(bool forceSave = false, bool localOnly = false) {
+        _ = SaveAllDataAsync(forceSave, localOnly);
+    }
+
+    public async UniTask SaveAllDataAsync(bool forceSave = false, bool localOnly = false) {
         if (_isSaving) {
             return;
         }
@@ -287,13 +300,14 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
             $"{KeepLocalCopyKey}: {KeepLocalCopy}\n" + 
             $"{JsonConvert.SerializeObject(Data)}";
         
-        if ((jsonData != _dataOnLoad) || forceSave) {
+        if ((jsonData != _dataOnLoad) || forceSave || _prendingSync) {
             PlayerPrefs.SetString(LocalDataPref, jsonData);
             _dataOnLoad = jsonData;
+            _prendingSync |= localOnly;
             long localModifiedTime = long.Parse(PlayerPrefs.GetString(LastLocalSavePref, "0"));
             RefreshDataDate();
 
-            if (IsUserLoggedIn) {
+            if (IsUserLoggedIn && !localOnly) {
                 var loadingWheelHandle = ApplicationManager.Instance.ShowLoadingWheel.Subscribe();
                 var saveMetadata = await GetSaveMetadata();
                 bool noRecordConflicts = (saveMetadata == null) ||
@@ -316,6 +330,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                     }
                     RefreshDataDate(file.ModifiedTime.Value);
                     PlayerPrefs.SetString(LastLocalSaveUploadedPref, file.ModifiedTime.Value.Ticks.ToString());
+                    _prendingSync = false;
                 }
                 loadingWheelHandle.Finish();
             }
@@ -330,9 +345,5 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
 
     private void RefreshDataDate(DateTime time) {
         PlayerPrefs.SetString(LastLocalSavePref, time.Ticks.ToString());
-    }
-
-    private void OnDestroy() {
-        SaveAllData();
     }
 }
