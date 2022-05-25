@@ -78,6 +78,7 @@ public class CampaignViewPopup : Popup {
         _clearSearchButton.gameObject.SetActive(false);
         _searchIcon.SetActive(true);
         _searchInput.onValueChanged.AddListener(OnSearchInputChanged);
+        _nameList.OnRefresh += RefreshEntriesColor;
 
         List<ButtonData> tabs = new List<ButtonData>();
 
@@ -456,16 +457,19 @@ public class CampaignViewPopup : Popup {
         _selectedEntry = entry.Name;
         _editEntry.interactable = _isEditable(entry);
         _deleteEntry.interactable = _isEditable(entry);
+        RefreshEntriesColor();
 
+        _onSetEntry?.Invoke(entry);
+    }
+
+    private void RefreshEntriesColor() {
         foreach (var element in _nameList.Elements) {
-            element.ButtonImage.color = (element.Text == entry.Name) ?
+            element.ButtonImage.color = (element.Text == _selectedEntry) ?
                 _selectedColor :
                 (element.Text == _highlightedEntry) ?
                     _highlightedColor :
                     _unselectedColor;
         }
-
-        _onSetEntry?.Invoke(entry);
     }
 
     private void DeleteEntry() {
