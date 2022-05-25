@@ -21,6 +21,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     private readonly List<string> ListFieldsQuery = new List<string> { "files/name, files/id, files/modifiedTime" };
     private readonly List<string> FileFieldsQuery = new List<string> { "name, id, modifiedTime" };
     private const string KeepLocalCopyKey = "keep_local_copy";
+    private const int AutoSaveIntervalInMinutes = 1;
     public UserData Data { get; private set; }
     public event Action OnBeforeSave;
     private string _fileID;
@@ -53,6 +54,14 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
         _driveSettings = GoogleDriveSettings.LoadFromResources();
         string localData = PlayerPrefs.GetString(LocalDataPref);
         ParseFileData(localData);
+        AutoSave();
+    }
+
+    private async void AutoSave() {
+        while (true) {
+            await UniTask.Delay(AutoSaveIntervalInMinutes * 60 * 1000);
+            SaveAllData();
+        }
     }
 
     private void ParseFileData(string fileContent) {
@@ -104,12 +113,11 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
         if (IsUserLoggedIn) {
             return;
         }
-        // OperationBySubscription.Subscription loadingWheelHandle = null;
+        
         OperationBySubscription.Subscription loadingScreenHandle = null;
         try {
             IsLoggingIn = true;
             OnAuthChanged?.Invoke();
-            // loadingWheelHandle = ApplicationManager.Instance.ShowLoadingWheel.Subscribe();
             loadingScreenHandle = ApplicationManager.Instance.ShowLoadingScreen.Subscribe();
             var aboutRequest = UnityGoogleDrive.GoogleDriveAbout.Get();
             aboutRequest.Fields = new List<string> { "user" };
@@ -161,7 +169,6 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                         Name = SaveFileName,
                                         Content = Encoding.ASCII.GetBytes(jsonData)
                                     };
-                                    // loadingWheelHandle.Finish();
                                     loadingScreenHandle = ApplicationManager.Instance.ShowLoadingScreen.Subscribe();
                                     var updateRequest = UnityGoogleDrive.GoogleDriveFiles.Update(_fileID, file);
                                     updateRequest.Fields = FileFieldsQuery;
@@ -194,9 +201,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                     IsLoggingIn = false;
                                     OnAuthChanged?.Invoke();
                                     OnLocalDataOverriden?.Invoke();
-                                    // loadingWheelHandle.Finish();
                                 };
-
 
                                 loadingScreenHandle.Finish();
                                 List<ButtonData> buttons = new List<ButtonData>(2);
@@ -223,21 +228,18 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                                 OnAuthChanged?.Invoke();
                                 OnLocalDataOverriden?.Invoke();
                                 loadingScreenHandle?.Finish();
-                                // loadingWheelHandle.Finish();
                             }
                         } else {
                             _userConfirmedData = true;
                             IsLoggingIn = false;
                             OnAuthChanged?.Invoke();
                             loadingScreenHandle?.Finish();
-                            // loadingWheelHandle.Finish();
                         }
                     } else {
                         _userConfirmedData = true;
                         IsLoggingIn = false;
                         SaveAllData(forceSave: true);
                         loadingScreenHandle?.Finish();
-                        // loadingWheelHandle.Finish();
                     }
                 } else {
                     Debug.LogWarning("File Location not found");
@@ -245,19 +247,16 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                     IsLoggingIn = false;
                     SaveAllData(forceSave: true);
                     loadingScreenHandle?.Finish();
-                    // loadingWheelHandle.Finish();
                 }
             } else {
                 var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
                 msgPopup.Populate("Failed to authenticate your google account", "Authentication Fail");
                 IsLoggingIn = false;
                 loadingScreenHandle?.Finish();
-                // loadingWheelHandle.Finish();
             }
         } catch (Exception ex) {
             Debug.LogError($"{ex.Message} \n {ex.StackTrace}");
             IsLoggingIn = false;
-            // loadingWheelHandle?.Finish();
             loadingScreenHandle?.Finish();
             OnAuthChanged?.Invoke();
         }
