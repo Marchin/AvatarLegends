@@ -299,7 +299,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
             $"{KeepLocalCopyKey}: {KeepLocalCopy}\n" + 
             $"{JsonConvert.SerializeObject(Data)}";
         
-        if (string.Equals(jsonData,_dataOnLoad) || forceSave || (_prendingSync && !localOnly)) {
+        if (!string.Equals(jsonData, _dataOnLoad) || forceSave || (_prendingSync && !localOnly)) {
             PlayerPrefs.SetString(LocalDataPref, jsonData);
             _dataOnLoad = jsonData;
             _prendingSync |= localOnly;
