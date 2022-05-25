@@ -82,7 +82,6 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _addButton.onClick.AddListener(() => _info.OnAdd());
         _onHover.OnPointerEnterEvent += () => _info.OnHoverIn?.Invoke();
         _onHover.OnPointerExitEvent += () => _info.OnHoverOut?.Invoke();
-        _toggle.onValueChanged.AddListener(value => _info?.OnToggle?.Invoke(value));
     }
 
     private void RefreshCounter() {
@@ -131,9 +130,11 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _decreaseButton.gameObject.SetActive(data.OnValueChange != null);
         _increaseButton.gameObject.SetActive(data.OnValueChange != null);
         _counter.transform.parent.gameObject.SetActive(data.OnValueChange != null);
+        _toggle.onValueChanged.RemoveAllListeners();
         _toggle.gameObject.SetActive((data.OnToggle != null) || data.IsToggleOn.HasValue);
         _toggle.isOn = data.IsToggleOn ?? false;
         _toggle.interactable = (data.OnToggle != null);
+        _toggle.onValueChanged.AddListener(value => _info?.OnToggle?.Invoke(value));
         _onHover.gameObject.SetActive((data.OnHoverIn != null) || (data.OnHoverOut != null));
         _counterValue = data.InitValue;
         RefreshCounter();
