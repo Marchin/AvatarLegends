@@ -22,7 +22,7 @@ public class MessagePopup : Popup {
     [SerializeField] private TextMeshProUGUI _content = default;
     [SerializeField] private Button _closeButton = default;
     // [SerializeField] private Image _image = default;
-    // [SerializeField] private ToggleList _toggleList = default;
+    [SerializeField] private ToggleList _toggleList = default;
     [SerializeField] private ButtonList _buttonList = default;
     [SerializeField] private GridLayoutGroup _buttonGrid = default;
     [SerializeField] private PopupCloser _backgroundCloser = default;
@@ -84,9 +84,9 @@ public class MessagePopup : Popup {
         // if (_spriteReference?.RuntimeKeyIsValid() ?? false) {
         //     _spriteHandle = UnityUtils.LoadSprite(_image, _spriteReference, _cts.Token);
         // }
-        // _toggleDataList = toggleDataList;
-        // _toggleList.Populate(_toggleDataList);
-        // _toggleList.gameObject.SetActive(toggleDataList != null && toggleDataList.Count > 0);
+        _toggleDataList = toggleDataList;
+        _toggleList.Populate(_toggleDataList);
+        _toggleList.gameObject.SetActive(toggleDataList != null && toggleDataList.Count > 0);
 
         _buttonDataList = buttonsList;
         _buttonList.Populate(_buttonDataList);
