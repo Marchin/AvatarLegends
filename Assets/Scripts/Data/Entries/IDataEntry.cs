@@ -7,7 +7,7 @@ public enum ETraining {
     Fire,
     Air,
     Weapons,
-    Tech
+    Technology
 }
 
 public interface IOnMoreInfo {

@@ -632,140 +632,140 @@
         },
         "Better, Faster, Stronger": {
             "name": "Better, Faster, Stronger",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "You push your equipment to its limits to move fast and charge up. Mark 1-fatigue to use Seize a Position, but no foe can block you. You may mark an additional 1-fatigue to gain Empowered for as long as you maintain the new position, or to move to an unsafe, unstable area and make it safe.",
             "rare": false
         },
         "Blinded By Science": {
             "name": "Blinded By Science",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Use your gadgets and gizmos in a way that confuses and dazzles even the most tech-savvy foe. Mark up to 3-fatigue as you throw out your devices. If you mark 1-fatigue, inflict 1-fatigue and Impaired on your foe. If you mark 2-fatigue, inflict Trapped or Stunned on your foe, as well. If you mark 3-fatigue, inflict both Trapped and Stunned in addition to the 1-fatigue effects.",
             "rare": false
         },
         "Collect Material": {
             "name": "Collect Material",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Scrounge up bits and bobs from the area around you that you can use to your advantage. Take 3-gears and become Prepared. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
             "rare": false
         },
         "Entangler": {
             "name": "Entangler",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Entangle a foe with a weapon or device. Mark 1-fatigue to wrap the entangling object around your foe; they are Trapped. They break free automatically after they are Trapped for two full exchanges.",
             "rare": false
         },
         "Full-Power Attack": {
             "name": "Full-Power Attack",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Discharge your batteries, release the high-tension coils, and otherwise unleash the full charge of your equipment! Become Impaired and inflict 2-fatigue on a targeted foe. Spend all gears you currently hold 1-for-1 to inflict 1 additional fatigue. If you spend 3 or more gears in this way, inflict 2 additional fatigue. You cannot earn gears for the rest of this scene—your equipment is too damaged, depleted, or otherwise used up.",
             "rare": true
         },
         "Jolt": {
             "name": "Jolt",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Launch a disruptive attack on a target within reach in an attempt to control or slow them. Mark 1-fatigue to target a person or object. If you target a person, they must shift their balance away from center; if they are a technology user or covered in metal, they become Stunned; if you target an object, it is temporarily slowed or shut down.",
             "rare": false
         },
         "Jury Rig": {
             "name": "Jury Rig",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Create a new device on the fly. You gain Favored, hold 1-gear, and name one basic technique from any approach. As long as you hold this device, you can use that technique as if it was part of your current approach by spending 1-gear. Otherwise, spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
             "rare": true
         },
         "Pinpoint Flows": {
             "name": "Pinpoint Flows",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Identify weak points in your environment. Name a status you wish to inflict on a foe next exchange; the GM will tell you what you need to break in your environment to inflict that status. Next exchange, you may use Smash in addition to any other techniques you use, no matter what approach you choose.",
             "rare": false
         },
         "Plant Trap": {
             "name": "Plant Trap",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Place a snare or triggered explosive into your environment. Mark 1-fatigue; the next enemy who enters the trapped area must mark a condition and shift their balance away from center.",
             "rare": false
         },
         "Rebuild": {
             "name": "Rebuild",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "Using your technological know-how, you improve your situation by quickly tuning, repairing, and adjusting your available equipment. Mark 1-fatigue, clear a condition, and gain 3-gears. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
             "rare": false
         },
         "Smoke Bomb": {
             "name": "Smoke Bomb",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "Throw a smoke bomb to cover your escape from the combat. Mark 1-fatigue to immediately Impair every other combatant in the area. You escape at the end of this exchange. Any foe who is engaged with you and not Impaired may mark 1-fatigue to block your escape.",
             "rare": false
         },
         "Wind Up": {
             "name": "Wind Up",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "Wind up a technological device to build tension and charge! Gain 1-gear and become Favored; then, mark up to 2-fatigue, and hold 2 additional gears for each fatigue you mark. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training.",
             "rare": true
         },
         "Brawling Blast": {
             "name": "Brawling Blast",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Unleash an explosive or forceful device up-close to a foe. Mark 2-fatigue and inflict 3-fatigue and Stunned on your foe.",
             "rare": false
         },
         "Flash Crystals": {
             "name": "Flash Crystals",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Throw a scattering of flash crystals at your opponent’s feet and shield your eyes. Any fighters in the area must mark 2-fatigue or become Stunned; you need only mark 1-fatigue.",
             "rare": true
         },
         "Grapple Line": {
             "name": "Grapple Line",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "Toss out a grapple line and zip around the battlefield to a new advantageous position. Mark 1-fatigue to become Favored and disengage with all current foes, reengaging with a foe of your choice as you take up your new position. If you spend any gears on this technique, inflict Impaired on any foes with whom you engage.",
             "rare": false
         },
         "Salvage": {
             "name": "Salvage",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Take apart a broken device or shattered piece of the environment to acquire the resources you need. Roll a single six-sided die. Take 2-gears if you roll a 1-2; 3-gears if you roll a 3-4; 4-gears if you roll a 5; and 5-gears if you roll a 6. Spend gears 1-for-1 instead of fatigue on technology techniques or basic techniques using technology training",
             "rare": true
         },
         "Stink Bomb": {
             "name": "Stink Bomb",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Evade",
             "description": "Toss a stink bomb at an area. All combatants engaged in that area without some kind of air filter become Impaired, mark 1-fatigue, and disengage with each other as they start hacking and coughing.",
             "rare": false
         },
         "Suction Boots": {
             "name": "Suction Boots",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Defend",
             "description": "Deploy the suction effect on your boots and move up vertical walls or even along the ceiling! Move to a new location, engaging/disengaging with foes, overcoming negative statuses or dangers, establishing an advantageous position, or escaping the scene. If you move along difficult surfaces, only foes who can reach you can stop you, and must mark 2-fatigue to do so.",
             "rare": false
         },
         "The Down": {
             "name": "The Down",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Use a device to tie your target to a surface or object of your choice. Mark 1-fatigue; your target becomes Impaired and is attached to that surface, essentially engaged with it, and cannot move away or disengage from it unless they pay 3-fatigue to break free or otherwise clear Impaired.",
             "rare": false
         },
         "Zip Zap": {
             "name": "Zip Zap",
-            "mastery": "Tech",
+            "mastery": "Technology",
             "approach": "Attack",
             "description": "Send a spark of electricity erupting from a device you control. Mark 1-fatigue to inflict 2-fatigue and Impaired on a target engaged with you. If that target is already Impaired, inflict an additional 2-fatigue.",
             "rare": false

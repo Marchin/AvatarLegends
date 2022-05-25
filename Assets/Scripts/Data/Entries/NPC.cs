@@ -561,8 +561,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
             case Technique.EMastery.Weapons: {
                 result = Trainings.Contains(ETraining.Weapons);
             } break;
-            case Technique.EMastery.Tech: {
-                result = Trainings.Contains(ETraining.Tech);
+            case Technique.EMastery.Technology: {
+                result = Trainings.Contains(ETraining.Technology);
             } break;
         }
 

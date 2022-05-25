@@ -38,7 +38,7 @@ public class Technique : IDataEntry, IOnHover {
         Fire,
         Air,
         Weapons,
-        Tech
+        Technology
     }
 
     [JsonProperty("name")]
