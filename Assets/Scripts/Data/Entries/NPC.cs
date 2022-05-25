@@ -484,6 +484,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         List<InformationData> infoList = new List<InformationData>(Data.Techniques.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
         var availableTechniques = GetLearnableTechniques();
+        int slotsAvailable = GetMaxTechniques() - Techniques.Count;
 
         foreach (var technique in Techniques) {
             availableTechniques.Remove(technique);
@@ -501,7 +502,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     Content = technique.Name,
                     IsToggleOn = techniquesToAdd.Contains(technique.Name),
                     OnToggle = async on => {
-                        if (!on || (techniquesToAdd.Count < GetMaxTechniques())) {
+                        if (!on || (techniquesToAdd.Count < slotsAvailable)) {
                             if (on) {
                                 techniquesToAdd.Add(technique.Name);
                             } else {
@@ -523,7 +524,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
             }
 
             listPopup.Populate(infoList,
-                $"Add Techniques ({techniquesToAdd.Count}/{availableTechniques.Count})",
+                $"Add Techniques ({techniquesToAdd.Count}/{slotsAvailable})",
                 () => {
                     Techniques.AddRange(techniquesToAdd);
                     Techniques.Sort();
