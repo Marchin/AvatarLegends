@@ -21,7 +21,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     private readonly List<string> ListFieldsQuery = new List<string> { "files/name, files/id, files/modifiedTime" };
     private readonly List<string> FileFieldsQuery = new List<string> { "name, id, modifiedTime" };
     private const string KeepLocalCopyKey = "keep_local_copy";
-    private const int AutoSaveIntervalInMinutes = 1;
+    private const int AutoSaveIntervalInMinutes = 5;
     public UserData Data { get; private set; }
     public event Action OnBeforeSave;
     private string _fileID;
