@@ -926,11 +926,11 @@
             "description": "Prestigious, redemptive, pigeonholed, rebellious. The Successor comes from a powerful family, group, order, or lineage—they’re the inheritor of real power, in one way or another, and everyone in the group believes the Successor belongs to it. But the lineage of the Successor is mired in corruption, or tragedy, or dark rumors. It’s not an unequivocally noble inheritance; it’s characterized by a tradition of destructive or cruel decisions and practices.\nThe Successor is a bit like the Icon; this identity has been foisted upon them. But unlike the Icon, this isn’t some specific, honored role that the Successor faces; it has the weight of an entire legacy with its own enemies, allies, responsibilities, and benefits. What’s more, nearly every NPC knows of the lineage, because the lineage holds power over or changed the scope in a significant way. If the scope of the game is the Northern Water Tribe, then the lineage is one of the most important families in the entire Northern Water Tribe, a name known to every Waterbender and ice fisher alike. Getting out from under that name, its weight, and its borne assumptions is quite the challenge for the Successor.",
             "principles": "Tradition/Progress",
             "conditions": [
-                "Frustrated",
-                "Jaded",
-                "Remorseful",
-                "Shaken",
-                "Worried"
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
             ]
         },
         "The Destined": {
@@ -950,11 +950,11 @@
             "description": "Experienced, esteemed, studious, guiding. The Elder is distinct from most other playbooks and PCs in Avatar Legends: The Roleplaying Game because they are always mid-30s or older, and they are experienced, successful, and even respected. Whereas most other PCs are proving themselves, establishing themselves, becoming heroes for the first time, the Elder has already seen and done so much. But crucially, the Elder has not finished learning, growing, or changing. They can guide others along the path with their own hard-won experience, but they will never stop walking down that very same road of learning and being a student.\nThe Elder has achieved much that earns them praise and respect throughout the scope of your game, but they are not currently in a position of power. To be a PC in the game, working and traveling with the companions, the Elder has moved away from their static position. Once, they might have been an important general or the leader of a monastic order; now, they have set that position aside, if only temporarily, to join the other PCs.",
             "principles": "Experience/Humility",
             "conditions": [
-                "Afraid",
-                "Angry",
-                "Guilty",
-                "Insecure",
-                "Troubled"
+                "Frustrated",
+                "Jaded",
+                "Remorseful",
+                "Shaken",
+                "Worried"
             ]
         },
         "The Foundling": {
