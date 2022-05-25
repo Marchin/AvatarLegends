@@ -256,28 +256,6 @@ public class CampaignViewPopup : Popup {
             }
         });
 
-        const string playbooksTabText = "Playbooks";
-        tabs.Add(new ButtonData {
-            Text = playbooksTabText,
-            Callback = () => {
-                SetEntryCollection<Playbook>(
-                    () => Data.Playbooks,
-                    val => Data.Playbooks = val,
-                    playbooksTabText,
-                    onSetEntry: null,
-                    onAddEntry: async () => {
-                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
-                        addPlaybookPopup.Populate(OnEntryCreation, _entries.Keys, null);
-                    },
-                    onEditEntry: async () => {
-                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
-                        addPlaybookPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Playbook);
-                    },
-                    isEditable: entry => Data.IsEditable(entry as Playbook)
-                );
-            }
-        });
-
         const string conditionsTabText = "Conditions";
         tabs.Add(new ButtonData {
             Text = conditionsTabText,
@@ -296,6 +274,28 @@ public class CampaignViewPopup : Popup {
                         addConditionPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Condition);
                     },
                     isEditable: entry => Data.IsEditable(entry as Condition)
+                );
+            }
+        });
+
+        const string playbooksTabText = "Playbooks";
+        tabs.Add(new ButtonData {
+            Text = playbooksTabText,
+            Callback = () => {
+                SetEntryCollection<Playbook>(
+                    () => Data.Playbooks,
+                    val => Data.Playbooks = val,
+                    playbooksTabText,
+                    onSetEntry: null,
+                    onAddEntry: async () => {
+                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
+                        addPlaybookPopup.Populate(OnEntryCreation, _entries.Keys, null);
+                    },
+                    onEditEntry: async () => {
+                        var addPlaybookPopup = await PopupManager.Instance.GetOrLoadPopup<AddPlaybookPopup>(restore: false);
+                        addPlaybookPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Playbook);
+                    },
+                    isEditable: entry => Data.IsEditable(entry as Playbook)
                 );
             }
         });
