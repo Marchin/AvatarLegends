@@ -68,8 +68,8 @@ public class CampaignViewPopup : Popup {
 
             void RefreshPopup() {
                 listPopup.Populate(
-                    SelectedCampaign.RetrieveData(RefreshPopup, RefreshPopup), 
-                    SelectedCampaign.Name,
+                    SelectedCampaign.RetrieveData(RefreshPopup, () => { _reload(); RefreshPopup();}), 
+                    "Campaign Info",
                     Refresh
                 );
             }

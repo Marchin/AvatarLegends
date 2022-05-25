@@ -68,6 +68,28 @@ public class Campaign : IDataEntry {
         List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
+            Prefix = nameof(Name),
+            Content = Name,
+            OnEdit = async () => {
+                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
+                inputPopup.Populate(
+                    "",
+                    nameof(Name),
+                    input => {
+                        Data.User.Campaigns.Remove(Name);
+                        Name = input;
+                        Data.User.Campaigns.Add(input, this);
+                        Data.User.SelectedCampaignName = input;
+                        reload();
+                        PopupManager.Instance.Back();
+                    },
+                    inputText: Name,
+                    multiLine: true
+                );
+            }
+        });
+
+        result.Add(new InformationData {
             Content = nameof(Description),
             OnHoverIn = () => TooltipManager.Instance.ShowMessage(DescriptionDisplay),
             OnHoverOut = TooltipManager.Instance.Hide,
