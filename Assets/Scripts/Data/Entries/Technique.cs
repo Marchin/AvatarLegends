@@ -23,7 +23,7 @@ public static class ApproachUtils {
     }
 }
 
-public class Technique : IDataEntry {
+public class Technique : IDataEntry, IOnHover {
     public enum EApproach {
         Attack,
         Defend,
@@ -68,6 +68,9 @@ public class Technique : IDataEntry {
         }
     }
     
+    public Action OnHoverIn => () => TooltipManager.Instance.ShowMessage(InfoDisplay);
+    public Action OnHoverOut => TooltipManager.Instance.Hide;
+
     private Action _onRefresh;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {

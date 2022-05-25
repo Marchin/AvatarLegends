@@ -12,7 +12,7 @@ public class ConditionState {
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class Condition : IDataEntry {
+public class Condition : IDataEntry, IOnHover {
     [JsonProperty("name")]
     public string Name { get; set; }
 
@@ -21,6 +21,9 @@ public class Condition : IDataEntry {
 
     [JsonProperty("clearing_condition")]
     public string ClearingCondition;
+
+    public Action OnHoverIn => () => TooltipManager.Instance.ShowMessage(Effect);
+    public Action OnHoverOut => TooltipManager.Instance.Hide;
 
     private Action _onRefresh;
     
@@ -34,8 +37,8 @@ public class Condition : IDataEntry {
         if (!string.IsNullOrEmpty(Effect)) {
             result.Add(new InformationData {
                 Content = nameof(Effect),
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Effect),
-                OnHoverOut = TooltipManager.Instance.Hide,
+                OnHoverIn = OnHoverIn,
+                OnHoverOut = OnHoverOut,
             });
         }
 

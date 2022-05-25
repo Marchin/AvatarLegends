@@ -181,12 +181,12 @@ public class Session : IDataEntry {
         return result;
 
         void UpdateNPCs(List<string> newNPCs) {
-            NPCs = newNPCs;
+            NPCs.AddRange(newNPCs);
             _onRefresh();
         }
 
         void UpdatePCs(List<string> newPCs) {
-            PCs = newPCs;
+            PCs.AddRange(newPCs);
             _onRefresh();
         }
     }

@@ -14,6 +14,11 @@ public interface IOnMoreInfo {
     Action OnMoreInfo { get; }
 }
 
+public interface IOnHover {
+    Action OnHoverIn { get; }
+    Action OnHoverOut { get; }
+}
+
 public interface IDataEntry {
     string Name { get; set; }
     List<InformationData> RetrieveData(Action refresh, Action reload);
@@ -23,12 +28,15 @@ public interface IDataEntry {
     static async void AddEntry<T>(
         IReadOnlyCollection<string> current, 
         IReadOnlyCollection<T> pool,
-        Action<List<string>> onDone
+        Action<List<string>> onDone,
+        string title = "Add Entries",
+        int maxCap = -1
     ) where T : IDataEntry {
-        List<string> entriesToAdd = new List<string>(current);
+        List<string> entriesToAdd = new List<string>(current.Count);
         List<InformationData> infoList = new List<InformationData>(pool.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
         List<T> availableEntries = GetAvailableEntries<T>(current, pool);
+        int slotsAvailable = maxCap - current.Count;
 
         Refresh();
 
@@ -38,21 +46,39 @@ public interface IDataEntry {
                 infoList.Add(new InformationData {
                     Content = entry.Name,
                     IsToggleOn = entriesToAdd.Contains(entry.Name),
-                    OnToggle = on => {
-                        if (on) {
-                            entriesToAdd.Add(entry.Name);
+                    OnToggle = async on => {
+                        if (!on || (maxCap == -1) || (entriesToAdd.Count < slotsAvailable)) {
+                            if (on) {
+                                entriesToAdd.Add(entry.Name);
+                            } else {
+                                entriesToAdd.Remove(entry.Name);
+                            }
+
+                            Refresh();
                         } else {
-                            entriesToAdd.Remove(entry.Name);
+                            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
+                            msgPopup.Populate(
+                                "You've already reached the maximum amount possible.",
+                                "Maxed"
+                            );
                         }
 
                         Refresh();
                     },
-                    OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo
+                    OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo,
+                    OnHoverIn = (entry as IOnHover)?.OnHoverIn,
+                    OnHoverOut = (entry as IOnHover)?.OnHoverOut
                 });
             }
 
+            string popupTitle = title;
+
+            if (maxCap > 0) {
+                popupTitle += $" ({entriesToAdd.Count}/{slotsAvailable})";
+            }
+
             listPopup.Populate(infoList,
-                $"Add Entries",
+                popupTitle,
                 () => onDone(entriesToAdd)
             );
         }

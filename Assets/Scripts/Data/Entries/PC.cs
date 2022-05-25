@@ -97,7 +97,7 @@ public class PC : IDataEntry, IOnMoreInfo {
         };
 
         result.Add(new InformationData {
-            Content = nameof(Trainings),
+            Content = $"Trainings ({Trainings.Count})",
             OnDropdown = (Trainings.Count > 0) ? onTrainingDropdown : null,
             OnAdd = (Trainings.Count < Enum.GetValues(typeof(ETraining)).Length) ?
                 AddTraining :

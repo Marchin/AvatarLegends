@@ -139,7 +139,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         };
 
         result.Add(new InformationData {
-            Content = nameof(Trainings),
+            Content = $"Trainings ({Trainings.Count})",
             OnDropdown = (Trainings.Count > 0) ? onTrainingDropdown : null,
             OnAdd = (Trainings.Count < Enum.GetValues(typeof(ETraining)).Length) ?
                 AddTraining :
@@ -354,7 +354,12 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 }
                 _refresh();
             };
-            IDataEntry.AddEntry<Condition>(Conditions.Keys, Data.Conditions.Values, onDone);
+            IDataEntry.AddEntry<Condition>(
+                Conditions.Keys, 
+                Data.Conditions.Values, 
+                onDone,
+                "Add Conditions",
+                GetMaxConditions());
         } else {
             MessagePopup.ShowMessage("No more conditions available, add more under the \"Conditions\" tab.", "Conditions");
         }
@@ -418,7 +423,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
                 var learnableTechniques = GetLearnableTechniques();
                 foreach (var technique in Techniques) {
-                    if (!learnableTechniques.Contains(technique)) {
+                    if (learnableTechniques.Find(t => t.Name == technique) != null) {
                         Techniques.Remove(technique);
                     }
                 }
@@ -479,58 +484,22 @@ public class NPC : IDataEntry, IOnMoreInfo {
         MessagePopup.ShowMessage(Description, nameof(Description));
     }
 
-    public async void AddTechnique() {
-        List<string> techniquesToAdd = new List<string>(Data.Techniques.Count);
-        List<InformationData> infoList = new List<InformationData>(Data.Techniques.Count);
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
-        var availableTechniques = GetLearnableTechniques();
-        int slotsAvailable = GetMaxTechniques() - Techniques.Count;
-
-        foreach (var technique in Techniques) {
-            availableTechniques.Remove(technique);
-        }
-
-        availableTechniques.Sort();
-
-        Refresh();
-
-        void Refresh() {
-            infoList.Clear();
-            foreach (var techniqueName in availableTechniques) {
-                Technique technique = Data.Techniques[techniqueName];
-                infoList.Add(new InformationData {
-                    Content = technique.Name,
-                    IsToggleOn = techniquesToAdd.Contains(technique.Name),
-                    OnToggle = async on => {
-                        if (!on || (techniquesToAdd.Count < slotsAvailable)) {
-                            if (on) {
-                                techniquesToAdd.Add(technique.Name);
-                            } else {
-                                techniquesToAdd.Remove(technique.Name);
-                            }
-
-                            Refresh();
-                        } else {
-                            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-                            msgPopup.Populate(
-                                "You've already reached the maximum amount of techniques for this NPC.",
-                                "Techniques Maxed"
-                            );
-                        }
-                    },
-                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
-                    OnHoverOut = TooltipManager.Instance.Hide,
-                });
-            }
-
-            listPopup.Populate(infoList,
-                $"Add Techniques ({techniquesToAdd.Count}/{slotsAvailable})",
-                () => {
-                    Techniques.AddRange(techniquesToAdd);
-                    Techniques.Sort();
-                    _refresh();
-                }
-            );
+    public void AddTechnique() {
+        var availableTechniques = IDataEntry.GetAvailableEntries<Technique>(Techniques, GetLearnableTechniques());
+        if (availableTechniques.Count > 0) {
+            Action<List<string>> onDone = techniquesToAdd => {
+                Techniques.AddRange(techniquesToAdd);
+                Techniques.Sort();
+                _refresh();
+            };
+            IDataEntry.AddEntry<Technique>(
+                Techniques, 
+                availableTechniques, 
+                onDone,
+                "Add Techniques",
+                GetMaxTechniques());
+        } else {
+            MessagePopup.ShowMessage("No more techniques available, add more under the \"Techniques\" tab.", "Techniques");
         }
     }
 
@@ -555,12 +524,12 @@ public class NPC : IDataEntry, IOnMoreInfo {
         return result;
     }
 
-    public List<string> GetLearnableTechniques() {
-        List<string> results = new List<string>(100);
+    public List<Technique> GetLearnableTechniques() {
+        List<Technique> results = new List<Technique>(64);
 
         foreach (var technique in Data.Techniques) {
             if (CanLearnTechnique(technique.Value)) {
-                results.Add(technique.Key);
+                results.Add(technique.Value);
             }
         }
 

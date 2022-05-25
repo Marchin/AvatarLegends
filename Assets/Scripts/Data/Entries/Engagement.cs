@@ -152,12 +152,12 @@ public class Engagement : IDataEntry {
         return result;
 
         void UpdateNPCs(List<string> newNPCs) {
-            NPCs = newNPCs;
+            NPCs.AddRange(newNPCs);
             _refresh();
         }
 
         void UpdatePCs(List<string> newPCs) {
-            PCs = newPCs;
+            PCs.AddRange(newPCs);
             _refresh();
         }
     }
