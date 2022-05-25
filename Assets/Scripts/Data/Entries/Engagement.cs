@@ -166,14 +166,6 @@ public class Engagement : IDataEntry {
         List<ButtonData> buttonData = new List<ButtonData>();
 
         buttonData.Add(new ButtonData {
-            Text = $"Previous ({CurrentSession.PreviousEngagementIndex})",
-            Callback = () => {
-                --CurrentSession.CurrentEngagementIndex;
-                refresh?.Invoke();
-            }
-        });
-
-        buttonData.Add(new ButtonData {
             Text = $"Current ({CurrentSession.CurrentEngagementIndex})",
             Callback = () => {
                 refresh?.Invoke();
