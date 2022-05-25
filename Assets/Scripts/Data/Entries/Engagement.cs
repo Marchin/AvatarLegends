@@ -85,9 +85,8 @@ public class Engagement : IDataEntry {
                     continue;
                 }
 
-                NPC npc = Data.NPCs[npcName];
                 result.Add(new InformationData {
-                    Content = $"{npcName} ({npc.Alignment})",
+                    Content = $"{npcName} ({Data.NPCs[npcName].Alignment})",
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
                             $"Remove {npcName} from the engagement?",
@@ -100,7 +99,7 @@ public class Engagement : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(npc.RetrieveData(Refresh, Refresh), npcName, null);
+                            listPopup.Populate(() => Data.NPCs[npcName].RetrieveData(Refresh, Refresh), npcName, null);
                         }
                     }
                 });
@@ -142,7 +141,7 @@ public class Engagement : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(pc.RetrieveData(Refresh, Refresh), pcName, null);
+                            listPopup.Populate(() => pc.RetrieveData(Refresh, Refresh), pcName, null);
                         }
                     }
                 });

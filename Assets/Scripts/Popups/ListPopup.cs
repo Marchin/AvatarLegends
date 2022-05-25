@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ListPopup : Popup {
     public class PopupData {
-        public List<InformationData> Data;
+        public Func<List<InformationData>> Data;
         public string Title;
         public Action OnConfirm;
     }
@@ -15,7 +15,7 @@ public class ListPopup : Popup {
     [SerializeField] private InformationList _infoList = default;
     [SerializeField] private Button _confirmButton = default;
     [SerializeField] private Button _closeButton = default;
-    private List<InformationData> _data;
+    private Func<List<InformationData>> _data;
     private Action _onConfirm;
 
     private void Awake() {
@@ -26,13 +26,13 @@ public class ListPopup : Popup {
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
     }
 
-    public void Populate(List<InformationData> data, string title, Action onConfirm) {
+    public void Populate(Func<List<InformationData>> data, string title, Action onConfirm) {
         _title.text = title;
         _data = data;
         _onConfirm = onConfirm;
         _confirmButton.gameObject.SetActive(_onConfirm != null);
 
-        _infoList.Populate(data);
+        _infoList.Populate(data?.Invoke());
     }
 
     public override object GetRestorationData() {

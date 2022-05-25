@@ -154,7 +154,11 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
                             $"Remove {training} training?",
-                            onYes: () => Trainings.Remove(training)
+                            onYes: () => {
+                                Trainings.Remove(training);
+                                _refresh?.Invoke();
+                            },
+                            restore: false
                         );
                         _refresh();
                     },
@@ -189,7 +193,11 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
                             $"Remove {conditionName} condition?",
-                            onYes: () => Conditions.Remove(conditionName)
+                            onYes: () => {
+                                Conditions.Remove(conditionName);
+                                _refresh?.Invoke();
+                            },
+                            restore: false
                         );
                         _refresh();
                     },
@@ -222,7 +230,11 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
                             $"Remove {techniqueName} technique?",
-                            onYes: () => Techniques.Remove(techniqueName)
+                            onYes: () => {
+                                Techniques.Remove(techniqueName);
+                                _refresh?.Invoke();
+                            },
+                            restore: false
                         );
                         _refresh();
                     },
@@ -339,7 +351,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         RefreshInfo();
 
         void RefreshInfo() {
-            listPopup.Populate(RetrieveData(RefreshInfo, RefreshInfo), Name, null);
+            listPopup.Populate(() => RetrieveData(RefreshInfo, RefreshInfo), Name, null);
         }
     }
 
@@ -418,7 +430,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 }
             }
             
-            listPopup.Populate(data, "Training", () => {
+            listPopup.Populate(() => data, "Training", () => {
                  Trainings.AddRange(trainingsToAdd);
 
                 var learnableTechniques = GetLearnableTechniques();
@@ -572,7 +584,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
     public async void AddStatus() {
         List<string> statusesToAdd = new List<string>();
         List<InformationData> infoList = new List<InformationData>(Data.Statuses.Count);
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
         var availableStatuses = new List<string>(Data.Statuses.Keys);
 
         foreach (var status in Statuses) {
@@ -612,7 +624,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 });
             }
 
-            listPopup.Populate(infoList,
+            listPopup.Populate(() => infoList,
                 $"Add Statuses",
                 () => {
                     Statuses.AddRange(statusesToAdd);
@@ -633,7 +645,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
     public async void AddConnection() {
         Dictionary<string, string> connectionsToAdd = new Dictionary<string, string>(GetMaxConnections());
         List<InformationData> infoList = new List<InformationData>(GetMaxConnections());
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
         var availableConnections = GetAvailableConnections();
 
         foreach (var connection in Connections) {
@@ -682,10 +694,10 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
                     void RefreshInfo() {
                         if (Data.NPCs.ContainsKey(connection)) {
-                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
+                            listPopup.Populate(() => Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
                         } else if (SelectedCampaign.PCs.ContainsKey(connection)) {
                             listPopup.Populate(
-                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
+                                () => SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
                                 connection,
                                 null);
                         } else {
@@ -695,7 +707,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 }
             }
 
-            listPopup.Populate(infoList,
+            listPopup.Populate(() => infoList,
                 $"Add Connections ({connectionsToAdd.Count}/{availableConnections.Count})",
                 () => {
                     foreach (var connection in connectionsToAdd) {

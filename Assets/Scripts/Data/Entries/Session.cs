@@ -130,7 +130,7 @@ public class Session : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(Data.NPCs[npc].RetrieveData(Refresh, Refresh), npc, null);
+                            listPopup.Populate(() => Data.NPCs[npc].RetrieveData(Refresh, Refresh), npc, null);
                         }
                     }
                 });
@@ -171,7 +171,7 @@ public class Session : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(SelectedCampaign.PCs[pc].RetrieveData(Refresh, Refresh), pc, null);
+                            listPopup.Populate(() => SelectedCampaign.PCs[pc].RetrieveData(Refresh, Refresh), pc, null);
                         }
                     }
                 });

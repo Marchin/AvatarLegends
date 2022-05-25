@@ -65,7 +65,7 @@ public class PC : IDataEntry, IOnMoreInfo {
                     Refresh();
 
                     void Refresh() {
-                        listPopup.Populate(Data.Playbooks[Playbook].RetrieveData(Refresh, Refresh), Playbook, null);
+                        listPopup.Populate(() => Data.Playbooks[Playbook].RetrieveData(Refresh, Refresh), Playbook, null);
                     }
                 }
             });
@@ -222,7 +222,7 @@ public class PC : IDataEntry, IOnMoreInfo {
         RefreshInfo();
 
         void RefreshInfo() {
-            listPopup.Populate(RetrieveData(RefreshInfo, RefreshInfo), Name, null);
+            listPopup.Populate(() => RetrieveData(RefreshInfo, RefreshInfo), Name, null);
         }
     }
 
@@ -251,7 +251,7 @@ public class PC : IDataEntry, IOnMoreInfo {
                 }
             }
             
-            listPopup.Populate(data, "Training", () => {
+            listPopup.Populate(() => data, "Training", () => {
                  Trainings.AddRange(trainingsToAdd);
             });
         }
@@ -309,10 +309,10 @@ public class PC : IDataEntry, IOnMoreInfo {
 
                     void RefreshInfo() {
                         if (Data.NPCs.ContainsKey(connection)) {
-                            listPopup.Populate(Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
+                            listPopup.Populate(() => Data.NPCs[connection].RetrieveData(RefreshInfo, RefreshInfo), connection, null);
                         } else if (SelectedCampaign.PCs.ContainsKey(connection)) {
                             listPopup.Populate(
-                                SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
+                                () => SelectedCampaign.PCs[connection].RetrieveData(RefreshInfo, RefreshInfo),
                                 connection,
                                 null);
                         } else {
@@ -322,7 +322,7 @@ public class PC : IDataEntry, IOnMoreInfo {
                 }
             }
 
-            listPopup.Populate(infoList,
+            listPopup.Populate(() => infoList,
                 $"Add Connections ({connectionsToAdd.Count}/{availableConnections.Count})",
                 () => {
                     foreach (var connection in connectionsToAdd) {

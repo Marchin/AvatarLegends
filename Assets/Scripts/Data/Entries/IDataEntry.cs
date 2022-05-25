@@ -34,7 +34,7 @@ public interface IDataEntry {
     ) where T : IDataEntry {
         List<string> entriesToAdd = new List<string>(current.Count);
         List<InformationData> infoList = new List<InformationData>(pool.Count);
-        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>(restore: false);
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
         List<T> availableEntries = GetAvailableEntries<T>(current, pool);
         int slotsAvailable = maxCap - current.Count;
 
@@ -77,7 +77,7 @@ public interface IDataEntry {
                 popupTitle += $" ({entriesToAdd.Count}/{slotsAvailable})";
             }
 
-            listPopup.Populate(infoList,
+            listPopup.Populate(() => infoList,
                 popupTitle,
                 () => onDone(entriesToAdd)
             );
