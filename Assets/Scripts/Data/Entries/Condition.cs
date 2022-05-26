@@ -22,7 +22,7 @@ public class Condition : IDataEntry, IOnHover {
     [JsonProperty("clearing_condition")]
     public string ClearingCondition;
 
-    public Action OnHoverIn => () => TooltipManager.Instance.ShowMessage(Effect);
+    public Action OnHoverIn => () => TooltipManager.Instance.ShowMessage(InfoDisplay);
     public Action OnHoverOut => TooltipManager.Instance.Hide;
 
     private Action _onRefresh;
@@ -36,17 +36,15 @@ public class Condition : IDataEntry, IOnHover {
 
         if (!string.IsNullOrEmpty(Effect)) {
             result.Add(new InformationData {
-                Content = nameof(Effect),
-                OnHoverIn = OnHoverIn,
-                OnHoverOut = OnHoverOut,
+                Prefix = nameof(Effect),
+                Content = Effect,
             });
         }
 
         if (!string.IsNullOrEmpty(ClearingCondition)) {
             result.Add(new InformationData {
-                Content = "Clearing Condition",
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(ClearingCondition),
-                OnHoverOut = TooltipManager.Instance.Hide
+                Prefix = "Clearing Condition",
+                Content = ClearingCondition
             });
         }
 
