@@ -30,7 +30,8 @@ public interface IDataEntry {
         IReadOnlyCollection<T> pool,
         Action<List<string>> onDone,
         string title = "Add Entries",
-        int maxCap = -1
+        int maxCap = -1,
+        Func<IDataEntry, string> customName = null
     ) where T : IDataEntry {
         List<string> entriesToAdd = new List<string>(current.Count);
         List<InformationData> infoList = new List<InformationData>(pool.Count);
@@ -44,7 +45,7 @@ public interface IDataEntry {
             infoList.Clear();
             foreach (var entry in availableEntries) {
                 infoList.Add(new InformationData {
-                    Content = entry.Name,
+                    Content = customName?.Invoke(entry) ?? entry.Name,
                     IsToggleOn = entriesToAdd.Contains(entry.Name),
                     OnToggle = async on => {
                         if (!on || (maxCap == -1) || (entriesToAdd.Count < slotsAvailable)) {

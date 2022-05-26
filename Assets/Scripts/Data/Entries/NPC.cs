@@ -233,7 +233,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
             foreach (var techniqueName in Techniques) {
                 Technique technique = Data.Techniques[techniqueName];
                 result.Add(new InformationData {
-                    Content = techniqueName,
+                    Content = technique.ColoredName,
                     OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
                     OnHoverOut = TooltipManager.Instance.Hide,
                     OnDelete = () => {
@@ -499,6 +499,16 @@ public class NPC : IDataEntry, IOnMoreInfo {
     public void AddTechnique() {
         var availableTechniques = IDataEntry.GetAvailableEntries<Technique>(Techniques, GetLearnableTechniques());
         if (availableTechniques.Count > 0) {
+            availableTechniques.Sort((x, y) => {
+                if (x.Mastery != y.Mastery) {
+                    return x.Mastery.CompareTo(y.Mastery);
+                } else if (x.Approach != y.Approach) {
+                    return x.Approach.CompareTo(y.Approach);
+                } else {
+                    return x.Name.CompareTo(y.Name);
+                }
+            });
+
             Action<List<string>> onDone = techniquesToAdd => {
                 Techniques.AddRange(techniquesToAdd);
                 Techniques.Sort();
@@ -509,7 +519,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 availableTechniques, 
                 onDone,
                 "Add Techniques",
-                GetMaxTechniques());
+                GetMaxTechniques(),
+                entry => (entry as Technique).ColoredName);
         } else {
             MessagePopup.ShowMessage("No more techniques available, add more under the \"Techniques\" tab.", "Techniques");
         }

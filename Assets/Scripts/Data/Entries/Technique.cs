@@ -3,7 +3,25 @@ using System;
 using System.Collections.Generic;
 
 [JsonObject(MemberSerialization.OptIn)]
-public static class ApproachUtils {
+public static class TechniqueUtils {
+    public static string GetColoredText(this Technique.EApproach approach) {
+        string result = "";
+
+        switch (approach) {
+            case Technique.EApproach.Attack: {
+                result = "<color=#d72929>Attack</color>";
+            } break;
+            case Technique.EApproach.Defend: {
+                result = "<color=#33aa33>Defend</color>";
+            } break;
+            case Technique.EApproach.Evade: {
+                result = "<color=#d2c592>Evade</color>";
+            } break;
+        }
+
+        return result;
+    }
+
     public static string GetDisplayText(this Technique.EApproach approach) {
         string result = "";
 
@@ -12,7 +30,7 @@ public static class ApproachUtils {
                 result = "Advance & Attack";
             } break;
             case Technique.EApproach.Defend: {
-                result = "Defense & Maneuver";
+                result = "Defend & Maneuver";
             } break;
             case Technique.EApproach.Evade: {
                 result = "Evade & Observe";
@@ -55,6 +73,47 @@ public class Technique : IDataEntry, IOnHover {
 
     [JsonProperty("rare")]
     public bool Rare;
+
+    public string ColoredName {
+        get {
+            string result = Name;
+
+            switch (Mastery) {
+                case EMastery.Earth: {
+                    result = $"<color=#6ece00>{result}</color>";
+                    break;
+                }
+                case EMastery.Water: {
+                    result = $"<color=#66ACff>{result}</color>";
+                    break;
+                }
+                case EMastery.Air: {
+                    result = $"<color=#ffe166>{result}</color>";
+                    break;
+                }
+                case EMastery.Fire: {
+                    result = $"<color=#FF6666>{result}</color>";
+                    break;
+                }
+                case EMastery.Weapons: {
+                    result = $"<color=#BBBBBB>{result}</color>";
+                    break;
+                }
+                case EMastery.Technology: {
+                    result = $"<color=#a28fda>{result}</color>";
+                    break;
+                }
+                case EMastery.Group: {
+                    result = $"{result} (Group)";
+                    break;
+                }
+            }
+
+            result += $" ({Approach.GetColoredText()})";
+
+            return result;
+        }
+    }
     
     public string InfoDisplay {
         get {
