@@ -156,6 +156,15 @@ public class NPC : IDataEntry, IOnMoreInfo {
                             $"Remove {training} training?",
                             onYes: () => {
                                 Trainings.Remove(training);
+                                var learnableTechniques = GetLearnableTechniques();
+                                for (int iTechnique = 0; iTechnique < Techniques.Count;) {
+                                    if (learnableTechniques.Find(t => t.Name == Techniques[iTechnique]) == null) {
+                                        Techniques.Remove(Techniques[iTechnique]);
+                                    } else {
+                                        ++iTechnique;
+                                    }
+                                }
+                
                                 _refresh?.Invoke();
                             },
                             restore: false
@@ -430,16 +439,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                 }
             }
             
-            listPopup.Populate(() => data, "Training", () => {
-                 Trainings.AddRange(trainingsToAdd);
-
-                var learnableTechniques = GetLearnableTechniques();
-                foreach (var technique in Techniques) {
-                    if (learnableTechniques.Find(t => t.Name == technique) != null) {
-                        Techniques.Remove(technique);
-                    }
-                }
-            });
+            listPopup.Populate(() => data, "Training", () => Trainings.AddRange(trainingsToAdd));
         }
     }
 
