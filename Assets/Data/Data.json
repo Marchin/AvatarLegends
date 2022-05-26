@@ -1173,6 +1173,42 @@
                 "Troubled"
             ]
         },
+        "The Destined": {
+            "name": "The Destined",
+            "description": "Aware, fated, strange, thoughtful. The Destined has been singled out by some strange circumstance surrounding them, be it otherworldly knowledge, a star atlas, the sensation of nature’s pain, or a mark from a great spirit. Whatever separates them from their peers, no one contests that the Destined has a significant fate, to perform feats worthy of song and story. Or at least, so everyone believes; so far the Destined hasn’t fulfilled any grand fate, but they still have a deep ingrained sense that their destiny awaits them down the line.\nThe Destined isn’t afraid of their destiny, per se—they might be nervous about its arrival, what it really means, but their destiny is ultimately positive in bent. The Destined is important! They just don’t fully understand their importance yet, or what they are fated to actually do. As a result, the Destined is torn between waiting patiently for their destiny to come to them—after all, it is fated to arrive—and seeking it out actively and determinedly.",
+            "principles": "Patience/Determination",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Elder": {
+            "name": "The Elder",
+            "description": "Experienced, esteemed, studious, guiding. The Elder is distinct from most other playbooks and PCs in Avatar Legends: The Roleplaying Game because they are always mid-30s or older, and they are experienced, successful, and even respected. Whereas most other PCs are proving themselves, establishing themselves, becoming heroes for the first time, the Elder has already seen and done so much. But crucially, the Elder has not finished learning, growing, or changing. They can guide others along the path with their own hard-won experience, but they will never stop walking down that very same road of learning and being a student.\nThe Elder has achieved much that earns them praise and respect throughout the scope of your game, but they are not currently in a position of power. To be a PC in the game, working and traveling with the companions, the Elder has moved away from their static position. Once, they might have been an important general or the leader of a monastic order; now, they have set that position aside, if only temporarily, to join the other PCs.",
+            "principles": "Experience/Humility",
+            "conditions": [
+                "Frustrated",
+                "Jaded",
+                "Remorseful",
+                "Shaken",
+                "Worried"
+            ]
+        },
+        "The Foundling": {
+            "name": "The Foundling",
+            "description": "Dualistic, torn, innovative, exploring. The Foundling is a child of two different heritages, each with their own traditions, their own practices, their own trainings. The Foundling might be an Earthbender raised by Air Nomads, or a sword-wielding Fire Nation orphan raised in the Southern Water Tribe. Both of their heritages have a place in the Foundling’s life and identity, and they struggle to find ways to belong to either heritage or to combine both. The struggle between belonging and owning one heritage and uniquely mixing both defines the Foundling’s path.\nA Foundling can’t bend two different elements—no one can do that except the Avatar! But they are always stronger for incorporating elements of another culture and training. A Waterbender who knows how to use firebending forms with waterbending is that much more effective! With their unique perspective, the Foundling can pick up skills that no other character can, adapting them and building a new style all their own.",
+            "principles": "Unity/Heritage",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
         "The Guardian": {
             "name": "The Guardian",
             "description": "Tough, cynical, protective, devoted. The Guardian is a protector of one other person—their ward—utterly determined to keep them safe and sound against all threats and dangers. Whether or not that person wants protection is not always as important to the Guardian as it should be!\nThe Guardian knows how dangerous the world can be and is determined to keep someone else safe from that danger. It’s an altruistic impulse and a selfish one at the same time—they want to help someone, protect them…but that desire comes from feeling no one else is trustworthy except the Guardian.",
@@ -1245,6 +1281,18 @@
                 "Troubled"
             ]
         },
+        "The Razor": {
+            "name": "The Razor",
+            "description": "Hardened, sharp, guilty, regretful. The Razor was forged into a dangerous weapon by their masters. Those masters might’ve been the rulers of a nation, the commanders of a military group, bandit chiefs, even the Razor’s own family. They taught the Razor to be tough, to act harshly, to do terrible things. But now, the Razor has moved away from that path and seeks redemption, finding forgiveness both externally and internally for the things they have done.\nCrucially, the Razor is dangerous and powerful, but not always in an overt fashion like the Prodigy (see page 194 of the core book). Where the Prodigy is just plain exceptional at their training in all its forms, the Razor might only be good at destructive or harmful aspects of their training…or they might be defined by an indomitable will more than skill. Regardless, however, the Razor’s restraint and disinterest in continuing to be a weapon both temper how they act more than anything—the Razor might be able to dispatch entire roomfuls of guards if they cut loose, but they try to hold themselves back to avoid harming anyone.",
+            "principles": "Control/Connection",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
         "The Rogue": {
             "name": "The Rogue",
             "description": "Troublemaking, lonely, attention-seeking, selfish. The Rogue is an outsider and a miscreant, whatever their background or training might be. If they’re from a Privileged or Military upbringing, they might look like a different kind of delinquent than one from an Outlaw or Urban background…but in either case, they’re known as a troublemaker even among their own people. Someone with an Outlaw background might be stereotyped as being a criminal by people from other backgrounds, but a Rogue with an Outlaw background is trouble even for other criminals.\nThe Rogue became such a scoundrel and rulebreaker out of a need to survive. Something in their circumstances and background threatened their life, perhaps outright, perhaps metaphorically. For some Rogues, they became rulebreakers because they needed food; for others, they became rulebreakers because life threatened to drain them of personality or hope or will. Whatever the case, they didn’t just start causing trouble for the heck of it—or rather, causing trouble for the heck of it helped them survive in the first place.",
@@ -1261,54 +1309,6 @@
             "name": "The Succesor",
             "description": "Prestigious, redemptive, pigeonholed, rebellious. The Successor comes from a powerful family, group, order, or lineage—they’re the inheritor of real power, in one way or another, and everyone in the group believes the Successor belongs to it. But the lineage of the Successor is mired in corruption, or tragedy, or dark rumors. It’s not an unequivocally noble inheritance; it’s characterized by a tradition of destructive or cruel decisions and practices.\nThe Successor is a bit like the Icon; this identity has been foisted upon them. But unlike the Icon, this isn’t some specific, honored role that the Successor faces; it has the weight of an entire legacy with its own enemies, allies, responsibilities, and benefits. What’s more, nearly every NPC knows of the lineage, because the lineage holds power over or changed the scope in a significant way. If the scope of the game is the Northern Water Tribe, then the lineage is one of the most important families in the entire Northern Water Tribe, a name known to every Waterbender and ice fisher alike. Getting out from under that name, its weight, and its borne assumptions is quite the challenge for the Successor.",
             "principles": "Tradition/Progress",
-            "conditions": [
-                "Afraid",
-                "Angry",
-                "Guilty",
-                "Insecure",
-                "Troubled"
-            ]
-        },
-        "The Destined": {
-            "name": "The Destined",
-            "description": "Aware, fated, strange, thoughtful. The Destined has been singled out by some strange circumstance surrounding them, be it otherworldly knowledge, a star atlas, the sensation of nature’s pain, or a mark from a great spirit. Whatever separates them from their peers, no one contests that the Destined has a significant fate, to perform feats worthy of song and story. Or at least, so everyone believes; so far the Destined hasn’t fulfilled any grand fate, but they still have a deep ingrained sense that their destiny awaits them down the line.\nThe Destined isn’t afraid of their destiny, per se—they might be nervous about its arrival, what it really means, but their destiny is ultimately positive in bent. The Destined is important! They just don’t fully understand their importance yet, or what they are fated to actually do. As a result, the Destined is torn between waiting patiently for their destiny to come to them—after all, it is fated to arrive—and seeking it out actively and determinedly.",
-            "principles": "Patience/Determination",
-            "conditions": [
-                "Afraid",
-                "Angry",
-                "Guilty",
-                "Insecure",
-                "Troubled"
-            ]
-        },
-        "The Elder": {
-            "name": "The Elder",
-            "description": "Experienced, esteemed, studious, guiding. The Elder is distinct from most other playbooks and PCs in Avatar Legends: The Roleplaying Game because they are always mid-30s or older, and they are experienced, successful, and even respected. Whereas most other PCs are proving themselves, establishing themselves, becoming heroes for the first time, the Elder has already seen and done so much. But crucially, the Elder has not finished learning, growing, or changing. They can guide others along the path with their own hard-won experience, but they will never stop walking down that very same road of learning and being a student.\nThe Elder has achieved much that earns them praise and respect throughout the scope of your game, but they are not currently in a position of power. To be a PC in the game, working and traveling with the companions, the Elder has moved away from their static position. Once, they might have been an important general or the leader of a monastic order; now, they have set that position aside, if only temporarily, to join the other PCs.",
-            "principles": "Experience/Humility",
-            "conditions": [
-                "Frustrated",
-                "Jaded",
-                "Remorseful",
-                "Shaken",
-                "Worried"
-            ]
-        },
-        "The Foundling": {
-            "name": "The Foundling",
-            "description": "Dualistic, torn, innovative, exploring. The Foundling is a child of two different heritages, each with their own traditions, their own practices, their own trainings. The Foundling might be an Earthbender raised by Air Nomads, or a sword-wielding Fire Nation orphan raised in the Southern Water Tribe. Both of their heritages have a place in the Foundling’s life and identity, and they struggle to find ways to belong to either heritage or to combine both. The struggle between belonging and owning one heritage and uniquely mixing both defines the Foundling’s path.\nA Foundling can’t bend two different elements—no one can do that except the Avatar! But they are always stronger for incorporating elements of another culture and training. A Waterbender who knows how to use firebending forms with waterbending is that much more effective! With their unique perspective, the Foundling can pick up skills that no other character can, adapting them and building a new style all their own.",
-            "principles": "Unity/Heritage",
-            "conditions": [
-                "Afraid",
-                "Angry",
-                "Guilty",
-                "Insecure",
-                "Troubled"
-            ]
-        },
-        "The Razor": {
-            "name": "The Razor",
-            "description": "Hardened, sharp, guilty, regretful. The Razor was forged into a dangerous weapon by their masters. Those masters might’ve been the rulers of a nation, the commanders of a military group, bandit chiefs, even the Razor’s own family. They taught the Razor to be tough, to act harshly, to do terrible things. But now, the Razor has moved away from that path and seeks redemption, finding forgiveness both externally and internally for the things they have done.\nCrucially, the Razor is dangerous and powerful, but not always in an overt fashion like the Prodigy (see page 194 of the core book). Where the Prodigy is just plain exceptional at their training in all its forms, the Razor might only be good at destructive or harmful aspects of their training…or they might be defined by an indomitable will more than skill. Regardless, however, the Razor’s restraint and disinterest in continuing to be a weapon both temper how they act more than anything—the Razor might be able to dispatch entire roomfuls of guards if they cut loose, but they try to hold themselves back to avoid harming anyone.",
-            "principles": "Control/Connection",
             "conditions": [
                 "Afraid",
                 "Angry",
