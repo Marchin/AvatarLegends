@@ -119,7 +119,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         });
 
         result.Add(new InformationData {
-            Prefix = "Principle",
+            Prefix = "Balance",
             Content = string.IsNullOrEmpty(Principle) ? "(none)" : Principle,
             InitValue = Balance,
             MaxValue = GetMaxBalance(),
