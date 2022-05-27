@@ -531,7 +531,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         switch (Type) {
             case EType.Minor: {
-                result = 0;
+                result = 1;
             } break;
             case EType.Major: {
                 result = 2;
