@@ -54,7 +54,9 @@ public class Campaign : IDataEntry {
         }
     }
 
-    private Action _onRefresh;
+    private Action _refresh;
+    private bool _showDescription;
+    private bool _showNotes;
     private bool _showNPCs;
     private bool _showPCs;
     private bool _showSessions;
@@ -63,36 +65,19 @@ public class Campaign : IDataEntry {
     public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
-        _onRefresh = refresh;
+        _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
 
-        result.Add(new InformationData {
-            Prefix = nameof(Name),
-            Content = Name,
-            OnEdit = async () => {
-                var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
-                inputPopup.Populate(
-                    "",
-                    nameof(Name),
-                    input => {
-                        Data.User.Campaigns.Remove(Name);
-                        Name = input;
-                        Data.User.Campaigns.Add(input, this);
-                        Data.User.SelectedCampaignName = input;
-                        reload();
-                        PopupManager.Instance.Back();
-                    },
-                    inputText: Name,
-                    multiLine: true
-                );
-            }
-        });
+        Action onDescriptionDropdown = () => {
+            _showDescription = !_showDescription;
+            _refresh();
+        };
 
         result.Add(new InformationData {
+            OnDropdown = string.IsNullOrEmpty(Description) ? null : onDescriptionDropdown,
             Content = nameof(Description),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(DescriptionDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            Expanded = _showDescription,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -101,7 +86,7 @@ public class Campaign : IDataEntry {
                     input => {
                         Description = input;
                         PopupManager.Instance.Back();
-                        _onRefresh();
+                        _refresh();
                     },
                     inputText: Description,
                     multiLine: true
@@ -109,10 +94,21 @@ public class Campaign : IDataEntry {
             }
         });
 
+        if (_showDescription) {
+            result.Add(new InformationData {
+                ExpandableContent = Description,
+                IndentLevel = 1
+            });
+        }
+
+        Action onNotesDropdown = () => {
+            _showNotes = !_showNotes;
+            _refresh();
+        };
+
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            OnDropdown = string.IsNullOrEmpty(Note) ? null : onNotesDropdown,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -121,17 +117,25 @@ public class Campaign : IDataEntry {
                     input => {
                         Note = input;
                         PopupManager.Instance.Back();
-                        _onRefresh();
+                        _refresh();
                     },
                     inputText: Note,
                     multiLine: true
                 );
-            }
+            },
+            Expanded = _showNotes
         });
+
+        if (_showNotes) {
+            result.Add(new InformationData {
+                ExpandableContent = Note,
+                IndentLevel = 1
+            });
+        }
 
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -150,7 +154,7 @@ public class Campaign : IDataEntry {
                             $"Remove {npc.Name} from the engagement?",
                             onYes: () => NPCs.Remove(npcKVP.Key)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
@@ -166,7 +170,7 @@ public class Campaign : IDataEntry {
 
         Action onSessionDropdown = () => {
             _showSessions = !_showSessions;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -184,7 +188,7 @@ public class Campaign : IDataEntry {
                             $"Remove {session.Key} from the engagement?",
                             onYes: () => Sessions.Remove(session.Key)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();

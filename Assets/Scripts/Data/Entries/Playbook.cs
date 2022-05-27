@@ -17,6 +17,7 @@ public class Playbook : IDataEntry {
     public List<string> Conditions;
 
     private Action _refresh;
+    private bool _showDescription;
     private bool _showConditions;
     private AppData Data => ApplicationManager.Instance.Data;
 
@@ -24,14 +25,6 @@ public class Playbook : IDataEntry {
         _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
-
-        if (!string.IsNullOrEmpty(Description)) {
-            result.Add(new InformationData {
-                Content = nameof(Description),
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
-                OnHoverOut = TooltipManager.Instance.Hide,
-            });
-        }
 
         if (!string.IsNullOrEmpty(Principles)) {
             result.Add(new InformationData {
@@ -61,6 +54,26 @@ public class Playbook : IDataEntry {
                     Content = conditionName,
                     OnHoverIn = () => TooltipManager.Instance.ShowMessage(Data.Conditions[conditionName].InfoDisplay),
                     OnHoverOut = TooltipManager.Instance.Hide,
+                    IndentLevel = 1
+                });
+            }
+        }
+
+        if (!string.IsNullOrEmpty(Description)) {
+            Action onDescriptionDropdown = () => {
+                _showDescription = !_showDescription;
+                _refresh();
+            };
+
+            result.Add(new InformationData {
+                OnDropdown = onDescriptionDropdown,
+                Content = nameof(Description),
+                Expanded = _showDescription
+            });
+
+            if (_showDescription) {
+                result.Add(new InformationData {
+                    ExpandableContent = Description,
                     IndentLevel = 1
                 });
             }

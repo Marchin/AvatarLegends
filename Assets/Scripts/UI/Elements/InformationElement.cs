@@ -2,6 +2,7 @@ using TMPro;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class InformationData {
     public Action<int> OnValueChange;
@@ -15,6 +16,7 @@ public class InformationData {
     public Action OnHoverOut;
     public string Prefix;
     public string Content;
+    public string ExpandableContent;
     public int IndentLevel;
     public int InitValue;
     public int MinValue;
@@ -27,9 +29,12 @@ public class InformationData {
 public class InformationElement : MonoBehaviour, IDataUIElement<InformationData> {
     [SerializeField] private int _indentWidth = default;
     [SerializeField] private GameObject _prefixContainer = default;
+    [SerializeField] private GameObject _contentContainer = default;
     [SerializeField] private TextMeshProUGUI _prefix = default;
     [SerializeField] private TextMeshProUGUI _content = default;
+    [SerializeField] private TextMeshProUGUI _expandableContent = default;
     [SerializeField] private TextMeshProUGUI _counter = default;
+    [SerializeField] private LayoutElement _layoutElement = default;
     [SerializeField] private Button _moreInfoButton = default;
     [SerializeField] private Button _onEditButton = default;
     [SerializeField] private Button _decreaseButton = default;
@@ -43,6 +48,11 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
     [SerializeField] private ScrollContent _scrollContent = default;
     private InformationData _info;
     private int _counterValue;
+    private float _initHeight;
+
+    private void Awake() {
+        _initHeight = _layoutElement.minHeight;
+    }
 
     private void Start() {
         _decreaseButton.onClick.AddListener(() => {
@@ -90,7 +100,7 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _counter.text = $"{_counterValue}/{_info.MaxValue}";
     }
 
-    public void Populate(InformationData data) {
+    public async void Populate(InformationData data) {
         _info = data;
 
         _dropdownButton.transform.localScale = data.Expanded ?
@@ -111,10 +121,16 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
             }
             _content.text = data.Content;
         }
+        _contentContainer.gameObject.SetActive(
+            !string.IsNullOrEmpty(data.Content) || !string.IsNullOrEmpty(data.Prefix)
+        );
 
         if (_prefixContainer != null) {
             _prefixContainer.SetActive(!string.IsNullOrEmpty(data.Prefix));
         }
+
+        _expandableContent.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(data.ExpandableContent));
+        _expandableContent.text = data.ExpandableContent;
 
         if (_scrollContent != null) {
             _scrollContent.Refresh();
@@ -138,5 +154,11 @@ public class InformationElement : MonoBehaviour, IDataUIElement<InformationData>
         _onHover.gameObject.SetActive((data.OnHoverIn != null) || (data.OnHoverOut != null));
         _counterValue = data.InitValue;
         RefreshCounter();
+
+        await UniTask.DelayFrame(1);
+        
+        _layoutElement.minHeight = string.IsNullOrEmpty(data.ExpandableContent) ?
+            _initHeight :
+            _expandableContent.rectTransform.sizeDelta.y;
     }
 }

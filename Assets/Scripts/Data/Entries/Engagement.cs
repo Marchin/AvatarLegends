@@ -20,6 +20,7 @@ public class Engagement : IDataEntry {
 
     private Action _refresh;
     private Action _reload;
+    private bool _showNotes;
     private bool _showNPCs;
     private bool _showPCs;
     private static AppData Data => ApplicationManager.Instance.Data;
@@ -46,10 +47,14 @@ public class Engagement : IDataEntry {
             }
         });
 
+        Action onNotesDropdown = () => {
+            _showNotes = !_showNotes;
+            _refresh();
+        };
+
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            OnDropdown = string.IsNullOrEmpty(Note) ? null : onNotesDropdown,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -58,12 +63,21 @@ public class Engagement : IDataEntry {
                     input => {
                         Note = input;
                         PopupManager.Instance.Back();
+                        _refresh();
                     },
                     inputText: Note,
                     multiLine: true
                 );
-            }
+            },
+            Expanded = _showNotes
         });
+
+        if (_showNotes) {
+            result.Add(new InformationData {
+                ExpandableContent = Note,
+                IndentLevel = 1
+            });
+        }
 
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;

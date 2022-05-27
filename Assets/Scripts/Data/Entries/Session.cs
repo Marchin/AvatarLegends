@@ -52,7 +52,9 @@ public class Session : IDataEntry {
     }
     public Engagement CurrentEngagement => (Engagements.Count > 0) ? Engagements[_currentEngagementIndex] : null;
 
-    private Action _onRefresh;
+    private Action _refresh;
+    private bool _showDescription;
+    private bool _showNotes;
     private bool _showNPCs;
     private bool _showPCs;
     private AppData Data => ApplicationManager.Instance.Data;
@@ -60,7 +62,7 @@ public class Session : IDataEntry {
     public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
-        _onRefresh = refresh;
+        _refresh = refresh;
 
         List<InformationData> result = new List<InformationData>();
 
@@ -70,17 +72,33 @@ public class Session : IDataEntry {
         });
 
         if (!string.IsNullOrEmpty(Description)) {
+            Action onDescriptionDropdown = () => {
+                _showDescription = !_showDescription;
+                _refresh();
+            };
+
             result.Add(new InformationData {
-                Prefix = "Description",
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
-                OnHoverOut = TooltipManager.Instance.Hide,
+                OnDropdown = onDescriptionDropdown,
+                Content = nameof(Description),
+                Expanded = _showDescription
             });
+
+            if (_showDescription) {
+                result.Add(new InformationData {
+                    ExpandableContent = Description,
+                    IndentLevel = 1
+                });
+            }
         }
+
+        Action onNotesDropdown = () => {
+            _showNotes = !_showNotes;
+            _refresh();
+        };
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            OnDropdown = string.IsNullOrEmpty(Note) ? null : onNotesDropdown,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -89,16 +107,25 @@ public class Session : IDataEntry {
                     input => {
                         Note = input;
                         PopupManager.Instance.Back();
+                        _refresh();
                     },
                     inputText: Note,
                     multiLine: true
                 );
-            }
+            },
+            Expanded = _showNotes
         });
+
+        if (_showNotes) {
+            result.Add(new InformationData {
+                ExpandableContent = Note,
+                IndentLevel = 1
+            });
+        }
 
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -123,7 +150,7 @@ public class Session : IDataEntry {
                             $"Remove {npc} from the engagement?",
                             onYes: () => NPCs.Remove(npc)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
@@ -139,7 +166,7 @@ public class Session : IDataEntry {
 
         Action onPCDropdown = () => {
             _showPCs = !_showPCs;
-            _onRefresh();
+            _refresh();
         };
 
         result.Add(new InformationData {
@@ -164,7 +191,7 @@ public class Session : IDataEntry {
                             $"Remove {pc} from the engagement?",
                             onYes: () => PCs.Remove(pc)
                         );
-                        _onRefresh();
+                        _refresh();
                     },
                     OnMoreInfo = async () => {
                         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
@@ -182,12 +209,12 @@ public class Session : IDataEntry {
 
         void UpdateNPCs(List<string> newNPCs) {
             NPCs.AddRange(newNPCs);
-            _onRefresh();
+            _refresh();
         }
 
         void UpdatePCs(List<string> newPCs) {
             PCs.AddRange(newPCs);
-            _onRefresh();
+            _refresh();
         }
     }
 

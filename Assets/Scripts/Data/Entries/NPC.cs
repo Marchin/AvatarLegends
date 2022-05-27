@@ -59,6 +59,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
     [JsonProperty("connections")]
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
+    private bool _showDescription;
+    private bool _showNotes;
     private bool _showConditions;
     private bool _showTrainings;
     private bool _showTechniques;
@@ -91,17 +93,33 @@ public class NPC : IDataEntry, IOnMoreInfo {
         });
 
         if (!string.IsNullOrEmpty(Description)) {
+            Action onDescriptionDropdown = () => {
+                _showDescription = !_showDescription;
+                _refresh();
+            };
+
             result.Add(new InformationData {
+                OnDropdown = onDescriptionDropdown,
                 Content = nameof(Description),
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
-                OnHoverOut = TooltipManager.Instance.Hide,
+                Expanded = _showDescription
             });
+
+            if (_showDescription) {
+                result.Add(new InformationData {
+                    ExpandableContent = Description,
+                    IndentLevel = 1
+                });
+            }
         }
+
+        Action onNotesDropdown = () => {
+            _showNotes = !_showNotes;
+            _refresh();
+        };
 
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            OnDropdown = string.IsNullOrEmpty(Note) ? null : onNotesDropdown,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -115,8 +133,16 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     inputText: Note,
                     multiLine: true
                 );
-            }
+            },
+            Expanded = _showNotes
         });
+
+        if (_showNotes) {
+            result.Add(new InformationData {
+                ExpandableContent = Note,
+                IndentLevel = 1
+            });
+        }
 
         result.Add(new InformationData {
             Prefix = "Balance",

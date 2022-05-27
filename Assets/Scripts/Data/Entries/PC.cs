@@ -27,6 +27,8 @@ public class PC : IDataEntry, IOnMoreInfo {
     [JsonProperty("connections")]
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
+    private bool _showNotes;
+    private bool _showBackstory;
     private bool _showConnections;
     private bool _showConditions;
     private bool _showTrainings;
@@ -48,14 +50,6 @@ public class PC : IDataEntry, IOnMoreInfo {
             });
         }
 
-        if (!string.IsNullOrEmpty(Backstory)) {
-            result.Add(new InformationData {
-                Prefix = nameof(Backstory),
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Backstory),
-                OnHoverOut = TooltipManager.Instance.Hide,
-            });
-        }
-
         if (Data.Playbooks.ContainsKey(Playbook)) {
             result.Add(new InformationData {
                 Prefix = nameof(Playbook),
@@ -71,10 +65,34 @@ public class PC : IDataEntry, IOnMoreInfo {
             });
         }
 
+        if (!string.IsNullOrEmpty(Backstory)) {
+            Action onBackstoryDropdown = () => {
+                _showBackstory = !_showBackstory;
+                _refresh();
+            };
+
+            result.Add(new InformationData {
+                OnDropdown = onBackstoryDropdown,
+                Content = nameof(Backstory),
+                Expanded = _showBackstory
+            });
+
+            if (_showBackstory) {
+                result.Add(new InformationData {
+                    ExpandableContent = Backstory,
+                    IndentLevel = 1
+                });
+            }
+        }
+        
+        Action onNotesDropdown = () => {
+            _showNotes = !_showNotes;
+            _refresh();
+        };
+
         result.Add(new InformationData {
             Content = nameof(Note),
-            OnHoverIn = () => TooltipManager.Instance.ShowMessage(NoteDisplay),
-            OnHoverOut = TooltipManager.Instance.Hide,
+            OnDropdown = string.IsNullOrEmpty(Note) ? null : onNotesDropdown,
             OnEdit = async () => {
                 var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
                 inputPopup.Populate(
@@ -88,8 +106,16 @@ public class PC : IDataEntry, IOnMoreInfo {
                     inputText: Note,
                     multiLine: true
                 );
-            }
+            },
+            Expanded = _showNotes
         });
+
+        if (_showNotes) {
+            result.Add(new InformationData {
+                ExpandableContent = Note,
+                IndentLevel = 1
+            });
+        }
 
         Action onTrainingDropdown = () => {
             _showTrainings = !_showTrainings;

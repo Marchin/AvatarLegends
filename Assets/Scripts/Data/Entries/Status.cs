@@ -12,26 +12,39 @@ public class Status : IDataEntry {
     
     [JsonProperty("positive")]
     public bool Positive;
-    private Action _onRefresh;
+
+    private bool _showDescription;
+    private Action _refresh;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
-        _onRefresh = refresh;
+        _refresh = refresh;
 
         var result = new List<InformationData>();
         
-        if (!string.IsNullOrEmpty(Description)) {
-            result.Add(new InformationData {
-                Content = nameof(Description),
-                OnHoverIn = () => TooltipManager.Instance.ShowMessage(Description),
-                OnHoverOut = TooltipManager.Instance.Hide,
-            });
-        }
-
         result.Add(new InformationData {
             Prefix = nameof(Positive),
             IsToggleOn = Positive
         });
 
+        if (!string.IsNullOrEmpty(Description)) {
+            Action onDescriptionDropdown = () => {
+                _showDescription = !_showDescription;
+                _refresh();
+            };
+
+            result.Add(new InformationData {
+                OnDropdown = onDescriptionDropdown,
+                Content = nameof(Description),
+                Expanded = _showDescription
+            });
+
+            if (_showDescription) {
+                result.Add(new InformationData {
+                    ExpandableContent = Description,
+                    IndentLevel = 1
+                });
+            }
+        }
 
         return result;
     }
