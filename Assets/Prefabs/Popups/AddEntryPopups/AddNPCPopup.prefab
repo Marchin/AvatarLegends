@@ -920,8 +920,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5286901640372456109}
   m_HandleRect: {fileID: 2799609174671058372}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.97576797
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1051,7 +1051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1851232273230099054, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 84
+      value: 184
       objectReference: {fileID: 0}
     - target: {fileID: 1851232273230099054, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1100,6 +1100,10 @@ PrefabInstance:
     - target: {fileID: 1851232273230099054, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1851232273230099055, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
+      propertyPath: m_MinHeight
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 1851232273749405846, guid: 4bc37b5a76f8c7741a2c7c55a58f6096, type: 3}
       propertyPath: m_enableWordWrapping
@@ -1519,6 +1523,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2249717554310109626}
     m_Modifications:
+    - target: {fileID: 766824182766435105, guid: d83604be80d4e554f923b58591452dfd, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 766824182822324504, guid: d83604be80d4e554f923b58591452dfd, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1993,6 +2001,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2249717554310109626}
     m_Modifications:
+    - target: {fileID: 766824182766435105, guid: d83604be80d4e554f923b58591452dfd, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 766824182822324504, guid: d83604be80d4e554f923b58591452dfd, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
