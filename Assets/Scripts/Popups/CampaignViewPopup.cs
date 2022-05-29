@@ -189,15 +189,7 @@ public class CampaignViewPopup : Popup {
                     },
                     isEditable: _ => true,
                     onDeleteAll: () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            "Delete all engagements?",
-                            onYes: () => {
-                                _entries.Clear();
-                                _selectedEntry = null;
-                                Refresh(applyFilter: true);
-                            },
-                            restore: false
-                        );
+                        CurrentSession.RemoveEngagements(_reload);
                     },
                     customSort: entries => {
                         entries.Sort((x, y) => 

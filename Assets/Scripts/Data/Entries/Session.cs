@@ -262,6 +262,40 @@ public class Session : IDataEntry {
         return results;
     }
     
+    public async void RemoveEngagements(Action onDone) {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        List<string> engagementsToRemove = new List<string>(Engagements.Count);
+        var infoList = new List<InformationData>(Engagements.Count);
+
+        Refresh();
+
+        void Refresh() {
+            infoList.Clear();
+            foreach (var engagement in Engagements) {
+                infoList.Add(new InformationData {
+                    Content = engagement.Name,
+                    IsToggleOn = engagementsToRemove.Contains(engagement.Name),
+                    OnToggle = isOn => {
+                        if (isOn) {
+                            engagementsToRemove.Add(engagement.Name);
+                        } else {
+                            engagementsToRemove.Remove(engagement.Name);
+                        }
+                        Refresh();
+                    }
+                });
+            }
+
+            listPopup.Populate(() => infoList,
+                "Remove engagements",
+                () => {
+                    Engagements.RemoveAll(x => engagementsToRemove.Contains(x.Name));
+                    onDone?.Invoke();
+                }
+            );
+        }
+    }
+    
     public Filter GetFilterData() {
         Filter filter = new Filter();
         
