@@ -138,7 +138,20 @@ public class CampaignViewPopup : Popup {
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
                         addNPCPopup.Populate(OnEntryEdition, names, _entries[_selectedEntry] as NPC);
                     },
-                    isEditable: entry => Data.IsEditable(entry as NPC)
+                    isEditable: entry => Data.IsEditable(entry as NPC),
+                    getButtons: () => {
+                        List<ButtonData> buttons = new List<ButtonData> {
+                            new ButtonData {
+                                Text = "Restore",
+                                Callback = () => {
+                                    SelectedCampaign.NPCs[_selectedEntry].Restore();
+                                    Refresh();
+                                }
+                            }
+                        };
+
+                        return buttons;
+                    }
                 );
             }
         });

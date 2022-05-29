@@ -208,7 +208,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         };
 
         result.Add(new InformationData {
-            Content = $"Condition ({Conditions.Count}/{GetMaxConditions()})",
+            Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
             OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
             OnAdd = (Conditions.Count < GetMaxConditions()) ?
                 AddCondition :
@@ -788,6 +788,15 @@ public class NPC : IDataEntry, IOnMoreInfo {
         int result = Data.NPCs.Count + SelectedCampaign.PCs.Count - 1;
 
         return result;
+    }
+
+    public void Restore() {
+        foreach (var condition in Conditions) {
+            condition.Value.On = false;
+        }
+        Fatigue = 0;
+        Balance = 0;
+        Statuses.Clear();
     }
 
     public Filter GetFilterData() {
