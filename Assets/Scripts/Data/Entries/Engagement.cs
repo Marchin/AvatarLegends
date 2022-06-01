@@ -23,10 +23,10 @@ public class Engagement : IDataEntry {
     private bool _showNotes;
     private bool _showNPCs;
     private bool _showPCs;
+    private Dictionary<string, bool> _showNPCData = new Dictionary<string, bool>();
     private static AppData Data => ApplicationManager.Instance.Data;
     private static Campaign SelectedCampaign => Data.User.SelectedCampaign;
     private static Session CurrentSession => Data.User.CurrentSession;
-    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -98,8 +98,18 @@ public class Engagement : IDataEntry {
                 if (!Data.NPCs.ContainsKey(npcName)) {
                     continue;
                 }
+                if (!_showNPCData.ContainsKey(npcName)) {
+                    _showNPCData.Add(npcName, false);
+                }
+
+
+                Action showNPC = () => {
+                    _showNPCData[npcName] = !_showNPCData[npcName];
+                    _refresh();
+                };
 
                 result.Add(new InformationData {
+                    OnDropdown = showNPC,
                     Content = $"{npcName} ({Data.NPCs[npcName].Alignment})",
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
@@ -115,8 +125,13 @@ public class Engagement : IDataEntry {
                         void Refresh() {
                             listPopup.Populate(() => Data.NPCs[npcName].RetrieveData(Refresh, Refresh), npcName, null);
                         }
-                    }
+                    },
+                    IndentLevel = 1
                 });
+
+                if (_showNPCData[npcName]) {
+                    result.AddRange(Data.NPCs[npcName].RetrieveCombatData(refresh, reload, indentLevel: 2));
+                }
             }
         }
 

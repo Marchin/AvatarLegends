@@ -66,15 +66,12 @@ public class NPC : IDataEntry, IOnMoreInfo {
     private bool _showTechniques;
     private bool _showStatuses;
     private bool _showConnections;
-    private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
     public Action OnMoreInfo => ShowNPCData;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
-        _refresh = refresh;
-
         List<InformationData> result = new List<InformationData>();
 
         result.Add(new InformationData {
@@ -95,7 +92,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         if (!string.IsNullOrEmpty(Description)) {
             Action onDescriptionDropdown = () => {
                 _showDescription = !_showDescription;
-                _refresh();
+                refresh();
             };
 
             result.Add(new InformationData {
@@ -114,7 +111,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         Action onNotesDropdown = () => {
             _showNotes = !_showNotes;
-            _refresh();
+            refresh();
         };
 
         result.Add(new InformationData {
@@ -128,7 +125,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     input => {
                         Note = input;
                         PopupManager.Instance.Back();
-                        _refresh();
+                        refresh();
                     },
                     inputText: Note,
                     multiLine: true
@@ -161,7 +158,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         Action onTrainingDropdown = () => {
             _showTrainings = !_showTrainings;
-            _refresh();
+            refresh();
         };
 
         result.Add(new InformationData {
@@ -191,121 +188,11 @@ public class NPC : IDataEntry, IOnMoreInfo {
                                     }
                                 }
                 
-                                _refresh?.Invoke();
+                                refresh?.Invoke();
                             },
                             restore: false
                         );
-                        _refresh();
-                    },
-                    IndentLevel = 1
-                });
-            }
-        }
-
-        Action onConditionDropdown = () => {
-            _showConditions = !_showConditions;
-            _refresh();
-        };
-
-        result.Add(new InformationData {
-            Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
-            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
-            OnAdd = (Conditions.Count < GetMaxConditions()) ?
-                AddCondition :
-                (Action)null,
-            Expanded = _showConditions
-        });
-
-        if (_showConditions) {
-            List<string> conditionNames = new List<string>(Conditions.Keys);
-            conditionNames.Sort();
-            foreach (var conditionName in conditionNames) {
-                ConditionState condition = Conditions[conditionName];
-                result.Add(new InformationData {
-                    Content = conditionName,
-                    IsToggleOn = condition.On,
-                    OnToggle = on => Conditions[conditionName].On = on,
-                    OnDelete = () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            $"Remove {conditionName} condition?",
-                            onYes: () => {
-                                Conditions.Remove(conditionName);
-                                _refresh?.Invoke();
-                            },
-                            restore: false
-                        );
-                        _refresh();
-                    },
-                    IndentLevel = 1
-                });
-            }
-        }
-
-        Action onTechniqueDropdown = () => {
-            _showTechniques = !_showTechniques;
-            _refresh();
-        };
-
-        result.Add(new InformationData {
-            Content = $"Techniques ({Techniques.Count}/{GetMaxTechniques()})",
-            OnDropdown = (Techniques.Count > 0) ? onTechniqueDropdown : null,
-            OnAdd = (Techniques.Count < GetMaxTechniques()) ?
-                AddTechnique :
-                (Action)null,
-            Expanded = _showTechniques
-        });
-
-        if (_showTechniques) {
-            foreach (var techniqueName in Techniques) {
-                Technique technique = Data.Techniques[techniqueName];
-                result.Add(new InformationData {
-                    Content = technique.ColoredName,
-                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
-                    OnHoverOut = TooltipManager.Instance.Hide,
-                    OnDelete = () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            $"Remove {techniqueName} technique?",
-                            onYes: () => {
-                                Techniques.Remove(techniqueName);
-                                _refresh?.Invoke();
-                            },
-                            restore: false
-                        );
-                        _refresh();
-                    },
-                    IndentLevel = 1
-                });
-            }
-        }
-
-        Action onStatusesDropdown = () => {
-            _showStatuses = !_showStatuses;
-            _refresh();
-        };
-
-        result.Add(new InformationData {
-            Content = $"Statuses ({Statuses.Count})",
-            OnDropdown = (Statuses.Count > 0) ? onStatusesDropdown : null,
-            OnAdd = (Statuses.Count < Data.Statuses.Count) ?
-                AddStatus :
-                (Action)null,
-            Expanded = _showStatuses
-        });
-
-        if (_showStatuses) {
-            foreach (var statusName in Statuses) {
-                Status status = Data.Statuses[statusName];
-                string effect = status.Positive ? "Positive" : "Negative";
-                result.Add(new InformationData {
-                    Content = $"{statusName} ({effect})",
-                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
-                    OnHoverOut = TooltipManager.Instance.Hide,
-                    OnDelete = () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            $"Remove {statusName} status?",
-                            onYes: () => Statuses.Remove(statusName)
-                        );
-                        _refresh();
+                        refresh();
                     },
                     IndentLevel = 1
                 });
@@ -314,14 +201,16 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         Action onConnectionDropdown = () => {
             _showConnections = !_showConnections;
-            _refresh();
+            refresh();
         };
+
+        result.AddRange(RetrieveCombatData(refresh, reload));
 
         result.Add(new InformationData {
             Content = $"Connections ({Connections.Count})",
             OnDropdown = (Connections.Count > 0) ? onConnectionDropdown : null,
             OnAdd = (Connections.Count < GetMaxConnections()) ?
-                AddConnection :
+                () => AddConnection(refresh) :
                 (Action)null,
             Expanded = _showConnections
         });
@@ -342,7 +231,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                             input => {
                                 EditConnection(connectionName, input);
                                 PopupManager.Instance.Back();
-                                _refresh();
+                                refresh();
                             },
                             inputText: Connections[connectionName],
                             multiLine: true
@@ -361,7 +250,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                                 }
                             }
                         );
-                        _refresh();
+                        refresh();
                     },
                     IndentLevel = 1
                 });
@@ -381,6 +270,125 @@ public class NPC : IDataEntry, IOnMoreInfo {
         return result;
     }
 
+    public List<InformationData> RetrieveCombatData(Action refresh, Action reload, int indentLevel = 0) {
+        List<InformationData> result = new List<InformationData>();
+
+        Action onConditionDropdown = () => {
+            _showConditions = !_showConditions;
+            refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
+            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
+            OnAdd = (Conditions.Count < GetMaxConditions()) ?
+                () => AddCondition(refresh) :
+                (Action)null,
+            Expanded = _showConditions,
+            IndentLevel = indentLevel
+        });
+
+        if (_showConditions) {
+            List<string> conditionNames = new List<string>(Conditions.Keys);
+            conditionNames.Sort();
+            foreach (var conditionName in conditionNames) {
+                ConditionState condition = Conditions[conditionName];
+                result.Add(new InformationData {
+                    Content = conditionName,
+                    IsToggleOn = condition.On,
+                    OnToggle = on => Conditions[conditionName].On = on,
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
+                            $"Remove {conditionName} condition?",
+                            onYes: () => {
+                                Conditions.Remove(conditionName);
+                                refresh?.Invoke();
+                            },
+                            restore: false
+                        );
+                        refresh();
+                    },
+                    IndentLevel = indentLevel + 1
+                });
+            }
+        }
+
+        Action onTechniqueDropdown = () => {
+            _showTechniques = !_showTechniques;
+            refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Techniques ({Techniques.Count}/{GetMaxTechniques()})",
+            OnDropdown = (Techniques.Count > 0) ? onTechniqueDropdown : null,
+            OnAdd = (Techniques.Count < GetMaxTechniques()) ?
+                () => AddTechnique(refresh) :
+                (Action)null,
+            Expanded = _showTechniques,
+            IndentLevel = indentLevel
+        });
+
+        if (_showTechniques) {
+            foreach (var techniqueName in Techniques) {
+                Technique technique = Data.Techniques[techniqueName];
+                result.Add(new InformationData {
+                    Content = technique.ColoredName,
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(technique.InfoDisplay),
+                    OnHoverOut = TooltipManager.Instance.Hide,
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
+                            $"Remove {techniqueName} technique?",
+                            onYes: () => {
+                                Techniques.Remove(techniqueName);
+                                refresh?.Invoke();
+                            },
+                            restore: false
+                        );
+                        refresh();
+                    },
+                    IndentLevel = indentLevel + 1
+                });
+            }
+        }
+
+        Action onStatusesDropdown = () => {
+            _showStatuses = !_showStatuses;
+            refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Statuses ({Statuses.Count})",
+            OnDropdown = (Statuses.Count > 0) ? onStatusesDropdown : null,
+            OnAdd = (Statuses.Count < Data.Statuses.Count) ?
+                () => AddStatus(refresh) :
+                (Action)null,
+            Expanded = _showStatuses,
+            IndentLevel = indentLevel
+        });
+
+        if (_showStatuses) {
+            foreach (var statusName in Statuses) {
+                Status status = Data.Statuses[statusName];
+                string effect = status.Positive ? "Positive" : "Negative";
+                result.Add(new InformationData {
+                    Content = $"{statusName} ({effect})",
+                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
+                    OnHoverOut = TooltipManager.Instance.Hide,
+                    OnDelete = () => {
+                        MessagePopup.ShowConfirmationPopup(
+                            $"Remove {statusName} status?",
+                            onYes: () => Statuses.Remove(statusName)
+                        );
+                        refresh();
+                    },
+                    IndentLevel = indentLevel + 1
+                });
+            }
+        }
+
+        return result;
+    }
+
     public async void ShowNPCData() {
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
         RefreshInfo();
@@ -390,7 +398,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         }
     }
 
-    private void AddCondition() {
+    private void AddCondition(Action refresh) {
         var availableConditions = IDataEntry.GetAvailableEntries<Condition>(Conditions.Keys, Data.Conditions.Values);
         if (availableConditions.Count > 0) {
             Action<List<string>> onDone = names => {
@@ -399,7 +407,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                         Conditions.Add(name, new ConditionState { Name = name });
                     }
                 }
-                _refresh();
+                refresh?.Invoke();
             };
             IDataEntry.AddEntry<Condition>(
                 Conditions.Keys, 
@@ -522,7 +530,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         MessagePopup.ShowMessage(Description, nameof(Description));
     }
 
-    public void AddTechnique() {
+    public void AddTechnique(Action refresh) {
         var availableTechniques = IDataEntry.GetAvailableEntries<Technique>(Techniques, GetLearnableTechniques());
         if (availableTechniques.Count > 0) {
             availableTechniques.Sort((x, y) => {
@@ -538,8 +546,9 @@ public class NPC : IDataEntry, IOnMoreInfo {
             Action<List<string>> onDone = techniquesToAdd => {
                 Techniques.AddRange(techniquesToAdd);
                 Techniques.Sort();
-                _refresh();
+                refresh?.Invoke();
             };
+
             IDataEntry.AddEntry<Technique>(
                 Techniques, 
                 availableTechniques, 
@@ -618,7 +627,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         return result;
     }
     
-    public async void AddStatus() {
+    private async void AddStatus(Action refresh) {
         List<string> statusesToAdd = new List<string>();
         List<InformationData> infoList = new List<InformationData>(Data.Statuses.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
@@ -673,13 +682,13 @@ public class NPC : IDataEntry, IOnMoreInfo {
                         }
                     });
 
-                    _refresh();
+                    refresh?.Invoke();
                 }
             );
         }
     }
 
-    public async void AddConnection() {
+    private async void AddConnection(Action refresh) {
         Dictionary<string, string> connectionsToAdd = new Dictionary<string, string>(GetMaxConnections());
         List<InformationData> infoList = new List<InformationData>(GetMaxConnections());
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
@@ -757,7 +766,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
                         }
                     }
 
-                    _refresh();
+                    refresh?.Invoke();
                 }
             );
         }
