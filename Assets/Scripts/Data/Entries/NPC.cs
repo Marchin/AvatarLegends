@@ -141,21 +141,6 @@ public class NPC : IDataEntry, IOnMoreInfo {
             });
         }
 
-        result.Add(new InformationData {
-            Prefix = "Balance",
-            Content = string.IsNullOrEmpty(Principle) ? "(none)" : Principle,
-            InitValue = Balance,
-            MaxValue = GetMaxBalance(),
-            OnValueChange = ChangeBalance
-        });
-
-        result.Add(new InformationData {
-            Content = $"Fatigue",
-            InitValue = Fatigue,
-            MaxValue = GetMaxFatigue(),
-            OnValueChange = ChangeFatigue
-        });
-
         Action onTrainingDropdown = () => {
             _showTrainings = !_showTrainings;
             refresh();
@@ -272,6 +257,23 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
     public List<InformationData> RetrieveCombatData(Action refresh, Action reload, int indentLevel = 0) {
         List<InformationData> result = new List<InformationData>();
+
+        result.Add(new InformationData {
+            Prefix = "Balance",
+            Content = string.IsNullOrEmpty(Principle) ? "(none)" : Principle,
+            InitValue = Balance,
+            MaxValue = GetMaxBalance(),
+            OnValueChange = ChangeBalance,
+            IndentLevel = indentLevel
+        });
+
+        result.Add(new InformationData {
+            Content = $"Fatigue",
+            InitValue = Fatigue,
+            MaxValue = GetMaxFatigue(),
+            OnValueChange = ChangeFatigue,
+            IndentLevel = indentLevel
+        });
 
         Action onConditionDropdown = () => {
             _showConditions = !_showConditions;
