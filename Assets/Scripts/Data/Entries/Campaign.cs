@@ -60,9 +60,6 @@ public class Campaign : IDataEntry {
     private bool _showNPCs;
     private bool _showPCs;
     private bool _showSessions;
-    private AppData Data => ApplicationManager.Instance.Data;
-    public string DescriptionDisplay => !string.IsNullOrEmpty(Description) ? Description : "(Empty)";
-    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;

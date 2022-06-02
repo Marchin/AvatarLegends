@@ -68,7 +68,6 @@ public class NPC : IDataEntry, IOnMoreInfo {
     private bool _showConnections;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
-    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
     public Action OnMoreInfo => ShowNPCData;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {

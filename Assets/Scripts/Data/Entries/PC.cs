@@ -35,7 +35,6 @@ public class PC : IDataEntry, IOnMoreInfo {
     private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
-    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
     public Action OnMoreInfo => ShowPCData;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {

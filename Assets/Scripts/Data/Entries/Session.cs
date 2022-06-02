@@ -59,7 +59,6 @@ public class Session : IDataEntry {
     private bool _showPCs;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
-    public string NoteDisplay => !string.IsNullOrEmpty(Note) ? Note : "(Empty)";
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
