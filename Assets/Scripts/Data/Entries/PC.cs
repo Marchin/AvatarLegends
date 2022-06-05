@@ -27,11 +27,11 @@ public class PC : IDataEntry, IOnMoreInfo {
     [JsonProperty("connections")]
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
 
-    private bool _showNotes;
-    private bool _showBackstory;
+    private bool _showNotes = true;
+    private bool _showBackstory = true;
     private bool _showConnections;
     private bool _showConditions;
-    private bool _showTrainings;
+    private bool _showTrainings = true;
     private Action _refresh;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;

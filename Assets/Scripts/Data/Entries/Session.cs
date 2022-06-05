@@ -55,8 +55,8 @@ public class Session : IDataEntry {
     private Action _refresh;
     private bool _showDescription;
     private bool _showNotes;
-    private bool _showNPCs;
-    private bool _showPCs;
+    private bool _showNPCs = true;
+    private bool _showPCs = true;
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
 
@@ -158,7 +158,8 @@ public class Session : IDataEntry {
                         void Refresh() {
                             listPopup.Populate(() => Data.NPCs[npc].RetrieveData(Refresh, Refresh), npc, null);
                         }
-                    }
+                    },
+                    IndentLevel = 1
                 });
             }
         }
@@ -199,7 +200,8 @@ public class Session : IDataEntry {
                         void Refresh() {
                             listPopup.Populate(() => SelectedCampaign.PCs[pc].RetrieveData(Refresh, Refresh), pc, null);
                         }
-                    }
+                    },
+                    IndentLevel = 1
                 });
             }
         }

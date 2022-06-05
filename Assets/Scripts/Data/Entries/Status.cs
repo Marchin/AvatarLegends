@@ -13,7 +13,7 @@ public class Status : IDataEntry {
     [JsonProperty("positive")]
     public bool Positive;
 
-    private bool _showDescription;
+    private bool _showDescription = true;
     private Action _refresh;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {

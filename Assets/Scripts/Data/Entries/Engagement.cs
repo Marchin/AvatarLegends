@@ -21,8 +21,8 @@ public class Engagement : IDataEntry {
     private Action _refresh;
     private Action _reload;
     private bool _showNotes;
-    private bool _showNPCs;
-    private bool _showPCs;
+    private bool _showNPCs = true;
+    private bool _showPCs = true;
     private Dictionary<string, bool> _showNPCData = new Dictionary<string, bool>();
     private static AppData Data => ApplicationManager.Instance.Data;
     private static Campaign SelectedCampaign => Data.User.SelectedCampaign;
@@ -172,7 +172,8 @@ public class Engagement : IDataEntry {
                         void Refresh() {
                             listPopup.Populate(() => pc.RetrieveData(Refresh, Refresh), pcName, null);
                         }
-                    }
+                    },
+                    IndentLevel = 1
                 });
             }
         }

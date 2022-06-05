@@ -130,7 +130,7 @@ public class Technique : IDataEntry, IOnHover {
     public Action OnHoverIn => () => TooltipManager.Instance.ShowMessage(InfoDisplay);
     public Action OnHoverOut => TooltipManager.Instance.Hide;
 
-    private bool _showDescription;
+    private bool _showDescription = true;
     private Action _refresh;
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
