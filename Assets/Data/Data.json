@@ -252,7 +252,7 @@
             "description": "Push a high-powered stream of water from a significant source. Mark fatigue to inflict a condition on a foe within reach of the water source; they are pinned against something and cannot shift positions or engage foes other than you until they break the stream or you drop it. Mark 1-fatigue at the end of each exchange to continue the stream.",
             "rare": false
         },
-        "Slip Over ice": {
+        "Slip Over Ice": {
             "name": "Slip Over Ice",
             "mastery": "Water",
             "approach": "Evade",
