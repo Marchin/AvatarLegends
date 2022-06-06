@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class UserData {
     [JsonProperty("campaigns")]
     public Dictionary<string, Campaign> Campaigns = new Dictionary<string, Campaign>();

@@ -24,8 +24,7 @@ public class AddSessionPopup : AddEntryPopup<Session> {
     protected override IDataEntry OnEntryCreation() {
         Session session = new Session() {
             Name = NewName,
-            Description = _descriptionInput.text,
-            Number = ApplicationManager.Instance.Data.User.SelectedCampaign.Sessions.Count + 1
+            Description = _descriptionInput.text
         };
 
         if (Editing) {

@@ -4,8 +4,7 @@ using Newtonsoft.Json;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class Session : IDataEntry {
-    [JsonProperty("number")]
-    public int Number;
+    public int Number => SelectedCampaign.Sessions.IndexOf(this) + 1;
 
     [JsonProperty("name")]
     public string Name { get; set; }
@@ -29,7 +28,9 @@ public class Session : IDataEntry {
             Dictionary<string, Engagement> engagements = new Dictionary<string, Engagement>(Engagements.Count);
 
             foreach (var engagement in Engagements) {
-                engagements.Add(engagement.Name, engagement);
+                if (!engagements.ContainsKey(engagement.Name)) {
+                    engagements.Add(engagement.Name, engagement);
+                }
             }
 
             return engagements;
@@ -67,7 +68,15 @@ public class Session : IDataEntry {
 
         result.Add(new InformationData {
             Prefix = nameof(Number),
-            Content = Number.ToString(),
+            InitValue = Number,
+            MinValue = 1,
+            MaxValue = SelectedCampaign.Sessions.Count,
+            LoopValue = true,
+            OnValueChange = value => {
+                SelectedCampaign.Sessions.Remove(this);
+                SelectedCampaign.Sessions.Insert(value - 1, this);
+                reload?.Invoke();
+            }
         });
 
         if (!string.IsNullOrEmpty(Description)) {

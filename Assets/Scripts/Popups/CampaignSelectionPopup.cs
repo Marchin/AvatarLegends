@@ -40,7 +40,7 @@ public class CampaignSelectionPopup : Popup {
                     Data.ClearCache();
                     UserData.SelectedCampaignName = campaign.Key;
                     var selectedCampaign = UserData.SelectedCampaign;
-                    selectedCampaign.CurrentSession = selectedCampaign.LastSession;
+                    selectedCampaign.CurrentSessionIndex = selectedCampaign.Sessions.Count;
                     _ = PopupManager.Instance.GetOrLoadPopup<CampaignViewPopup>(restore: false);
                 }
             });

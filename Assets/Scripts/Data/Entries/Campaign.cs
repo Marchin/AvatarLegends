@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -20,39 +21,37 @@ public class Campaign : IDataEntry {
     public Dictionary<string, PC> PCs = new Dictionary<string, PC>();
 
     [JsonProperty("sesions")]
-    public Dictionary<string, Session> Sessions = new Dictionary<string, Session>();
+    public Dictionary<string, Session> OldSessions = new Dictionary<string, Session>();
 
-    private string _currentSessionName;
-
-    public Session CurrentSession
-    {
+    [JsonProperty("sessions")]
+    public List<Session> Sessions = new List<Session>();
+    public Dictionary<string, Session> SessionsByName {
         get {
-            if (!string.IsNullOrEmpty(_currentSessionName) && Sessions.ContainsKey(_currentSessionName)) {
-                return Sessions[_currentSessionName];
-            } else {
-                return null;
+            Dictionary<string, Session> sessions = new Dictionary<string, Session>(Sessions.Count);
+
+            foreach (var session in Sessions) {
+                if (!sessions.ContainsKey(session.Name)) {
+                    sessions.Add(session.Name, session);
+                }
             }
+
+            return sessions;
         }
         set {
-            if ((value != null) && Sessions.ContainsKey(value.Name)) {
-                _currentSessionName = value.Name;
+            Sessions.Clear();
+            
+            foreach (var session in value) {
+                Sessions.Add(session.Value);
             }
         }
     }
 
-    public Session LastSession {
-        get {
-            List<Session> sessions = new List<Session>(Sessions.Values);
-
-            if (sessions.Count > 0) {
-                sessions.Sort((x, y) => y.Number.CompareTo(x.Number));
-
-                return sessions[0];
-            } else {
-                return null;
-            }
-        }
+    private int _currentSessionIndex;
+    public int CurrentSessionIndex {
+        get => _currentSessionIndex + 1;
+        set => _currentSessionIndex = UnityUtils.Repeat(value - 1, Sessions.Count);
     }
+    public Session CurrentSession => (Sessions.Count > 0) ? Sessions[_currentSessionIndex] : null;
 
     private Action _refresh;
     private bool _showDescription;
@@ -60,6 +59,20 @@ public class Campaign : IDataEntry {
     private bool _showNPCs;
     private bool _showPCs;
     private bool _showSessions;
+
+    [OnDeserialized()]
+    void OnDeserializedMethod(StreamingContext context) {
+        if (OldSessions.Count <= 0) {
+            return;
+        }
+
+        Sessions.Clear();
+        foreach (var session in OldSessions) {
+            Sessions.Add(session.Value);
+        }
+
+        OldSessions.Clear();
+    }
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -179,11 +192,11 @@ public class Campaign : IDataEntry {
         if (_showSessions) {
             foreach (var session in Sessions) {
                 result.Add(new InformationData {
-                    Content = session.Key,
+                    Content = session.Name,
                     OnDelete = () => {
                         MessagePopup.ShowConfirmationPopup(
-                            $"Remove {session.Key} from the engagement?",
-                            onYes: () => Sessions.Remove(session.Key)
+                            $"Remove {session.Name} from the engagement?",
+                            onYes: () => Sessions.Remove(Sessions.Find(s => s.Name == session.Name))
                         );
                         _refresh();
                     },
@@ -192,7 +205,7 @@ public class Campaign : IDataEntry {
                         Refresh();
 
                         void Refresh() {
-                            listPopup.Populate(() => session.Value.RetrieveData(Refresh, Refresh), session.Key, null);
+                            listPopup.Populate(() => session.RetrieveData(Refresh, Refresh), session.Name, null);
                         }
                     }
                 });

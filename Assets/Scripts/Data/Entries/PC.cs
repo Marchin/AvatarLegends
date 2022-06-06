@@ -109,7 +109,7 @@ public class PC : IDataEntry, IOnMoreInfo {
             Expanded = _showNotes
         });
 
-        if (_showNotes) {
+        if (_showNotes && !string.IsNullOrEmpty(Note)) {
             result.Add(new InformationData {
                 ExpandableContent = Note,
                 IndentLevel = 1

@@ -87,19 +87,14 @@ public class CampaignViewPopup : Popup {
             Text = sessionsTabText,
             Callback = () => {
                 SetEntryCollection<Session>(
-                    () => Data.User.SelectedCampaign.Sessions,
-                    val => Data.User.SelectedCampaign.Sessions = val,
+                    () => Data.User.SelectedCampaign.SessionsByName,
+                    val => Data.User.SelectedCampaign.SessionsByName = val,
                     sessionsTabText,
-                    onSetEntry: entry => {
-                        Data.User.SelectedCampaign.CurrentSession = entry as Session;
-                    },
+                    onSetEntry: null,
                     onAddEntry: async () => {
                         var addSessionPopup = await PopupManager.Instance.GetOrLoadPopup<AddSessionPopup>(restore: false);
                         addSessionPopup.Populate(
-                            entry => {
-                                Data.User.SelectedCampaign.Sessions.Add(entry.Name, entry as Session);
-                                OnEntryCreation(entry);
-                            },
+                            OnEntryCreation,
                             _entries.Keys,
                             null);
                     },
@@ -109,8 +104,8 @@ public class CampaignViewPopup : Popup {
                     },
                     isEditable: _ => true,
                     customSort: entries => {
-                        entries.Sort((x, y) => (y as Session).Number.CompareTo(
-                            (x as Session).Number
+                        entries.Sort((x, y) => (x as Session).Number.CompareTo(
+                            (y as Session).Number
                         ));
                     }
                 );

@@ -222,7 +222,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
                             } else {
                                 _userConfirmedData = true;
                                 string jsonData = Encoding.ASCII.GetString(fileData.Content);
-                                ParseFileData(jsonData);
+                                ParseFileData(jsonData.Replace("\r", ""));
                                 RefreshDataDate(saveFileLocation.ModifiedTime.Value);
                                 IsLoggingIn = false;
                                 OnAuthChanged?.Invoke();
