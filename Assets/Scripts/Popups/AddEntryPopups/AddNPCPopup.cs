@@ -89,11 +89,11 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
             npc.Statuses = _editingEntry.Statuses;
             npc.Trainings = _editingEntry.Trainings;
             npc.Techniques = _editingEntry.Techniques;
-            npc.Conditions = new Dictionary<string, ConditionState>(_editingEntry.Conditions);
+            npc.Conditions = _editingEntry.Conditions;
             npc.Connections = _editingEntry.Connections;
 
             int amountToRemove = Mathf.Max(npc.Conditions.Count - npc.GetMaxConditions(), 0);
-            List<string> keys = new List<string>(npc.Conditions.Keys);
+            List<string> keys = new List<string>(npc.Conditions);
             for (int iKey = 0; iKey < amountToRemove; ++iKey) {
                 npc.Conditions.Remove(keys[keys.Count - iKey - 1]);
             }

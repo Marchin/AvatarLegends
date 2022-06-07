@@ -53,8 +53,8 @@ public class NPC : IDataEntry, IOnMoreInfo {
     [JsonProperty("statuses")]
     public List<string> Statuses = new List<string>();
 
-    [JsonProperty("conditions")]
-    public Dictionary<string, ConditionState> Conditions = new Dictionary<string, ConditionState>();
+    [JsonProperty("active_conditions")]
+    public List<string> Conditions = new List<string>();
     
     [JsonProperty("connections")]
     public Dictionary<string, string> Connections = new Dictionary<string, string>();
@@ -281,33 +281,27 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         result.Add(new InformationData {
             Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
-            OnDropdown = (Conditions.Count > 0) ? onConditionDropdown : null,
-            OnAdd = (Conditions.Count < GetMaxConditions()) ?
-                () => AddCondition(refresh) :
-                (Action)null,
+            OnDropdown = onConditionDropdown,
             Expanded = _showConditions,
             IndentLevel = indentLevel
         });
 
         if (_showConditions) {
-            List<string> conditionNames = new List<string>(Conditions.Keys);
-            conditionNames.Sort();
-            foreach (var conditionName in conditionNames) {
-                ConditionState condition = Conditions[conditionName];
+            foreach (var condition in Data.Conditions) {
                 result.Add(new InformationData {
-                    Content = conditionName,
-                    IsToggleOn = condition.On,
-                    OnToggle = on => Conditions[conditionName].On = on,
-                    OnDelete = () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            $"Remove {conditionName} condition?",
-                            onYes: () => {
-                                Conditions.Remove(conditionName);
-                                refresh?.Invoke();
-                            },
-                            restore: false
-                        );
-                        refresh();
+                    Content = condition.Key,
+                    IsToggleOn = Conditions.Contains(condition.Key),
+                    OnToggle = on => {
+                        if (!on || (Conditions.Count < GetMaxConditions())) {
+                            if (on) {
+                                Conditions.Add(condition.Key);
+                            } else {
+                                Conditions.Remove(condition.Key);
+                            }
+                        } else {
+                            MessagePopup.ShowMessage("Amount of conditions exceeded! NPC is down!", "NPC Down", restore: false);
+                        }
+                        refresh?.Invoke();
                     },
                     IndentLevel = indentLevel + 1
                 });
@@ -396,28 +390,6 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         void RefreshInfo() {
             listPopup.Populate(() => RetrieveData(RefreshInfo, RefreshInfo), Name, null);
-        }
-    }
-
-    private void AddCondition(Action refresh) {
-        var availableConditions = IDataEntry.GetAvailableEntries<Condition>(Conditions.Keys, Data.Conditions.Values);
-        if (availableConditions.Count > 0) {
-            Action<List<string>> onDone = names => {
-                foreach (var name in names) {
-                    if (!Conditions.ContainsKey(name)) {
-                        Conditions.Add(name, new ConditionState { Name = name });
-                    }
-                }
-                refresh?.Invoke();
-            };
-            IDataEntry.AddEntry<Condition>(
-                Conditions.Keys, 
-                Data.Conditions.Values, 
-                onDone,
-                "Add Conditions",
-                GetMaxConditions());
-        } else {
-            MessagePopup.ShowMessage("No more conditions available, add more under the \"Conditions\" tab.", "Conditions");
         }
     }
 
@@ -801,11 +773,9 @@ public class NPC : IDataEntry, IOnMoreInfo {
     }
 
     public void Restore() {
-        foreach (var condition in Conditions) {
-            condition.Value.On = false;
-        }
         Fatigue = 0;
         Balance = 0;
+        Conditions.Clear();
         Statuses.Clear();
     }
 

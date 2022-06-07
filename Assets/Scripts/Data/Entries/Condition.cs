@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class ConditionState {
-    [JsonProperty("name")]
-    public string Name;
-
-    [JsonProperty("on")]
-    public bool On;
-}
-
-[JsonObject(MemberSerialization.OptIn)]
 public class Condition : IDataEntry, IOnHover {
     [JsonProperty("name")]
     public string Name { get; set; }
