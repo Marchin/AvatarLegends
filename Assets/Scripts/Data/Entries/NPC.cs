@@ -353,32 +353,40 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         result.Add(new InformationData {
             Content = $"Statuses ({Statuses.Count})",
-            OnDropdown = (Statuses.Count > 0) ? onStatusesDropdown : null,
-            OnAdd = (Statuses.Count < Data.Statuses.Count) ?
-                () => AddStatus(refresh) :
-                (Action)null,
+            OnDropdown = onStatusesDropdown,
             Expanded = _showStatuses,
             IndentLevel = indentLevel
         });
 
-        if (_showStatuses) {
-            foreach (var statusName in Statuses) {
-                Status status = Data.Statuses[statusName];
-                string effect = status.Positive ? "Positive" : "Negative";
-                result.Add(new InformationData {
-                    Content = $"{statusName} ({effect})",
-                    OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Description),
-                    OnHoverOut = TooltipManager.Instance.Hide,
-                    OnDelete = () => {
-                        MessagePopup.ShowConfirmationPopup(
-                            $"Remove {statusName} status?",
-                            onYes: () => Statuses.Remove(statusName)
-                        );
-                        refresh();
-                    },
-                    IndentLevel = indentLevel + 1
-                });
+        foreach (var status in Data.Statuses) {
+            if (!_showStatuses && !Statuses.Contains(status.Key)) {
+                continue;
             }
+
+            string effect = status.Value.Positive ? "Positive" : "Negative";
+            result.Add(new InformationData {
+                Content = $"{status.Key} ({effect})",
+                IsToggleOn = Statuses.Contains(status.Key),
+                OnToggle = on => {
+                    if (on) {
+                        Statuses.Add(status.Key);
+                    } else {
+                        Statuses.Remove(status.Key);
+                    }
+
+                    refresh?.Invoke();
+                },
+                OnHoverIn = () => TooltipManager.Instance.ShowMessage(status.Value.Description),
+                OnHoverOut = TooltipManager.Instance.Hide,
+                OnDelete = () => {
+                    MessagePopup.ShowConfirmationPopup(
+                        $"Remove {status.Key} status?",
+                        onYes: () => Statuses.Remove(status.Key)
+                    );
+                    refresh();
+                },
+                IndentLevel = indentLevel + 1
+            });
         }
 
         return result;
