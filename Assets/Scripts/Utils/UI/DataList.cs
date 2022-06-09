@@ -16,6 +16,11 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
         Vertical,
         Horizontal
     }
+    
+    public class ScrollData {
+        public int BaseIndex;
+        public Vector2 NormalizedPos;
+    }
 
     private const float MinHandleLenght = 24f;
     private const float ElementReuseScrollPoint = 0.4f;
@@ -48,6 +53,19 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
     private CancellationTokenSource _scrollCTS;
     public T this[int i] => Elements[i];
 
+    public ScrollData GetScrollData() {
+        ScrollData scroll = null;
+        
+        if (_data != null) {
+            scroll = new ScrollData {
+                BaseIndex = _baseIndex,
+                NormalizedPos = _scroll.normalizedPosition
+            };
+        }
+
+        return scroll;
+    }
+
     private void Start() {
         _template.gameObject.SetActive(false);
 
@@ -72,7 +90,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
         }
     }
 
-    public void Populate(List<D> data) {
+    public void Populate(List<D> data, ScrollData scrollData = null) {
         _data = data;
         if (data == null || data.Count == 0) {
             Clear();
@@ -116,12 +134,12 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             _elements.RemoveAt(index2);
         }
 
-        CalculateSizes();
+        CalculateSizes(scrollData);
 
         OnPopulate?.Invoke(data);
     }
     
-    public async void CalculateSizes() {
+    public async void CalculateSizes(ScrollData scrollData = null) {
         if (_scroll != null) {
             _calculatingSizes = true;
             try {
@@ -143,7 +161,13 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                 elementLength += _layoutGroup.spacing;
             }
             _elementNormalizedLength = elementLength / scrollableLength;
-            _calculatingSizes = false;
+
+            if (scrollData != null) {
+                _baseIndex = scrollData.BaseIndex;
+                _scroll.normalizedPosition = scrollData.NormalizedPos;
+            } else {
+                _scroll.normalizedPosition = Vector2.up;
+            }
 
             if (_fakeScrollBar != null && _fakeScrollBarHandle != null) {
                 bool showScrollbar = scrollableLength > 1f;
@@ -190,6 +214,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                     _scroll.viewport.offsetMax = offset;
                 }
             }
+            
+            _calculatingSizes = false;
         }
     }
 

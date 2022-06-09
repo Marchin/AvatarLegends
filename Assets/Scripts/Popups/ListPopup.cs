@@ -9,6 +9,7 @@ public class ListPopup : Popup {
         public Func<List<InformationData>> Data;
         public string Title;
         public Action OnConfirm;
+        public InformationList.ScrollData Scroll;
     }
 
     [SerializeField] private TextMeshProUGUI _title = default;
@@ -17,6 +18,7 @@ public class ListPopup : Popup {
     [SerializeField] private Button _closeButton = default;
     private Func<List<InformationData>> _data;
     private Action _onConfirm;
+    public InformationList.ScrollData GetScrollData() => _infoList.GetScrollData();
 
     private void Awake() {
         _confirmButton.onClick.AddListener(() => {
@@ -26,20 +28,26 @@ public class ListPopup : Popup {
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
     }
 
-    public void Populate(Func<List<InformationData>> data, string title, Action onConfirm) {
+    public void Populate(
+        Func<List<InformationData>> data, 
+        string title, 
+        Action onConfirm, 
+        InformationList.ScrollData scrollData = null
+    ) {
         _title.text = title;
         _data = data;
         _onConfirm = onConfirm;
         _confirmButton.gameObject.SetActive(_onConfirm != null);
 
-        _infoList.Populate(data?.Invoke());
+        _infoList.Populate(data?.Invoke(), scrollData);
     }
 
     public override object GetRestorationData() {
         PopupData popupData = new PopupData {
             Data = _data,
             Title = _title.text,
-            OnConfirm = _onConfirm
+            OnConfirm = _onConfirm,
+            Scroll = _infoList.GetScrollData()
         };
 
         return popupData;
@@ -47,7 +55,7 @@ public class ListPopup : Popup {
 
     public override void Restore(object data) {
         if (data is PopupData popupData) {
-            Populate(popupData.Data, popupData.Title, popupData.OnConfirm);
+            Populate(popupData.Data, popupData.Title, popupData.OnConfirm, popupData.Scroll);
         }
     }
 }

@@ -42,12 +42,13 @@ public interface IDataEntry {
         Refresh();
 
         void Refresh() {
+            var scrollData = listPopup.GetScrollData();
             infoList.Clear();
             foreach (var entry in availableEntries) {
                 infoList.Add(new InformationData {
                     Content = customName?.Invoke(entry) ?? entry.Name,
                     IsToggleOn = entriesToAdd.Contains(entry.Name),
-                    OnToggle = async on => {
+                    OnToggle = on => {
                         if (!on || (maxCap == -1) || (entriesToAdd.Count < slotsAvailable)) {
                             if (on) {
                                 entriesToAdd.Add(entry.Name);
@@ -57,8 +58,7 @@ public interface IDataEntry {
 
                             Refresh();
                         } else {
-                            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>();
-                            msgPopup.Populate(
+                            MessagePopup.ShowMessage(
                                 "You've already reached the maximum amount possible.",
                                 "Maxed"
                             );
@@ -78,9 +78,11 @@ public interface IDataEntry {
                 popupTitle += $" ({entriesToAdd.Count}/{slotsAvailable})";
             }
 
-            listPopup.Populate(() => infoList,
+            listPopup.Populate(
+                () => infoList,
                 popupTitle,
-                () => onDone(entriesToAdd)
+                () => onDone(entriesToAdd),
+                scrollData
             );
         }
     }
