@@ -844,7 +844,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
 
         filter.Toggles.Add(new ToggleActionData(
-            "Is Group",
+            "Group",
             action: (list, on) => {
                 if (on) {
                     list.RemoveAll(x => !(x as NPC).Group);
@@ -854,7 +854,7 @@ public class NPC : IDataEntry, IOnMoreInfo {
         ));
 
         filter.Toggles.Add(new ToggleActionData(
-            "Is Not Group",
+            "Not Group",
             action: (list, on) => {
                 if (on) {
                     list.RemoveAll(x => (x as NPC).Group);
