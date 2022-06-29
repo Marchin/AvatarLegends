@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-[JsonObject(MemberSerialization.OptIn)]
 public static class TechniqueUtils {
     public static string GetColoredText(this Technique.EApproach approach) {
         string result = "";
@@ -41,6 +40,7 @@ public static class TechniqueUtils {
     }
 }
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Technique : IDataEntry, IOnHover {
     public enum EApproach {
         Attack,
