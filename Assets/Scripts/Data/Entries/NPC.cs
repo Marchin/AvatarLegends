@@ -274,40 +274,6 @@ public class NPC : IDataEntry, IOnMoreInfo {
             IndentLevel = indentLevel
         });
 
-        Action onConditionDropdown = () => {
-            _showConditions = !_showConditions;
-            refresh();
-        };
-
-        result.Add(new InformationData {
-            Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
-            OnDropdown = onConditionDropdown,
-            Expanded = _showConditions,
-            IndentLevel = indentLevel
-        });
-
-        if (_showConditions) {
-            foreach (var condition in Data.Conditions) {
-                result.Add(new InformationData {
-                    Content = condition.Key,
-                    IsToggleOn = Conditions.Contains(condition.Key),
-                    OnToggle = on => {
-                        if (!on || (Conditions.Count < GetMaxConditions())) {
-                            if (on) {
-                                Conditions.Add(condition.Key);
-                            } else {
-                                Conditions.Remove(condition.Key);
-                            }
-                        } else {
-                            MessagePopup.ShowMessage("Amount of conditions exceeded! NPC is down!", "NPC Down", restore: false);
-                        }
-                        refresh?.Invoke();
-                    },
-                    IndentLevel = indentLevel + 1
-                });
-            }
-        }
-
         Action onTechniqueDropdown = () => {
             _showTechniques = !_showTechniques;
             refresh();
@@ -344,6 +310,39 @@ public class NPC : IDataEntry, IOnMoreInfo {
                     IndentLevel = indentLevel + 1
                 });
             }
+        }
+
+        Action onConditionDropdown = () => {
+            _showConditions = !_showConditions;
+            refresh();
+        };
+
+        result.Add(new InformationData {
+            Content = $"Conditions ({Conditions.Count}/{GetMaxConditions()})",
+            OnDropdown = onConditionDropdown,
+            Expanded = _showConditions,
+            IndentLevel = indentLevel
+        });
+
+        foreach (var condition in Data.Conditions) {
+            if (!_showConditions && !Conditions.Contains(condition.Key)) {
+                continue;
+            }
+
+            result.Add(new InformationData {
+                Content = condition.Key,
+                IsToggleOn = Conditions.Contains(condition.Key),
+                OnToggle = on => {
+                    if (on) {
+                        Conditions.Add(condition.Key);
+                    } else {
+                        Conditions.Remove(condition.Key);
+                    }
+
+                    refresh?.Invoke();
+                },
+                IndentLevel = indentLevel + 1
+            });
         }
 
         Action onStatusesDropdown = () => {
