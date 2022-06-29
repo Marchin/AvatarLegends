@@ -21,6 +21,7 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     private readonly List<string> ListFieldsQuery = new List<string> { "files/name, files/id, files/modifiedTime" };
     private readonly List<string> FileFieldsQuery = new List<string> { "name, id, modifiedTime" };
     private const string KeepLocalCopyKey = "keep_local_copy";
+    private const string FirstLoginDoneKey = "first_login_done";
     private const int AutoSaveIntervalInMinutes = 5;
     public UserData Data { get; private set; }
     public event Action OnBeforeSave;
@@ -45,6 +46,10 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
         }
     }
     public bool IsLoggingIn { get; private set; }
+    public bool FirstLoginDone {
+        get => PlayerPrefs.GetInt(FirstLoginDoneKey, 0) > 0;
+        set => PlayerPrefs.SetInt(FirstLoginDoneKey, value ? 1 : 0);
+    }
     public event Action OnAuthChanged;
     public event Action OnLocalDataOverriden;
     
@@ -112,6 +117,41 @@ public class UserDataManager : MonoBehaviourSingleton<UserDataManager> {
     public async UniTask Login() {
         if (IsUserLoggedIn) {
             return;
+        }
+
+        if (!FirstLoginDone) {
+            bool? continueToLogin = null;
+
+            List<ButtonData> buttons = new List<ButtonData>(2);
+            buttons.Add(new ButtonData {
+                Text = "Cancel",
+                Callback = () => {
+                    PopupManager.Instance.Back();
+                    continueToLogin = false;
+                }
+            });
+            buttons.Add(new ButtonData {
+                Text = "Go",
+                Callback = () => {
+                    PopupManager.Instance.Back();
+                    continueToLogin = true;
+                }
+            });
+
+            var msgPopup = await PopupManager.Instance.GetOrLoadPopup<MessagePopup>(track: false);
+            msgPopup.Populate(
+                "This tracker allows you to sync your data using your Google Drive account.",
+                "Data Sync",
+                buttons,
+                showCloseButton: false);
+
+            await UniTask.WaitUntil(() => continueToLogin.HasValue);
+
+            if (continueToLogin.Value == false) {
+                return;
+            }
+
+            FirstLoginDone = true;
         }
         
         OperationBySubscription.Subscription loadingScreenHandle = null;
