@@ -61,7 +61,13 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                 BaseIndex = _baseIndex,
                 NormalizedPos = _scroll.normalizedPosition
             };
+        } else if (_direction == Direction.Vertical) {
+            scroll = new ScrollData {
+                BaseIndex = 0,
+                NormalizedPos = Vector2.up
+            };
         }
+
 
         return scroll;
     }
@@ -101,10 +107,10 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             _overflowDisplay.SetActive(false);
         }
 
-        _baseIndex = 0;
+        _baseIndex = scrollData?.BaseIndex ?? 0;
 
         int index = 0;
-        for (; index < data.Count; ++index) {
+        for (; index + _baseIndex < data.Count; ++index) {
             if (_maxDisplayCount > 0 && index >= _maxDisplayCount) {
                 if (_overflowDisplay != null) {
                     _overflowDisplay.SetActive(true);
@@ -123,7 +129,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                 }
             }
             T element = _elements[index];
-            element.Populate(data[index]);
+            element.Populate(data[index + _baseIndex]);
             element.gameObject.SetActive(true);
         }
 
@@ -163,7 +169,6 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             _elementNormalizedLength = elementLength / scrollableLength;
 
             if (scrollData != null) {
-                _baseIndex = scrollData.BaseIndex;
                 _scroll.normalizedPosition = scrollData.NormalizedPos;
             } else {
                 _scroll.normalizedPosition = Vector2.up;
@@ -196,7 +201,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                             _fakeScrollBarHandle.rect.width,
                             handleLength);
                     }
-                    OnScroll(_scroll.normalizedPosition);
+                    OnScroll(scrollData?.NormalizedPos ?? _scroll.normalizedPosition);
                 } else {
                     _fakeScrollBar.gameObject.SetActive(false);
                 }
@@ -214,7 +219,6 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                     _scroll.viewport.offsetMax = offset;
                 }
             }
-            
             _calculatingSizes = false;
         }
     }

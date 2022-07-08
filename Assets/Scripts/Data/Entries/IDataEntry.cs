@@ -63,8 +63,6 @@ public interface IDataEntry {
                                 "Maxed"
                             );
                         }
-
-                        Refresh();
                     },
                     OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo,
                     OnHoverIn = (entry as IOnHover)?.OnHoverIn,
