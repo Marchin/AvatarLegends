@@ -786,6 +786,10 @@ public class NPC : IDataEntry, IOnMoreInfo {
         Statuses.Clear();
     }
 
+    public NPC Clone() {
+        return this.MemberwiseClone() as NPC;
+    }
+
     public Filter GetFilterData() {
         Filter filter = new Filter();
 

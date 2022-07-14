@@ -45,6 +45,7 @@ public class CampaignViewPopup : Popup {
     private Action _record;
     private Action _onAddEntry;
     private Action _onEditEntry;
+    private Func<IDataEntry, string, IDataEntry> _onCloneEntry;
     private Action<IDataEntry> _onSetEntry;
     private Func<IDataEntry, bool> _isEditable;
     private Action _onDeleteAll;
@@ -133,9 +134,18 @@ public class CampaignViewPopup : Popup {
                         var addNPCPopup = await PopupManager.Instance.GetOrLoadPopup<AddNPCPopup>(restore: false);
                         addNPCPopup.Populate(OnEntryEdition, names, _entries[_selectedEntry] as NPC);
                     },
+                    onCloneEntry: (entry, name) => {
+                        IDataEntry clone = (entry as NPC).Clone();
+                        clone.Name = name;
+                        return clone;
+                    },
                     isEditable: entry => Data.IsEditable(entry as NPC),
                     getButtons: () => {
                         List<ButtonData> buttons = new List<ButtonData> {
+                            new ButtonData {
+                                Text = "Clone",
+                                Callback = CloneEntry
+                            },
                             new ButtonData {
                                 Text = "Restore",
                                 Callback = () => {
@@ -322,7 +332,8 @@ public class CampaignViewPopup : Popup {
         Func<IDataEntry, bool> isEditable,
         Action onDeleteAll = null,
         Action<List<IDataEntry>> customSort = null,
-        Func<List<ButtonData>> getButtons = null
+        Func<List<ButtonData>> getButtons = null,
+        Func<IDataEntry, string, IDataEntry> onCloneEntry = null
     ) where T : IDataEntry, new() {
         _record?.Invoke();
         Dictionary<string, T> entries = entriesFunc?.Invoke();
@@ -347,6 +358,7 @@ public class CampaignViewPopup : Popup {
         _onDeleteAll = onDeleteAll;
         _customSort = customSort;
         _getButtons = getButtons;
+        _onCloneEntry = onCloneEntry;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
 
         _reload = () => {
@@ -487,8 +499,25 @@ public class CampaignViewPopup : Popup {
         );
     }
 
+    private async void CloneEntry() {
+        var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+        inputPopup.Populate(
+            "Input new name for the entry copy.",
+            "Clone",
+            name => {
+                if (_entries.ContainsKey(name)) {
+                    MessagePopup.ShowMessage("Name already exists.", "Conflict");
+                } else {
+                    var clone = _onCloneEntry?.Invoke(_entries[_selectedEntry], name);
+                    OnEntryCreation(clone);
+                }
+            },
+            inputText: _selectedEntry
+        );
+    }
+
     private void OnEntryCreation(IDataEntry entry) {
-        _entries.Add(entry.Name, (IDataEntry)entry);
+        _entries.Add(entry.Name, entry);
         _selectedEntry = entry.Name;
         Refresh(applyFilter: true);
     }
