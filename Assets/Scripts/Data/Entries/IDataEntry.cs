@@ -10,6 +10,10 @@ public enum ETraining {
     Technology
 }
 
+public interface IDisplayName {
+    string DisplayName { get; }
+}
+
 public interface IOnMoreInfo {
     Action OnMoreInfo { get; }
 }

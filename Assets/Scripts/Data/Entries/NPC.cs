@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class NPC : IDataEntry, IOnMoreInfo {
+public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
     public enum EType {
         Minor,
         Major,
@@ -19,6 +19,9 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
     [JsonProperty("name")]
     public string Name { get; set; }
+    public string DisplayName {
+        get => Archived ? $"{Name} (Archived)" : Name;
+    }
     
     [JsonProperty("description")]
     public string Description;
@@ -46,6 +49,9 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
     [JsonProperty("note")]
     public string Note;
+    
+    [JsonProperty("archived")]
+    public bool Archived;
     
     [JsonProperty("techniques")]
     public List<string> Techniques = new List<string>();
@@ -845,6 +851,15 @@ public class NPC : IDataEntry, IOnMoreInfo {
 
         filter.Filters.Add(trainingFilter);
 
+        filter.Toggles.Add(new ToggleActionData(
+            "Archived",
+            action: (list, on) => {
+                if (!on) {
+                    list.RemoveAll(x => (x as NPC).Archived);
+                }
+                return list;
+            }
+        ));
 
         filter.Toggles.Add(new ToggleActionData(
             "Group",

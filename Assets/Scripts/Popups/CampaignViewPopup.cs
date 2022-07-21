@@ -155,6 +155,28 @@ public class CampaignViewPopup : Popup {
                             }
                         };
 
+                        if (SelectedCampaign.NPCs[_selectedEntry].Archived) {
+                            buttons.Insert(0, 
+                                new ButtonData {
+                                    Text = "Unarchive",
+                                    Callback = () => {
+                                        (_entries[_selectedEntry] as NPC).Archived = false;
+                                        Refresh(applyFilter: true);
+                                    }
+                                }
+                            );
+                        } else {
+                            buttons.Insert(0, 
+                                new ButtonData {
+                                    Text = "Archive",
+                                    Callback = () => {
+                                        (_entries[_selectedEntry] as NPC).Archived = true;
+                                        Refresh(applyFilter: true);
+                                    }
+                                }
+                            );
+                        }
+
                         return buttons;
                     }
                 );
@@ -439,8 +461,13 @@ public class CampaignViewPopup : Popup {
         List<ButtonData> buttons = new List<ButtonData>(_entries.Count);
         foreach (var entry in _searchedEntries) {
             _selectedEntry = _selectedEntry ?? entry.Name;
+            string displayName = entry.Name;
+            if (entry is IDisplayName nameDisplay) {
+                displayName = nameDisplay.DisplayName;
+            }
+
             buttons.Add(new ButtonData {
-                Text = entry.Name,
+                Text = displayName,
                 Callback = () => SetEntry(entry)
             });
         }
@@ -462,7 +489,12 @@ public class CampaignViewPopup : Popup {
     }
 
     private void SetEntry(IDataEntry entry) {
-        _name.text = entry.Name;
+        if (entry is IDisplayName nameDisplay) {
+            _name.text = nameDisplay.DisplayName;
+        } else {
+            _name.text = entry.Name;
+        }
+
         _entries[entry.Name] = entry;
         _tabSelectedEntry[_selectedTab] = entry.Name;
         _infoList.Populate(_entries[entry.Name].RetrieveData(Refresh, _reload));
@@ -470,6 +502,7 @@ public class CampaignViewPopup : Popup {
         _editEntry.interactable = _isEditable(entry);
         _deleteEntry.interactable = _isEditable(entry);
         RefreshEntriesColor();
+        RefreshButtons();
 
         _onSetEntry?.Invoke(entry);
     }
@@ -500,7 +533,7 @@ public class CampaignViewPopup : Popup {
     }
 
     private async void CloneEntry() {
-        var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>();
+        var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
         inputPopup.Populate(
             "Input new name for the entry copy.",
             "Clone",
@@ -510,6 +543,7 @@ public class CampaignViewPopup : Popup {
                 } else {
                     var clone = _onCloneEntry?.Invoke(_entries[_selectedEntry], name);
                     OnEntryCreation(clone);
+                    PopupManager.Instance.Back();
                 }
             },
             inputText: _selectedEntry
