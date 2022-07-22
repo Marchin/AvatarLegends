@@ -69,7 +69,7 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
     private bool _showNotes;
     private bool _showConditions;
     private bool _showTrainings;
-    private bool _showTechniques;
+    private bool _showTechniques = true;
     private bool _showStatuses;
     private bool _showConnections;
     private AppData Data => ApplicationManager.Instance.Data;
@@ -794,7 +794,7 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
 
     public NPC Clone() {
         NPC npc = this.MemberwiseClone() as NPC;
-        
+
         npc.Techniques = new List<string>(Techniques);
         npc.Conditions = new List<string>(Conditions);
         npc.Statuses = new List<string>(Statuses);
