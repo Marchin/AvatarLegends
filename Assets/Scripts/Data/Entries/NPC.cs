@@ -793,7 +793,15 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
     }
 
     public NPC Clone() {
-        return this.MemberwiseClone() as NPC;
+        NPC npc = this.MemberwiseClone() as NPC;
+        
+        npc.Techniques = new List<string>(Techniques);
+        npc.Conditions = new List<string>(Conditions);
+        npc.Statuses = new List<string>(Statuses);
+        npc.Trainings = new List<ETraining>(Trainings);
+        npc.Connections = new Dictionary<string, string>(Connections);
+
+        return npc;
     }
 
     public Filter GetFilterData() {
