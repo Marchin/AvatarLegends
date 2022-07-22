@@ -533,6 +533,12 @@ public class CampaignViewPopup : Popup {
     }
 
     private async void CloneEntry() {
+        string newName = _selectedEntry;
+
+        for (int i = 1; _entries.ContainsKey(newName); ++i) {
+            newName = _selectedEntry + $" ({i})";
+        }
+
         var inputPopup = await PopupManager.Instance.GetOrLoadPopup<InputPopup>(restore: false);
         inputPopup.Populate(
             "Input new name for the entry copy.",
@@ -546,7 +552,7 @@ public class CampaignViewPopup : Popup {
                     PopupManager.Instance.Back();
                 }
             },
-            inputText: _selectedEntry
+            inputText: newName
         );
     }
 
