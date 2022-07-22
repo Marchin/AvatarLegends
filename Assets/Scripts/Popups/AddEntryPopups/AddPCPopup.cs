@@ -63,6 +63,7 @@ public class AddPCPopup : AddEntryPopup<PC> {
         };
 
         if (Editing) {
+            pc.Note = _editingEntry.Note;
             pc.Connections = _editingEntry.Connections;
             pc.Trainings = _editingEntry.Trainings;
         }
