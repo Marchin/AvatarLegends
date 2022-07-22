@@ -84,6 +84,7 @@ public class AddNPCPopup : AddEntryPopup<NPC> {
         };
 
         if (Editing) {
+            npc.Note = _editingEntry.Note;
             npc.Balance = Math.Min(_editingEntry.Balance, npc.GetMaxBalance());
             npc.Fatigue = Math.Min(_editingEntry.Balance, npc.GetMaxFatigue());
             npc.Statuses = _editingEntry.Statuses;
