@@ -54,7 +54,15 @@ public class CampaignViewPopup : Popup {
     private GameObject _engagementTab;
     private Dictionary<string, string> _tabSelectedEntry = new Dictionary<string, string>();
     private Dictionary<string, Filter> _tabFilter = new Dictionary<string, Filter>();
-    
+    private Dictionary<string, string> _tabQueries = new Dictionary<string, string>();
+    private string Query {
+        get => _tabQueries[_selectedTab];
+        set {
+            _searchInput.text = value;
+            _tabQueries[_selectedTab] = value;
+        }
+    }
+
     private void Awake() {
         _addEntry.onClick.AddListener(() => _onAddEntry());
         _editEntry.onClick.AddListener(() => _onEditEntry());
@@ -62,7 +70,7 @@ public class CampaignViewPopup : Popup {
         _deleteEntry.onClick.AddListener(DeleteEntry);
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
         _filterButton.onClick.AddListener(OnFilterPress);
-        _clearSearchButton.onClick.AddListener(() => _searchInput.text = "");
+        _clearSearchButton.onClick.AddListener(() => Query = "");
         _infoButton.onClick.AddListener(async () => {
             var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
             RefreshPopup();
@@ -78,7 +86,6 @@ public class CampaignViewPopup : Popup {
 
         _clearSearchButton.gameObject.SetActive(false);
         _searchIcon.SetActive(true);
-        _searchInput.onValueChanged.AddListener(OnSearchInputChanged);
         _nameList.OnRefresh += RefreshEntriesColor;
 
         List<ButtonData> tabs = new List<ButtonData>();
@@ -335,9 +342,10 @@ public class CampaignViewPopup : Popup {
         _tabsList.Populate(tabs);
 
         foreach (var element in _tabsList.Elements) {
-            if ((element as ButtonElement).Text == engagementsTabText) {
+            _tabQueries.Add(element.Text, "");
+
+            if (element.Text == engagementsTabText) {
                 _engagementTab = element.gameObject;
-                break;
             }
         }
         
@@ -382,6 +390,12 @@ public class CampaignViewPopup : Popup {
         _getButtons = getButtons;
         _onCloneEntry = onCloneEntry;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
+
+        _searchInput.onValueChanged.RemoveListener(OnSearchInputChanged);
+        _searchInput.text = _tabQueries[tabName];
+        _searchInput.onValueChanged.AddListener(OnSearchInputChanged);
+        _clearSearchButton.gameObject.SetActive(!string.IsNullOrEmpty(_tabQueries[tabName]));
+        _searchIcon.SetActive(string.IsNullOrEmpty(_tabQueries[tabName]));
 
         _reload = () => {
             _record = null;
@@ -441,16 +455,16 @@ public class CampaignViewPopup : Popup {
             }
         }
 
-        if (string.IsNullOrEmpty(_searchInput.text)) {
+        if (string.IsNullOrEmpty(Query)) {
             _searchedEntries = _filteredEntries;
         } else {
             _searchedEntries = new List<IDataEntry>(_filteredEntries.Count);
             _searchedEntries.AddRange(
                 _filteredEntries.FindAll(x => x.Name.StartsWith(
-                    _searchInput.text, true, CultureInfo.InvariantCulture)));
+                    Query, true, CultureInfo.InvariantCulture)));
             _searchedEntries.AddRange(_filteredEntries.FindAll(x => 
                 (_searchedEntries.Find(y => y.Name == x.Name) == null) &&
-                x.Name.Contains(_searchInput.text, StringComparison.InvariantCultureIgnoreCase)));
+                x.Name.Contains(Query, StringComparison.InvariantCultureIgnoreCase)));
         }
 
 
@@ -582,6 +596,7 @@ public class CampaignViewPopup : Popup {
     private void OnSearchInputChanged(string query) {
         _clearSearchButton.gameObject.SetActive(!string.IsNullOrEmpty(query));
         _searchIcon.SetActive(string.IsNullOrEmpty(query));
+        _tabQueries[_selectedTab] = query;
         Refresh();
     }
             
