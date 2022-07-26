@@ -9,8 +9,7 @@ public class AppData {
     [JsonProperty("ncps")]
     private Dictionary<string, NPC> _dataNPCs = new Dictionary<string, NPC>();
     private Dictionary<string, NPC> _npcs;
-    public Dictionary<string, NPC> NPCs
-    {
+    public Dictionary<string, NPC> NPCs {
         get {
             if (_npcs == null) {
                 _npcs = new Dictionary<string, NPC>();
@@ -37,6 +36,20 @@ public class AppData {
         }
     }
 
+    public Dictionary<string, NPC> ActiveNPCs {
+        get {
+            var result = new Dictionary<string, NPC>(NPCs.Count);
+
+            foreach (var npc in NPCs) {
+                if (!npc.Value.Archived) {
+                    result.Add(npc.Key, npc.Value);
+                }
+            }
+
+            return result;
+        }
+    }
+
     public bool IsEditable(NPC npc) {
         return !_dataNPCs.ContainsKey(npc.Name);
     }
@@ -44,8 +57,7 @@ public class AppData {
     [JsonProperty("conditions")]
     private Dictionary<string, Condition> _dataConditions = new Dictionary<string, Condition>();
     private Dictionary<string, Condition> _conditions;
-    public Dictionary<string, Condition> Conditions
-    {
+    public Dictionary<string, Condition> Conditions {
         get {
             if (_conditions == null) {
                 _conditions = new Dictionary<string, Condition>();
@@ -79,8 +91,7 @@ public class AppData {
     [JsonProperty("techniques")]
     private Dictionary<string, Technique> _dataTechniques = new Dictionary<string, Technique>();
     private Dictionary<string, Technique> _techniques;
-    public Dictionary<string, Technique> Techniques
-    {
+    public Dictionary<string, Technique> Techniques {
         get {
             if (_techniques == null) {
                 _techniques = new Dictionary<string, Technique>();
@@ -114,8 +125,7 @@ public class AppData {
     [JsonProperty("statuses")]
     private Dictionary<string, Status> _dataStatuses = new Dictionary<string, Status>();
     private Dictionary<string, Status> _statuses;
-    public Dictionary<string, Status> Statuses
-    {
+    public Dictionary<string, Status> Statuses {
         get {
             if (_statuses == null) {
                 _statuses = new Dictionary<string, Status>();
@@ -149,8 +159,7 @@ public class AppData {
     [JsonProperty("playbooks")]
     private Dictionary<string, Playbook> _dataPlaybooks = new Dictionary<string, Playbook>();
     private Dictionary<string, Playbook> _playbooks;
-    public Dictionary<string, Playbook> Playbooks
-    {
+    public Dictionary<string, Playbook> Playbooks {
         get {
             if (_playbooks == null) {
                 _playbooks = new Dictionary<string, Playbook>();

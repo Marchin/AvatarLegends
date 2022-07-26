@@ -139,8 +139,8 @@ public class Session : IDataEntry {
         result.Add(new InformationData {
             Content = $"NPCs ({NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(NPCs, Data.NPCs.Values).Count > 0) ?
-                () => IDataEntry.AddEntry<NPC>(NPCs, Data.NPCs.Values, UpdateNPCs) :
+            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(NPCs, Data.ActiveNPCs.Values).Count > 0) ?
+                () => IDataEntry.AddEntry<NPC>(NPCs, Data.ActiveNPCs.Values, UpdateNPCs) :
                 (Action)null,
             Expanded = _showNPCs
         });
