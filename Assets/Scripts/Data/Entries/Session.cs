@@ -140,7 +140,7 @@ public class Session : IDataEntry {
             Content = $"NPCs ({NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
             OnAdd = (IDataEntry.GetAvailableEntries<NPC>(NPCs, Data.ActiveNPCs.Values).Count > 0) ?
-                () => IDataEntry.AddEntry<NPC>(NPCs, Data.ActiveNPCs.Values, UpdateNPCs) :
+                () => IDataEntry.AddEntry<NPC>(NPCs, Data.ActiveNPCs.Values, AddNPCs) :
                 (Action)null,
             Expanded = _showNPCs
         });
@@ -182,7 +182,7 @@ public class Session : IDataEntry {
             Content = $"PCs ({PCs.Count})",
             OnDropdown = (PCs.Count > 0) ? onPCDropdown : null,
             OnAdd = (IDataEntry.GetAvailableEntries<PC>(PCs, SelectedCampaign.PCs.Values).Count > 0) ?
-                () => IDataEntry.AddEntry<PC>(PCs, SelectedCampaign.PCs.Values, UpdatePCs) :
+                () => IDataEntry.AddEntry<PC>(PCs, SelectedCampaign.PCs.Values, AddPCs) :
                 (Action)null,
             Expanded = _showPCs
         });
@@ -217,18 +217,13 @@ public class Session : IDataEntry {
 
         return result;
 
-        void UpdateNPCs(List<string> newNPCs) {
-            NPCs.AddRange(newNPCs);
-            _refresh();
-        }
-
-        void UpdatePCs(List<string> newPCs) {
+        void AddPCs(List<string> newPCs) {
             PCs.AddRange(newPCs);
             _refresh();
         }
     }
 
-    public List<NPC> GetNPCsData() {
+    public List<NPC> GetNPCs() {
         List<NPC> npcs = new List<NPC>(NPCs.Count);
 
         foreach (var npcName in NPCs) {
@@ -238,6 +233,16 @@ public class Session : IDataEntry {
         }
 
         return npcs;
+    }
+
+    public void AddNPCs(List<string> newNPCs) {
+        foreach (var npc in newNPCs) {
+            if (!NPCs.Contains(npc)) {
+                NPCs.Add(npc);
+            }
+        }
+        NPCs.Sort();
+        _refresh();
     }
 
     public List<PC> GetPCsData() {

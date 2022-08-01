@@ -29,51 +29,37 @@ public interface IDataEntry {
     Filter GetFilterData();
 
 
-    static async void AddEntry<T>(
+    static void AddEntry<T>(
         IReadOnlyCollection<string> current, 
         IReadOnlyCollection<T> pool,
         Action<List<string>> onDone,
         string title = "Add Entries",
         int maxCap = -1,
-        Func<IDataEntry, string> customName = null
+        Func<IDataEntry, string> customName = null,
+        Func<IReadOnlyList<ButtonData>> buttonsRetriever = null
     ) where T : IDataEntry {
-        List<string> entriesToAdd = new List<string>(current.Count);
+        AddEntry<T>(current, () => pool, onDone, title, maxCap, customName, buttonsRetriever);
+    }
+
+    static async void AddEntry<T>(
+        IReadOnlyCollection<string> current, 
+        Func<IReadOnlyCollection<T>> poolGet,
+        Action<List<string>> onDone,
+        string title = "Add Entries",
+        int maxCap = -1,
+        Func<IDataEntry, string> customName = null,
+        Func<IReadOnlyList<ButtonData>> buttonsRetriever = null
+    ) where T : IDataEntry {
+        IReadOnlyCollection<T> pool = poolGet?.Invoke();
         List<InformationData> infoList = new List<InformationData>(pool.Count);
+        List<string> entriesToAdd = new List<string>(current.Count);
         var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
-        List<T> availableEntries = GetAvailableEntries<T>(current, pool);
-        int slotsAvailable = maxCap - current.Count;
 
         Refresh();
 
         void Refresh() {
+            int slotsAvailable = maxCap - current.Count;
             var scrollData = listPopup.GetScrollData();
-            infoList.Clear();
-            foreach (var entry in availableEntries) {
-                infoList.Add(new InformationData {
-                    Content = customName?.Invoke(entry) ?? entry.Name,
-                    IsToggleOn = entriesToAdd.Contains(entry.Name),
-                    OnToggle = on => {
-                        if (!on || (maxCap == -1) || (entriesToAdd.Count < slotsAvailable)) {
-                            if (on) {
-                                entriesToAdd.Add(entry.Name);
-                            } else {
-                                entriesToAdd.Remove(entry.Name);
-                            }
-
-                            Refresh();
-                        } else {
-                            MessagePopup.ShowMessage(
-                                "You've already reached the maximum amount possible.",
-                                "Maxed"
-                            );
-                        }
-                    },
-                    OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo,
-                    OnHoverIn = (entry as IOnHover)?.OnHoverIn,
-                    OnHoverOut = (entry as IOnHover)?.OnHoverOut
-                });
-            }
-
             string popupTitle = title;
 
             if (maxCap > 0) {
@@ -81,11 +67,46 @@ public interface IDataEntry {
             }
 
             listPopup.Populate(
-                () => infoList,
+                GetData,
                 popupTitle,
                 () => onDone(entriesToAdd),
-                scrollData
+                buttonsRetriever: buttonsRetriever,
+                scrollData: scrollData
             );
+
+            List<InformationData> GetData() {
+                infoList.Clear();
+                pool = poolGet?.Invoke();
+
+                List<T> availableEntries = GetAvailableEntries<T>(current, pool);
+                foreach (var entry in availableEntries) {
+                    infoList.Add(new InformationData {
+                        Content = customName?.Invoke(entry) ?? entry.Name,
+                        IsToggleOn = entriesToAdd.Contains(entry.Name),
+                        OnToggle = on => {
+                            if (!on || (maxCap == -1) || (entriesToAdd.Count < slotsAvailable)) {
+                                if (on) {
+                                    entriesToAdd.Add(entry.Name);
+                                } else {
+                                    entriesToAdd.Remove(entry.Name);
+                                }
+
+                                Refresh();
+                            } else {
+                                MessagePopup.ShowMessage(
+                                    "You've already reached the maximum amount possible.",
+                                    "Maxed"
+                                );
+                            }
+                        },
+                        OnMoreInfo = (entry as IOnMoreInfo)?.OnMoreInfo,
+                        OnHoverIn = (entry as IOnHover)?.OnHoverIn,
+                        OnHoverOut = (entry as IOnHover)?.OnHoverOut
+                    });
+                }
+
+                return infoList;
+            }
         }
     }
 

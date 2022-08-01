@@ -79,6 +79,21 @@ public class Engagement : IDataEntry {
             });
         }
 
+        List<ButtonData> RefreshButtons() {
+            List<NPC> availableNPCs = new List<NPC>(Data.ActiveNPCs.Values);
+            availableNPCs.RemoveAll(npc => CurrentSession.NPCs.Contains(npc.Name));
+
+            List<ButtonData> buttons = new List<ButtonData>();
+
+            if (availableNPCs.Count > 0) {
+                buttons.Add(new ButtonData {
+                    Text = "Add NPC to Session",
+                    Callback = () => IDataEntry.AddEntry<NPC>(NPCs, availableNPCs, CurrentSession.AddNPCs)
+                });
+            }
+            return buttons;
+        }
+
         Action onNPCDropdown = () => {
             _showNPCs = !_showNPCs;
             _refresh();
@@ -87,9 +102,13 @@ public class Engagement : IDataEntry {
         result.Add(new InformationData {
             Content = $"NPCs ({NPCs.Count}/{CurrentSession.NPCs.Count - CurrentSession.GetEngagedNPCs().Count + NPCs.Count})",
             OnDropdown = (NPCs.Count > 0) ? onNPCDropdown : null,
-            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(CurrentSession.GetEngagedNPCs(), CurrentSession.GetNPCsData()).Count > 0) ?
-                () => IDataEntry.AddEntry<NPC>(CurrentSession.GetEngagedNPCs(), CurrentSession.GetNPCsData(), UpdateNPCs)  :
-                (Action)null,
+            OnAdd = (IDataEntry.GetAvailableEntries<NPC>(CurrentSession.GetEngagedNPCs(), SelectedCampaign.NPCs.Values).Count > 0) ?
+                () => IDataEntry.AddEntry<NPC>(
+                    CurrentSession.GetEngagedNPCs(), 
+                    CurrentSession.GetNPCs,
+                    UpdateNPCs,
+                    buttonsRetriever: RefreshButtons
+                )  : (Action)null,
             Expanded = _showNPCs
         });
 

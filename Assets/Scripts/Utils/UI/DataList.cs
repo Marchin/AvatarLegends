@@ -40,10 +40,10 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
 
     private List<T> _elements = new List<T>();
     public IReadOnlyList<T> Elements => _elements;
-    public event Action<List<D>> OnPopulate;
+    public event Action<IReadOnlyList<D>> OnPopulate;
     public event Action OnRefresh;
     private List<T> _pool = new List<T>();
-    private List<D> _data;
+    public IReadOnlyList<D> Data { get; private set; }
     private int _baseIndex;
     private float _elementNormalizedLength;
     private float _handleSizeAdjustment;
@@ -56,7 +56,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
     public ScrollData GetScrollData() {
         ScrollData scroll = null;
         
-        if (_data != null) {
+        if (Data != null) {
             scroll = new ScrollData {
                 BaseIndex = _baseIndex,
                 NormalizedPos = _scroll.normalizedPosition
@@ -96,8 +96,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
         }
     }
 
-    public void Populate(List<D> data, ScrollData scrollData = null) {
-        _data = data;
+    public void Populate(IReadOnlyList<D> data, ScrollData scrollData = null) {
+        Data = data;
         if (data == null || data.Count == 0) {
             Clear();
             return;
@@ -181,7 +181,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
                     float scrollBarLength = (_direction == Direction.Horizontal) ?
                         _fakeScrollBar.rect.width :
                         _fakeScrollBar.rect.height;
-                    float handleLength = (viewportLength / (elementLength * _data.Count)) * scrollBarLength;
+                    float handleLength = (viewportLength / (elementLength * Data.Count)) * scrollBarLength;
                     if (handleLength < MinHandleLenght) {
                         _handleSizeAdjustment = MinHandleLenght - handleLength;
                         handleLength = MinHandleLenght;
@@ -224,9 +224,9 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
     }
 
     private void Refresh() {
-        _baseIndex = Mathf.Min(_baseIndex, _data.Count - _elements.Count);
+        _baseIndex = Mathf.Min(_baseIndex, Data.Count - _elements.Count);
         for (int iData = _baseIndex, iElement = 0; iElement < _elements.Count; ++iData, ++iElement) {
-            _elements[iElement].Populate(_data[iData]);
+            _elements[iElement].Populate(Data[iData]);
         }
         OnRefresh?.Invoke();
     }
@@ -245,7 +245,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
     }
 
     public async void ScrollTo(int index) {
-        if ((_data == null) || (_scroll == null)) {
+        if ((Data == null) || (_scroll == null)) {
             return;
         }
 
@@ -262,8 +262,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             return;
         }
 
-        index = Mathf.Clamp(index, 0, _data.Count - 1);
-        int scrolled = Mathf.Min(index, _data.Count - _elements.Count);
+        index = Mathf.Clamp(index, 0, Data.Count - 1);
+        int scrolled = Mathf.Min(index, Data.Count - _elements.Count);
         _baseIndex = index;
         Vector2 pos = _scroll.normalizedPosition;
         if (_direction == Direction.Horizontal) {
@@ -284,8 +284,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             float maxX = rect.TransformPoint(_fakeScrollBar.rect.max).x;
             float scrollPos = Mathf.InverseLerp(minX, maxX,
                 pos.x + (0.5f * _fakeScrollBarHandle.rect.size.x));
-            float scrolledElements = (1f - scrollPos) * _data.Count;
-            int scrolled = Mathf.Min(Mathf.FloorToInt(scrolledElements), _data.Count - _elements.Count);
+            float scrolledElements = (1f - scrollPos) * Data.Count;
+            int scrolled = Mathf.Min(Mathf.FloorToInt(scrolledElements), Data.Count - _elements.Count);
             _baseIndex = scrolled;
             pos.x = 1f - (scrolledElements - scrolled) * _elementNormalizedLength;
         } else {
@@ -293,8 +293,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             float maxY = rect.TransformPoint(_fakeScrollBar.rect.max).y;
             float scrollPos = Mathf.InverseLerp(minY, maxY,
                 pos.y + (0.5f * _fakeScrollBarHandle.rect.size.y));
-            float scrolledElements = (1f - scrollPos) * _data.Count;
-            int scrolled = Mathf.Min(Mathf.FloorToInt(scrolledElements), _data.Count - _elements.Count);
+            float scrolledElements = (1f - scrollPos) * Data.Count;
+            int scrolled = Mathf.Min(Mathf.FloorToInt(scrolledElements), Data.Count - _elements.Count);
             _baseIndex = scrolled;
             pos.y = 1f - (scrolledElements - scrolled) * _elementNormalizedLength;
         }
@@ -323,8 +323,8 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             (pos > (1f - ElementReuseScrollPoint));
 
         if (count > 0) {
-            if (_baseIndex < (_data.Count - _elements.Count) && isScrollingForwards && pastScrollForwardPoint) {
-                count = Mathf.Min(count, (_data.Count - _elements.Count) - _baseIndex);
+            if (_baseIndex < (Data.Count - _elements.Count) && isScrollingForwards && pastScrollForwardPoint) {
+                count = Mathf.Min(count, (Data.Count - _elements.Count) - _baseIndex);
                 newScrollIndex += count;
                 if (_direction == Direction.Horizontal) {
                     _scroll.CustomSetHorizontalNormalizedPosition(pos - _elementNormalizedLength * count);
@@ -351,7 +351,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             if (_direction == Direction.Horizontal) {
                 float elementsScrolled = _baseIndex +
                     ((1f - _scroll.horizontalNormalizedPosition) / _elementNormalizedLength);
-                float newX = -(elementsScrolled / _data.Count) * (_fakeScrollBar.rect.width - _handleSizeAdjustment);
+                float newX = -(elementsScrolled / Data.Count) * (_fakeScrollBar.rect.width - _handleSizeAdjustment);
                 _fakeScrollBarHandle.anchoredPosition = new Vector2(
                     newX - (0.5f * _fakeScrollBarHandle.rect.width),
                     _fakeScrollBarHandle.anchoredPosition.y
@@ -359,7 +359,7 @@ public class DataList<T, D> : MonoBehaviour where T : MonoBehaviour, IDataUIElem
             } else {
                 float elementsScrolled = _baseIndex +
                     ((1f - _scroll.verticalNormalizedPosition) / _elementNormalizedLength);
-                float newY = -(elementsScrolled / _data.Count) * (_fakeScrollBar.rect.height - _handleSizeAdjustment);
+                float newY = -(elementsScrolled / Data.Count) * (_fakeScrollBar.rect.height - _handleSizeAdjustment);
                 _fakeScrollBarHandle.anchoredPosition = new Vector2(
                     _fakeScrollBarHandle.anchoredPosition.x,
                     newY - (0.5f * _fakeScrollBarHandle.rect.height)

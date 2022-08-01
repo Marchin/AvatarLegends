@@ -99,7 +99,7 @@ public class CampaignViewPopup : Popup {
                     () => Data.User.SelectedCampaign.SessionsByName,
                     val => Data.User.SelectedCampaign.SessionsByName = val,
                     sessionsTabText,
-                    onSetEntry: entry => SelectedCampaign.CurrentSessionIndex = SelectedCampaign.Sessions.IndexOf(entry as Session),
+                    onSetEntry: entry => SelectedCampaign.CurrentSessionIndex = SelectedCampaign.Sessions.IndexOf(entry as Session) + 1,
                     onAddEntry: async () => {
                         var addSessionPopup = await PopupManager.Instance.GetOrLoadPopup<AddSessionPopup>(restore: false);
                         addSessionPopup.Populate(
