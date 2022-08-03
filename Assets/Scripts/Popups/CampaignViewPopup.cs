@@ -91,7 +91,11 @@ public class CampaignViewPopup : Popup {
         List<ButtonData> tabs = new List<ButtonData>();
 
         const string sessionsTabText = "Sessions";
-        _tabSelectedEntry.Add(sessionsTabText, CurrentSession.Name);
+
+        if (CurrentSession != null) {
+            _tabSelectedEntry.Add(sessionsTabText, CurrentSession.Name);
+        }
+
         tabs.Add(new ButtonData {
             Text = sessionsTabText,
             Callback = () => {
