@@ -153,6 +153,10 @@ public class CampaignViewPopup : Popup {
                     },
                     isEditable: entry => Data.IsEditable(entry as NPC),
                     getButtons: () => {
+                        if (string.IsNullOrEmpty(_selectedEntry)) {
+                            return null;
+                        }
+
                         List<ButtonData> buttons = new List<ButtonData> {
                             new ButtonData {
                                 Text = "Clone",
