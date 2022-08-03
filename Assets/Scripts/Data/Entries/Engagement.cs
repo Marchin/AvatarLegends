@@ -87,7 +87,7 @@ public class Engagement : IDataEntry {
 
             if (availableNPCs.Count > 0) {
                 buttons.Add(new ButtonData {
-                    Text = "Add NPC to Session",
+                    Text = "Add NPC To Session",
                     Callback = () => IDataEntry.AddEntry<NPC>(NPCs, availableNPCs, CurrentSession.AddNPCs)
                 });
             }
@@ -201,11 +201,13 @@ public class Engagement : IDataEntry {
 
         void UpdateNPCs(List<string> newNPCs) {
             NPCs.AddRange(newNPCs);
+            NPCs.Sort();
             _refresh();
         }
 
         void UpdatePCs(List<string> newPCs) {
             PCs.AddRange(newPCs);
+            PCs.Sort();
             _refresh();
         }
     }
