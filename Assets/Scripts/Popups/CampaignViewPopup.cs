@@ -532,7 +532,14 @@ public class CampaignViewPopup : Popup {
 
     private void RefreshEntriesColor() {
         foreach (var element in _nameList.Elements) {
-            element.ButtonImage.color = (element.Text == _selectedEntry) ?
+            string displayName = _selectedEntry;
+
+            IDataEntry entry = _entries[_selectedEntry];
+            if (entry is IDisplayName nameDisplay) {
+                displayName = nameDisplay.DisplayName;
+            }
+
+            element.ButtonImage.color = (element.Text == displayName) ?
                 _selectedColor :
                 (element.Text == _highlightedEntry) ?
                     _highlightedColor :
