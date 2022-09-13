@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 
 public static class TechniqueUtils {
+    private static AppData Data => ApplicationManager.Instance.Data;
+
     public static string GetColoredText(this Technique.EApproach approach) {
         string result = "";
 
@@ -33,6 +35,51 @@ public static class TechniqueUtils {
             } break;
             case Technique.EApproach.Evade: {
                 result = "Evade & Observe";
+            } break;
+        }
+
+        return result;
+    }
+
+    public static List<Technique> GetLearnableTechniques(this List<ETraining> trainings, bool group) {
+        List<Technique> results = new List<Technique>(64);
+
+        foreach (var technique in Data.Techniques) {
+            if (trainings.CanLearnTechnique(technique.Value, group)) {
+                results.Add(technique.Value);
+            }
+        }
+
+        return results;
+    }
+
+    public static bool CanLearnTechnique(this List<ETraining> trainings, Technique technique, bool group) {
+        bool result = false;
+
+        switch (technique.Mastery) {
+            case Technique.EMastery.Universal: {
+                result = true;
+            } break;
+            case Technique.EMastery.Group: {
+                result = group;
+            } break;
+            case Technique.EMastery.Air: {
+                result = trainings.Contains(ETraining.Air);
+            } break;
+            case Technique.EMastery.Earth: {
+                result = trainings.Contains(ETraining.Earth);
+            } break;
+            case Technique.EMastery.Water: {
+                result = trainings.Contains(ETraining.Water);
+            } break;
+            case Technique.EMastery.Fire: {
+                result = trainings.Contains(ETraining.Fire);
+            } break;
+            case Technique.EMastery.Weapons: {
+                result = trainings.Contains(ETraining.Weapons);
+            } break;
+            case Technique.EMastery.Technology: {
+                result = trainings.Contains(ETraining.Technology);
             } break;
         }
 

@@ -169,7 +169,7 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
                             $"Remove {training} training?",
                             onYes: () => {
                                 Trainings.Remove(training);
-                                var learnableTechniques = GetLearnableTechniques();
+                                var learnableTechniques = Trainings.GetLearnableTechniques(Group);
                                 for (int iTechnique = 0; iTechnique < Techniques.Count;) {
                                     if (learnableTechniques.Find(t => t.Name == Techniques[iTechnique]) == null) {
                                         Techniques.Remove(Techniques[iTechnique]);
@@ -517,7 +517,7 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
     }
 
     public void AddTechnique(Action refresh) {
-        var availableTechniques = IDataEntry.GetAvailableEntries<Technique>(Techniques, GetLearnableTechniques());
+        var availableTechniques = IDataEntry.GetAvailableEntries<Technique>(Techniques, Trainings.GetLearnableTechniques(Group));
         if (availableTechniques.Count > 0) {
             availableTechniques.Sort((x, y) => {
                 if (x.Mastery != y.Mastery) {
@@ -568,51 +568,6 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
         return result;
     }
 
-    public List<Technique> GetLearnableTechniques() {
-        List<Technique> results = new List<Technique>(64);
-
-        foreach (var technique in Data.Techniques) {
-            if (CanLearnTechnique(technique.Value)) {
-                results.Add(technique.Value);
-            }
-        }
-
-        return results;
-    }
-
-    private bool CanLearnTechnique(Technique technique) {
-        bool result = false;
-
-        switch (technique.Mastery) {
-            case Technique.EMastery.Universal: {
-                result = true;
-            } break;
-            case Technique.EMastery.Group: {
-                result = Group;
-            } break;
-            case Technique.EMastery.Air: {
-                result = Trainings.Contains(ETraining.Air);
-            } break;
-            case Technique.EMastery.Earth: {
-                result = Trainings.Contains(ETraining.Earth);
-            } break;
-            case Technique.EMastery.Water: {
-                result = Trainings.Contains(ETraining.Water);
-            } break;
-            case Technique.EMastery.Fire: {
-                result = Trainings.Contains(ETraining.Fire);
-            } break;
-            case Technique.EMastery.Weapons: {
-                result = Trainings.Contains(ETraining.Weapons);
-            } break;
-            case Technique.EMastery.Technology: {
-                result = Trainings.Contains(ETraining.Technology);
-            } break;
-        }
-
-        return result;
-    }
-    
     private async void AddStatus(Action refresh) {
         List<string> statusesToAdd = new List<string>();
         List<InformationData> infoList = new List<InformationData>(Data.Statuses.Count);
