@@ -85,13 +85,26 @@ public static class TechniqueUtils {
 
         return result;
     }
+
+    public static void Sort(ref List<string> techniques) {
+        techniques.RemoveAll(t => !Data.Techniques.ContainsKey(t));
+        techniques.Sort((x, y) => {
+            int comp = Data.Techniques[x].Approach.CompareTo(Data.Techniques[y].Approach);
+
+            if (comp == 0) {
+                comp = x.CompareTo(y);
+            }
+
+            return comp;
+        });
+    }
 }
 
 [JsonObject(MemberSerialization.OptIn)]
 public class Technique : IDataEntry, IOnHover {
     public enum EApproach {
-        Attack,
         Defend,
+        Attack,
         Evade
     }
 

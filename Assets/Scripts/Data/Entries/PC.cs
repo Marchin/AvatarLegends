@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Cysharp.Threading.Tasks;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class PC : IDataEntry, IOnMoreInfo {
@@ -40,6 +42,12 @@ public class PC : IDataEntry, IOnMoreInfo {
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     public Action OnMoreInfo => ShowPCData;
+
+    [OnDeserialized]
+    private async void OnDeserialize(StreamingContext context) {
+        await UniTask.WaitUntil(() => ApplicationManager.Instance.Initialized);
+        TechniqueUtils.Sort(ref Techniques);
+    }
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         _refresh = refresh;
@@ -348,7 +356,7 @@ public class PC : IDataEntry, IOnMoreInfo {
 
             Action<List<string>> onDone = techniquesToAdd => {
                 Techniques.AddRange(techniquesToAdd);
-                Techniques.Sort();
+                TechniqueUtils.Sort(ref Techniques);
                 refresh?.Invoke();
             };
 

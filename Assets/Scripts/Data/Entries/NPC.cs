@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Cysharp.Threading.Tasks;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
@@ -75,6 +77,12 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
     private AppData Data => ApplicationManager.Instance.Data;
     private Campaign SelectedCampaign => Data.User.SelectedCampaign;
     public Action OnMoreInfo => ShowNPCData;
+
+    [OnDeserialized]
+    private async void OnDeserialize(StreamingContext context) {
+        await UniTask.WaitUntil(() => ApplicationManager.Instance.Initialized);
+        TechniqueUtils.Sort(ref Techniques);
+    }
 
     public List<InformationData> RetrieveData(Action refresh, Action reload) {
         List<InformationData> result = new List<InformationData>();
@@ -531,7 +539,7 @@ public class NPC : IDataEntry, IOnMoreInfo, IDisplayName {
 
             Action<List<string>> onDone = techniquesToAdd => {
                 Techniques.AddRange(techniquesToAdd);
-                Techniques.Sort();
+                TechniqueUtils.Sort(ref Techniques);
                 refresh?.Invoke();
             };
 
