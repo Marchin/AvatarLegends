@@ -15,6 +15,7 @@ public class CampaignViewPopup : Popup {
     [SerializeField] private Button _editEntry = default;
     [SerializeField] private Button _deleteEntry = default;
     [SerializeField] private Button _deleteAll = default;
+    [SerializeField] private Button _archive = default;
     [SerializeField] private Button _closeButton = default;
     [SerializeField] private Button _filterButton = default;
     [SerializeField] private Button _infoButton = default;
@@ -49,6 +50,7 @@ public class CampaignViewPopup : Popup {
     private Action<IDataEntry> _onSetEntry;
     private Func<IDataEntry, bool> _isEditable;
     private Action _onDeleteAll;
+    private Action _onArchive;
     private Action<List<IDataEntry>> _customSort;
     private Func<List<ButtonData>> _getButtons;
     private GameObject _engagementTab;
@@ -67,6 +69,7 @@ public class CampaignViewPopup : Popup {
         _addEntry.onClick.AddListener(() => _onAddEntry());
         _editEntry.onClick.AddListener(() => _onEditEntry());
         _deleteAll.onClick.AddListener(() => _onDeleteAll());
+        _archive.onClick.AddListener(() => _onArchive());
         _deleteEntry.onClick.AddListener(DeleteEntry);
         _closeButton.onClick.AddListener(PopupManager.Instance.Back);
         _filterButton.onClick.AddListener(OnFilterPress);
@@ -151,6 +154,7 @@ public class CampaignViewPopup : Popup {
                         clone.Name = name;
                         return clone;
                     },
+                    onArchive: () => SelectedCampaign.ArchiveNPCs(_reload),
                     isEditable: entry => Data.IsEditable(entry as NPC),
                     getButtons: () => {
                         if (string.IsNullOrEmpty(_selectedEntry)) {
@@ -244,9 +248,7 @@ public class CampaignViewPopup : Popup {
                         addEngagementPopup.Populate(OnEntryEdition, _entries.Keys, _entries[_selectedEntry] as Engagement);
                     },
                     isEditable: _ => true,
-                    onDeleteAll: () => {
-                        CurrentSession.RemoveEngagements(_reload);
-                    },
+                    onDeleteAll: () => CurrentSession.RemoveEngagements(_reload),
                     customSort: entries => {
                         entries.Sort((x, y) => 
                             (x as Engagement).Number.CompareTo((y as Engagement).Number)
@@ -370,6 +372,7 @@ public class CampaignViewPopup : Popup {
         Action onEditEntry,
         Func<IDataEntry, bool> isEditable,
         Action onDeleteAll = null,
+        Action onArchive = null,
         Action<List<IDataEntry>> customSort = null,
         Func<List<ButtonData>> getButtons = null,
         Func<IDataEntry, string, IDataEntry> onCloneEntry = null
@@ -395,10 +398,12 @@ public class CampaignViewPopup : Popup {
         _onEditEntry = onEditEntry;
         _isEditable = isEditable;
         _onDeleteAll = onDeleteAll;
+        _onArchive = onArchive;
         _customSort = customSort;
         _getButtons = getButtons;
         _onCloneEntry = onCloneEntry;
         _deleteAll.gameObject.SetActive(onDeleteAll != null);
+        _archive.gameObject.SetActive(onArchive != null);
 
         _searchInput.onValueChanged.RemoveListener(OnSearchInputChanged);
         _searchInput.text = _tabQueries[tabName];
@@ -411,8 +416,8 @@ public class CampaignViewPopup : Popup {
             SetEntryCollection<T>(
                 entriesFunc, onSave, tabName, 
                 onSetEntry, onAddEntry, onEditEntry, 
-                isEditable, onDeleteAll, customSort, 
-                getButtons
+                isEditable, onDeleteAll, onArchive,
+                customSort, getButtons
             );
         };
 

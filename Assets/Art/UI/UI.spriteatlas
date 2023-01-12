@@ -56,6 +56,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 03fd2494961029049a23be8c59731b5c, type: 3}
   - {fileID: 21300000, guid: f92bd39836b7dd147a4b84dc6e53b56f, type: 3}
   - {fileID: 21300000, guid: cd99ec797695fe4409635e4db5c3f1f9, type: 3}
+  - {fileID: 21300000, guid: 49af83897567f7440929857d229eeb71, type: 3}
   - {fileID: 21300000, guid: 888cca4a43c1067439e0931c09518bbe, type: 3}
   - {fileID: 21300000, guid: 18cd1b9ac853efe4280b2fe5c800a469, type: 3}
   - {fileID: 21300000, guid: e8944f9aa680ddb4fa38e14c5c1ed9f0, type: 3}
@@ -71,6 +72,7 @@ SpriteAtlas:
   - Filter
   - Pencil
   - Rounded Square
+  - Archive
   - Checkmark
   - Info Icon
   - Forbidden

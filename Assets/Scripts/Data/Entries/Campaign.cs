@@ -214,6 +214,49 @@ public class Campaign : IDataEntry {
 
         return result;
     }
+       
+    public async void ArchiveNPCs(Action onDone) {
+        var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
+        List<string> npcsToArchive = new List<string>(NPCs.Count);
+        var infoList = new List<InformationData>(NPCs.Count);
+
+        Refresh();
+
+        void Refresh() {
+            infoList.Clear();
+            foreach (var npcKVP in NPCs) {
+                NPC npc = npcKVP.Value;
+
+                if (npc.Archived)
+                {
+                    continue;
+                }
+
+                infoList.Add(new InformationData {
+                    Content = npc.DisplayName,
+                    IsToggleOn = npcsToArchive.Contains(npc.Name),
+                    OnToggle = isOn => {
+                        if (isOn) {
+                            npcsToArchive.Add(npc.Name);
+                        } else {
+                            npcsToArchive.Remove(npc.Name);
+                        }
+                        Refresh();
+                    }
+                });
+            }
+
+            listPopup.Populate(() => infoList,
+                "Archive NPCs",
+                () => {
+                    foreach (var npc in npcsToArchive) {
+                        NPCs[npc].Archived = true;
+                    }
+                    onDone?.Invoke();
+                }
+            );
+        }
+    }
     
     public Filter GetFilterData() {
         return null;
