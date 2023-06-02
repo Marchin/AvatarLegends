@@ -64,7 +64,7 @@ public class PC : IDataEntry, IOnMoreInfo {
         if (Data.Playbooks.ContainsKey(Playbook)) {
             result.Add(new InformationData {
                 Prefix = nameof(Playbook),
-                Content = Playbook,
+                Content = $"{Playbook} ({Data.Playbooks[Playbook].Principles})",
                 OnMoreInfo = async () => {
                     var listPopup = await PopupManager.Instance.GetOrLoadPopup<ListPopup>();
                     Refresh();
