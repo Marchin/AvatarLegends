@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tooltipContainer: {fileID: 941592570}
+  _canvasScaler: {fileID: 43143942}
   _tooltipMsg: {fileID: 760422933}
   _tooltipPad: 8
 --- !u!1 &75571389
