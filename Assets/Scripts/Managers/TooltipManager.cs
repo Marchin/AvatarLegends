@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class TooltipManager : MonoBehaviourSingleton<TooltipManager> {
     [SerializeField] private RectTransform _tooltipContainer = default;
-    [SerializeField] private CanvasScaler _canvasScaler = default;
     [SerializeField] private TextMeshProUGUI _tooltipMsg = default;
     [SerializeField] private float _tooltipPad = default;
     private readonly float _halfHeight = 0.5f * Screen.height;
