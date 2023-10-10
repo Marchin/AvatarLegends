@@ -1049,6 +1049,342 @@
             "approach": "Evade",
             "description": "Insult and taunt an engaged foe into making a mistake. Your foe must either try to ignore your insults and mark fatigue equal to their highest balance principle rating, or give in to them, agreeing now to advance and attack and target you with any attacks. If your foe gives in to your insults, you become Prepared.",
             "rare": false
+        },
+        "Arcing Blast": {
+            "name": "Arcing Blast",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Curve a sparking, spitting beam of focused energy around cover and protection to reach your target. Mark 1-fatigue, and your target must mark 3-fatigue and lose Favored and Prepared if they have either or both of those statuses.",
+            "rare": true
+        },
+        "Arms of the Ocean’s Reach": {
+            "name": "Arms of the Ocean’s Reach",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Pull water along your arms to create two long tendrils with which to maneuver, attack, and engage. Mark 1-fatigue and become Pre- pared. While you are Prepared, your reach is extended by your water tendrils. It costs foes an extra 1-fatigue to disengage with you in any way. If you use Water Whip, Octopus Form, Crushing Grip of Seas, or any other advanced technique that uses water tendrils while you are Prepared from this technique, you may lose Prepared to ignore the fatigue cost of that technique and inflict an extra 1-fatigue if it inflicts any harm on a target.",
+            "rare": true
+        },
+        "Batter Weapon": {
+            "name": "Batter Weapon",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Target a foe’s melee weapon with battering strikes, knocking the weapon from your foe’s grasp. Your foe must either mark 2-fatigue or lose the weapon and become Impaired.",
+            "rare": false
+        },
+        "Breathless Gale": {
+            "name": "Breathless Gale",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "Pour forth a terrifying gale that makes it impossible for others in the area to breathe. Mark 2-fatigue. Everyone in the area becomes Impaired except for you. If they are already Impaired by breathlessness, they become Stunned.",
+            "rare": true
+        },
+        "Diagnose Specs": {
+            "name": "Diagnose Specs",
+            "mastery": "Technology",
+            "approach": "Evade",
+            "description": "Observe a mechanical device or weapon and quickly figure out its weaknesses. Choose a mechanical device currently wielded by a foe you are engaged with. Become Favored and Prepared to deal with that device and that foe. If the device is a mecha or a vehicle, inflict an additional 2-fatigue the next time you or an ally you can guide inflicts harm on it.",
+            "rare": true
+        },
+        "Dire Strike": {
+            "name": "Dire Strike",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Put all your force and strength behind a two-handed swing of a sizable melee weapon. Mark 2-fatigue and inflict 4-fatigue, a condition, and Impaired on your target. If they are wielding a melee weapon, you may mark an additional 1-fatigue to knock it from their grasp.",
+            "rare": false
+        },
+        "Disruptive Spark": {
+            "name": "Disruptive Spark",
+            "mastery": "Fire",
+            "approach": "Evade",
+            "description": "Emit a small crackling burst of electricity that disrupts a nearby foe or an electrical device. Mark 1-fatigue and choose a target. If you target a foe, they become Impaired and chooses one fewer technique in the next exchange, to a minimum of zero. If you target an electrical device, it is immediately shut down as if Stunned for one exchange.",
+            "rare": false
+        },
+        "Double-Leg Kick-Out": {
+            "name": "Double-Leg Kick-Out",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Leap and land both your feet on your foe, kicking off them with your whole body. Mark 1-fatigue, and then you and your foe each secretly wager up to 3-fatigue. Reveal your wagers simultaneously, each of you marking as much fatigue as you wagered. If you wagered as much or more fatigue than your foe, they are knocked to the ground, becoming Stunned and Impaired.",
+            "rare": false
+        },
+        "Doubling Down": {
+            "name": "Doubling Down",
+            "mastery": "Universal",
+            "approach": "Evade",
+            "description": "Redouble your efforts and invest yourself fully into the fight. Shift your balance twice away from center, then clear twice your highest principle in fatigue. You may only use this technique once per combat.",
+            "rare": false
+        },
+        "Douse Flame": {
+            "name": "Douse Flame",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Cast a wave of water about, putting out all flames and soaking your foes. Mark 1-fatigue. Everyone around you except Waterbenders becomes Impaired. All Firebenders affected by this technique cannot remove Impaired until they first spend 2-fatigue to heat themselves up and dry out their soaked clothing.",
+            "rare": false
+        },
+        "Electromagnet Bomb": {
+            "name": "Electromagnet Bomb",
+            "mastery": "Technology",
+            "approach": "Attack",
+            "description": "Use available materials to construct, plant, and detonate a device that emits an electromagnetic pulse. Mark 2-fatigue. Any unshielded advanced technology in the area, including mecha systems, airship systems, radio systems, or electrical systems, is immediately disrupted and deactivated until a technologist spends time repairing it.",
+            "rare": false
+        },
+        "Electromagnetic Shield": {
+            "name": "Electromagnetic Shield",
+            "mastery": "Technology",
+            "approach": "Evade",
+            "description": "Activate an electromagnetic field around yourself to repel metallic objects. Mark 1-fatigue. Anyone holding a metallic object must either immediately move away and disengage with you, or mark 2-fatigue to remain engaged with you. Anyone wearing metallic material around their bodies must immediately move away and disengage with you or mark 3-fatigue to remain engaged with you.",
+            "rare": false
+        },
+        "Finger Flame Jet": {
+            "name": "Finger Flame Jet",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Emit an incredibly hot, small jet of flame from your fingertip and use it to burn through armor, metal, or a barrier. Destroy one vulnerable metal item in reach; if it is held or worn by a foe, they may mark 2-fatigue to twist out of reach and avoid the effect. If you target a larger metal object (a mecha suit, a vehicle, etc.), the target must mark 3-fatigue instead.",
+            "rare": false
+        },
+        "Flowing Stance": {
+            "name": "Flowing Stance",
+            "mastery": "Weapons",
+            "approach": "Evade",
+            "description": "You take up a stance to enable you to string many motions together fluidly. Mark 2-fatigue and become Prepared. While you are Prepared from this technique, you may use one additional weapons-training advanced technique of your chosen approach each exchange, as long as you advance & attack or defend & maneuver.",
+            "rare": true
+        },
+        "Grapple Toss": {
+            "name": "Grapple Toss",
+            "mastery": "Technology",
+            "approach": "Attack",
+            "description": "Grab a foe with a grappling gun and throw them away from you. Target a foe you are engaged with and mark 1-fatigue. You toss them away from you, forcing them to disengage with you. They may mark 3-fatigue to resist this motion. Regardless of whether they resist ornot, they also become Impaired.",
+            "rare": false
+        },
+        "Hazardous Field": {
+            "name": "Hazardous Field",
+            "mastery": "Technology",
+            "approach": "Defend",
+            "description": "Use available components to quickly set up a hazardous field—a poisonous cloud, an electrical barrier, a line of burning oil—that acts as a barrier for anyone to cross. Mark 1-fatigue. Your field extends between two points within reach. Anyone who crosses it for any reason must mark 2-fatigue immediately. The field lasts until someone takes it down, or until shortly after the end of combat.",
+            "rare": false
+        },
+        "Heat Metal": {
+            "name": "Heat Metal",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Place your hands upon a metal surface or object and pour heat into it. Anyone in contact with the hot metal must either hold their position and become Impaired or must mark 1-fatigue to abandon  that position. If they are already Impaired, they must instead mark 2-fatigue to hold their position.",
+            "rare": false
+        },
+        "Hidden Weapon Strike": {
+            "name": "Hidden Weapon Strike",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Reveal a hidden weapon from within your apparel and strike with it all in one motion. Mark 1-fatigue and inflict 3-fatigue and Stunned on your foe. You may only use this technique against any given foe once per combat.",
+            "rare": true
+        },
+        "High-Speed Grapple Strike": {
+            "name": "High-Speed Grapple Strike",
+            "mastery": "Technology",
+            "approach": "Defend",
+            "description": "Fire a grappling line near a foe to launch yourself directly at them at high speeds. Target a foe you are not currently engaged with and mark 1-fatigue. You close the distance and engage with them immediately. Any foe currently engaged with you can block this movement by marking 3-fatigue. If your movement is unblocked, you may mark an additional 1-fatigue to become Favored or to immediately use the technique Strike against your target; you may not do both.",
+            "rare": false
+        },
+        "Hurl Weapon": {
+            "name": "Hurl Weapon",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Hurl a weapon unintended for throwing at a foe. You lose your weapon and become Impaired for the next exchange or until you retrieve it. Inflict 2-fatigue and a condition on your target.",
+            "rare": false
+        },
+        "Ice Slide": {
+            "name": "Ice Slide",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Create an ice slide around you to shift and redirect your foes. Mark 1-fatigue. For any foes engaged with you who chose advance & attack or defend & maneuver this exchange, you may shift their position, engaging or disengaging with them as appropriate. Each of those foes may mark a condition or 2-fatigue to resist this movement.",
+            "rare": false
+        },
+        "Ice Snare": {
+            "name": "Ice Snare",
+            "mastery": "Water",
+            "approach": "Defend",
+            "description": "Prepare to throw a bit of water at a foe’s hand or foot, catching the appendage, and then freezing it in place. Hold 1-reaction. You may mark 1-fatigue and spend 1-reaction to interrupt a foe’s technique during this exchange. If you do, they must either become Impaired and mark 2-fatigue or the technique is interrupted and has no effect. Lose all reaction at the end of the exchange.",
+            "rare": false
+        },
+        "Improvise Weapon": {
+            "name": "Improvise Weapon",
+            "mastery": "Weapons",
+            "approach": "Evade",
+            "description": "Quickly arm yourself with a weapon improvised from materials around you. Mark 1-fatigue and become Favored. When you inflict harm with this weapon, the weapon breaks and you inflict an additional 2-fatigue.",
+            "rare": false
+        },
+        "Line Skating": {
+            "name": "Line Skating",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Use metal wires (like those common in the air above Republic City) or the edges of metal surfaces to skate rapidly around your environment. Mark 1-fatigue, become Favored, and shift to a new location, disengaging with anyone you are currently engaged with and re-engaging with any foes at the new location. Other Metalbenders engaged with you can mark 2-fatigue to stop this motion; if they do, you still become Favored.",
+            "rare": true
+        },
+        "Mirror Block": {
+            "name": "Mirror Block",
+            "mastery": "Weapons",
+            "approach": "Defend",
+            "description": "Prepare to match, mirror, and capitalize on an opponent’s attack. Mark 1-fatigue and become Prepared. While you are Prepared from this technique, you may lose Prepared to mirror an opponent’s attack, blocking it and then pulling them off-balance; if you do, you completely cancel the effects of an attack they make and inflict Impaired on them.",
+            "rare": true
+        },
+        "Mount/Dismount": {
+            "name": "Mount/Dismount",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Move from inside a vehicle or atop a steed to standing on your own feet quickly and efficiently, or vice versa. You immediately move to a new position—away from your vehicle or steed if you dismount, or atop or inside your vehicle or steed if you mount—engaging new enemies as appropriate, and you become Favored and Prepared.",
+            "rare": false
+        },
+        "Overload": {
+            "name": "Overload",
+            "mastery": "Technology",
+            "approach": "Attack",
+            "description": "Overload a vulnerable device or electrical weapon to unleash an explosion. The device detonates and destroys itself at the end of the next exchange. Anyone within range when it detonates suffers fatigue based on its size: 3-fatigue for a handheld device, 5-fatigue for a heavy portable device, 7-fatigue for a stationary device.",
+            "rare": true
+        },
+        "Pressurized Fire Blast": {
+            "name": "Pressurized Fire Blast",
+            "mastery": "Fire",
+            "approach": "Attack",
+            "description": "Build up a tongue of fire under pressure before releasing it in a torrent of flame. Mark 1-fatigue and take 1-force. Then choose to release the blast or continue building pressure. If you release the blast, choose your target, spend all force, and inflict X-fatigue per force spent, where X is the amount of force spent. If you continue building pressure, hold your force into the next exchange. In any exchange in which you do not continue building pressure, you lose 1-force at the end of the exchange.",
+            "rare": true
+        },
+        "Probing Metal": {
+            "name": "Probing Metal",
+            "mastery": "Earth",
+            "approach": "Evade",
+            "description": "Extend your metalbending senses to detect vulnerabilities in a metallic target, including mecha, vehicles, and structures. Mark 1-fatigue. Become Prepared to attack your target. When next you inflict harm on your target, you inflict an additional 2-fatigue. If you instead attack an inanimate target that can’t suffer fatigue (like a building structure), then you can use Smash against it without paying any fatigue costs.",
+            "rare": false
+        },
+        "Razor Rings": {
+            "name": "Razor Rings",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "While standing in or near a significant supply of water, send a wave of razor-sharp water rings rolling up at a foe near the water. Mark 1-fatigue. Your foe must dodge the rings, marking 2-fatigue and becoming Impaired, or you can cut loose or destroy any vulnerable objects or items they are carrying of your choice.",
+            "rare": false
+        },
+        "Reflect Projectiles": {
+            "name": "Reflect Projectiles",
+            "mastery": "Air",
+            "approach": "Defend",
+            "description": "Ready yourself to return incoming projectiles (arrows, rocks thrown with earthbending, knives, icicles, etc.) at an attacker. Hold 2-defense  against these attacks. You may spend 1-defense to deflect any incoming projectile attack aimed at you. You may spend 2-defense to reflect an incoming projectile attack aimed at you, returning it to the attacker and inflicting any fatigue, conditions, or statuses from the initial attack upon them. You may spend 2-defense to deflect any incoming project attack aimed at an ally within reach. You retain unspent defense until you spend it, the combat ends, or you become Impaired.",
+            "rare": true
+        },
+        "Remote Bomb": {
+            "name": "Remote Bomb",
+            "mastery": "Technology",
+            "approach": "Evade",
+            "description": "Plant a small explosive you can trigger remotely on a nearby surface. Mark 1-fatigue. You may activate the explosive at the start of any ensuing exchange, after approaches have been chosen but before  anyone makes the stance move. When you detonate the explosive, everyone in the area suffers 3-fatigue and a condition. (Unless you have moved away, you are assumed to be in the area.)",
+            "rare": false
+        },
+        "Rock Cuff Barrage": {
+            "name": "Rock Cuff Barrage",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Toss a barrage of rock cuffs that catch a foe’s wrists and ankles to bind them against a wall. Mark 1-fatigue to inflict Impaired upon a single foe. Mark 3-fatigue to inflict Impaired upon a group of foes, or to inflict Impaired and Trapped upon a single foe. Mark 5-fatigue to inflict Impaired and Trapped upon a group of foes.",
+            "rare": true
+        },
+        "Run Them Down": {
+            "name": "Run Them Down",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "While driving a vehicle, aim straight for a non-vehicle target and gun your engine. Your target must block or dodge your vehicle, choosing two out of three: mark 3-fatigue, mark a condition, become Impaired.",
+            "rare": false
+        },
+        "Seek the Deepest Calm": {
+            "name": "Seek the Deepest Calm",
+            "mastery": "Universal",
+            "approach": "Evade",
+            "description": "Quiet your emotions and focus yourself. Use only in an exchange in which no conditions were inflicted upon you. Clear any non-physical negative statuses or become Inspired. Clear two conditions of your choice. You may only use this technique once per combat.",
+            "rare": false
+        },
+        "Shame": {
+            "name": "Shame",
+            "mastery": "Universal",
+            "approach": "Attack",
+            "description": "Insult an opponent to drive home their inefficacy after they’ve suffered a blow. Target a foe who has suffered some harm (marked fatigue, marked a condition, or suffered a negative status) from an attack this exchange and mark 1-fatigue. Insult them, forcing them to mark additional fatigue equal to the number of conditions they have marked, or to shift their balance, their choice.",
+            "rare": false
+        },
+        "Sightless Detection": {
+            "name": "Sightless Detection",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Hone your awareness to be ready for any of your foes’ movements and attacks, even if your senses are impaired or they attempt to strike from a blindspot. If you are Impaired due to your senses being disrupted, you lose your Impaired status. For the next exchange, all combatants engaged with you must choose and reveal their approach before you do, and must choose and reveal any techniques they plan to use before you use any techniques in the same approach.",
+            "rare": false
+        },
+        "Slip Away": {
+            "name": "Slip Away",
+            "mastery": "Universal",
+            "approach": "Defend",
+            "description": "Move out of sight and into a superior position. You may only use this technique if no one is engaged with you. Mark 1-fatigue, become Favored, and move into a position where your foes lose track of you. No one may target you or engage with you—and you may not target or engage with anyone else—while you are hidden. Mark 1-fatigue at the start of each exchange to remain hidden; do not choose an approach or make the stance move while hidden. You may reveal yourself and act during the resolution of any approach; if you do, you immediately commit to that approach and make the stance move, re-entering the fight and performing techniques as appropriate.",
+            "rare": true
+        },
+        "Sonic Grenade": {
+            "name": "Sonic Grenade",
+            "mastery": "Technology",
+            "approach": "Evade",
+            "description": "Toss a device that produces incredibly loud noise. Everyone engaged with you becomes Impaired by the noise unless they have protected their ears in some way (you are assumed to have ear protection when you use this technique). If they are already Impaired, they become Stunned. You may only use this technique once per combat.",
+            "rare": true
+        },
+        "Spike Drill Dive": {
+            "name": "Spike Drill Dive",
+            "mastery": "Water",
+            "approach": "Attack",
+            "description": "Leap into the air, then hurtle back down legs first, spinning like a corkscrew and surrounding your lower body with an icy spike. Mark 3-fatigue. Every foe near the ground where you land marks 2-fatigue and is thrown backward. If there is anything beneath the surface you land on (a lower floor, a cave, etc.), you immediately move into that space, disengaging and engaging with foes as appropriate.",
+            "rare": true
+        },
+        "Squash Push": {
+            "name": "Squash Push",
+            "mastery": "Air",
+            "approach": "Defend",
+            "description": "Spin up a wild storm of winds that casts foes away from you. Mark 1-fatigue. Your foes are cast away from you unless they mark 1-fatigue to plant their feet; if they do, they become Impaired.",
+            "rare": false
+        },
+        "Squash Elements": {
+            "name": "Squash Elements",
+            "mastery": "Earth",
+            "approach": "Defend",
+            "description": "Use mounds, piles, and walls of earth to squash another element— absorbing water in dirt, smothering a fire, or blocking wind. Mark 1-fatigue and choose an element (water, fire, or air) to squash. Anyone in your vicinity during the next exchange must mark an additional 1-fatigue for each technique of that bending style that they use.",
+            "rare": false
+        },
+        "Tremor Strike": {
+            "name": "Tremor Strike",
+            "mastery": "Earth",
+            "approach": "Attack",
+            "description": "Strike the ground with force to send a wave of stone and earth rippling out. Mark 2-fatigue. Any individual foes engaged with you suffer 2-fatigue and are knocked to the ground, becoming Impaired. Groups of foes engaged with you suffer 3-fatigue and become Impaired.",
+            "rare": false
+        },
+        "Venomous Darts": {
+            "name": "Venomous Darts",
+            "mastery": "Weapons",
+            "approach": "Attack",
+            "description": "Throw a few darts coated with paralytic venom at a foe. Mark 1-fatigue, or you are out of darts and cannot use this technique for the rest of combat. Inflict 1-fatigue and Impaired on your foe. If they are already Impaired, inflict Stunned. If they are already Stunned, inflict Doomed.",
+            "rare": false
+        },
+        "Versatile Strike": {
+            "name": "Versatile Strike",
+            "mastery": "Earth",
+            "approach": "Attack",
+            "description": "Use a piece of meteor ore to launch a strike that shifts between liquefied and solid aspects. Mark 1-fatigue and inflict 2-fatigue on your foe. Next exchange, your foe cannot choose to evade & observe.",
+            "rare": false
+        },
+        "Wall Run": {
+            "name": "Wall Run",
+            "mastery": "Fire",
+            "approach": "Defend",
+            "description": "Run along a vertical surface, using flame jets from your hands to keep from falling. Mark 1-fatigue and move to a new location, disengaging with foes at your origin and engaging with any foes at your destination. Any foe engaged with you can mark 3-fatigue to block this technique.",
+            "rare": false
+        },
+        "Wind Toss": {
+            "name": "Wind Toss",
+            "mastery": "Air",
+            "approach": "Attack",
+            "description": "Throw a large object at a foe with a gust of wind. Choose an object to hurl, and the GM will tell you to mark 1, 2, or 3-fatigue as appropriate to the size (smaller than a person, person-sized, bigger than a person). Your target must either stand strong and take the hit, marking one, two, or three conditions respectively; or they must move away to avoid the attack, disengaging and marking 1, 2, or 3-fatigue respectively.",
+            "rare": true
+        },
+        "Wingsuit Swerve": {
+            "name": "Wingsuit Swerve",
+            "mastery": "Air",
+            "approach": "Evade",
+            "description": "Use your wingsuit to rapidly change direction mid-air, throwing your foes off. Mark 2-fatigue and become Favored. Next exchange, each foe must mark an additional 1-fatigue to target you with any techniques.",
+            "rare": false
         }
     },
     
