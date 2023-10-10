@@ -1054,7 +1054,7 @@
             "name": "Arcing Blast",
             "mastery": "Fire",
             "approach": "Attack",
-            "description": "Curve a sparking, spitting beam of focused energy around cover and protection to reach your target. Mark 1-fatigue, and your target must mark 3-fatigue and lose Favored and Prepared if they have either or both of those statuses.",
+            "description": "[Combustion] Curve a sparking, spitting beam of focused energy around cover and protection to reach your target. Mark 1-fatigue, and your target must mark 3-fatigue and lose Favored and Prepared if they have either or both of those statuses.",
             "rare": true
         },
         "Arms of the Ocean’s Reach": {
@@ -1096,7 +1096,7 @@
             "name": "Disruptive Spark",
             "mastery": "Fire",
             "approach": "Evade",
-            "description": "Emit a small crackling burst of electricity that disrupts a nearby foe or an electrical device. Mark 1-fatigue and choose a target. If you target a foe, they become Impaired and chooses one fewer technique in the next exchange, to a minimum of zero. If you target an electrical device, it is immediately shut down as if Stunned for one exchange.",
+            "description": "[Lighting] Emit a small crackling burst of electricity that disrupts a nearby foe or an electrical device. Mark 1-fatigue and choose a target. If you target a foe, they become Impaired and chooses one fewer technique in the next exchange, to a minimum of zero. If you target an electrical device, it is immediately shut down as if Stunned for one exchange.",
             "rare": false
         },
         "Double-Leg Kick-Out": {
@@ -1215,7 +1215,7 @@
             "name": "Line Skating",
             "mastery": "Earth",
             "approach": "Defend",
-            "description": "Use metal wires (like those common in the air above Republic City) or the edges of metal surfaces to skate rapidly around your environment. Mark 1-fatigue, become Favored, and shift to a new location, disengaging with anyone you are currently engaged with and re-engaging with any foes at the new location. Other Metalbenders engaged with you can mark 2-fatigue to stop this motion; if they do, you still become Favored.",
+            "description": "[Metal] Use metal wires (like those common in the air above Republic City) or the edges of metal surfaces to skate rapidly around your environment. Mark 1-fatigue, become Favored, and shift to a new location, disengaging with anyone you are currently engaged with and re-engaging with any foes at the new location. Other Metalbenders engaged with you can mark 2-fatigue to stop this motion; if they do, you still become Favored.",
             "rare": true
         },
         "Mirror Block": {
@@ -1250,7 +1250,7 @@
             "name": "Probing Metal",
             "mastery": "Earth",
             "approach": "Evade",
-            "description": "Extend your metalbending senses to detect vulnerabilities in a metallic target, including mecha, vehicles, and structures. Mark 1-fatigue. Become Prepared to attack your target. When next you inflict harm on your target, you inflict an additional 2-fatigue. If you instead attack an inanimate target that can’t suffer fatigue (like a building structure), then you can use Smash against it without paying any fatigue costs.",
+            "description": "[Metal] Extend your metalbending senses to detect vulnerabilities in a metallic target, including mecha, vehicles, and structures. Mark 1-fatigue. Become Prepared to attack your target. When next you inflict harm on your target, you inflict an additional 2-fatigue. If you instead attack an inanimate target that can’t suffer fatigue (like a building structure), then you can use Smash against it without paying any fatigue costs.",
             "rare": false
         },
         "Razor Rings": {
@@ -1362,7 +1362,7 @@
             "name": "Versatile Strike",
             "mastery": "Earth",
             "approach": "Attack",
-            "description": "Use a piece of meteor ore to launch a strike that shifts between liquefied and solid aspects. Mark 1-fatigue and inflict 2-fatigue on your foe. Next exchange, your foe cannot choose to evade & observe.",
+            "description": "[Metal] Use a piece of meteor ore to launch a strike that shifts between liquefied and solid aspects. Mark 1-fatigue and inflict 2-fatigue on your foe. Next exchange, your foe cannot choose to evade & observe.",
             "rare": false
         },
         "Wall Run": {
