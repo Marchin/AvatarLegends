@@ -1497,6 +1497,30 @@
                 "Troubled"
             ]
         },
+        "The Adrift": {
+            "name": "The Adrift",
+            "description": "Resilient, searching, detached, capable.\nThe Adrift was once exactly what others expected of them, playing some role to perfection without ever caring or investing in thing.any They couldn’t bring themselves to commit to the world, to involve themselves—they just did as was expected. But now, they’re trying to find a cause to commit to, a reason to struggle and strive. The Adrift is slowly shifting from being so deeply enmeshed in inoffensive, perfectly safe apathy, to taking risks and putting themselves on the line for worthy causes. That means more than any other hero, they start out already skewed toward one of their principles and their journey is about shifting away from that principle.",
+            "principles": "Risk/Stability",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Aspirant": {
+            "name": "The Aspirant",
+            "description": "Hopeful, ambitious, performing, mutable. The Aspirant is a figure of hopeful, positive change in the world at large. To achieve that change, they pursue fame and reputation, hoping to wield it to successfully influence the world. But of course, they cannot achieve such fame and reputation without being changed by those whose adoration they seek.\nThe Aspirant is always struggling between their desire to serve the actual real interests of the world and of the peoples they come to represent, and their desire to be well-liked and adored by those peoples. They come from a community and they build their reputation with that group, but they always need to extend their reputation to other groups…and meanwhile every group that believes in them can make demands of them.",
+            "principles": "Legacy/Adoraton",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
         "The Bold": {
             "name": "The Bold",
             "description": "Self-doubting, boastful, clever, curious. The Bold is sure that they have it in them to be someone great—a great warrior, an exceptional artist, a master bender—even if they aren’t really there yet, even if others make sure that the Bold knows they aren’t there yet. They will be, someday. They just need to work up to it, okay? They’re working up to it!\nThe Bold is trying to prove themselves. They may present to the world a confident, capable face, may even boast about their excellence—but that’s nearly always a facade, an attempt to sell themselves on their own skills as much as to convince anyone else. But at the same time, the Bold isn’t all talk—they are committed to making the world better, and especially for their friends, their family, and the people they care about. ",
@@ -1585,6 +1609,18 @@
             "name": "The Idealist",
             "description": "Noble, pained, kind, committed. The Idealist has suffered some tragedy in their past, something terrible that left them with pain and anger…but also, with hope. Even in the face of tragedy, they felt and pursued a belief that people could be great, that the world could be better. The Idealist pursues that belief, taking action to help people, connect them, and solve problems.\nThe Idealist still has an edge to them, however, and a capacity for unforgiveness. After all, something terrible happened to them, and it can be hard not to crave vengeance against those responsible. At their best, the Idealist can turn that drive into a push to change the world for the better. At their worst, it can drive the Idealist to extreme, dangerous action.",
             "principles": "Forgiveness/Action",
+            "conditions": [
+                "Afraid",
+                "Angry",
+                "Guilty",
+                "Insecure",
+                "Troubled"
+            ]
+        },
+        "The Outcast": {
+            "name": "The Outcast",
+            "description": "Insightful, uncompromising, abrasive, isolated. The Outcast refused to compromise themselves for their community, and as a result they were thrown out. They are defined by this struggle between seeing clearly and having a strong sense of right, and finding a place where they belong and are accepted.\nThe Outcast has a unique perspective on communities and societies in general now, seeing their truths and their difficulties with a heightened clarity. But they still have to be careful not to unthinkingly repeat their past mistakes—some hard truths can drive people away instead of helping them or bringing them closer.",
+            "principles": "Society/Integrity",
             "conditions": [
                 "Afraid",
                 "Angry",
