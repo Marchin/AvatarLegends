@@ -50,7 +50,7 @@ public class AddPCPopup : AddEntryPopup<PC> {
             _backstoryInput.text = _editingEntry.Backstory;
 
             List<string> playbooks = new List<string>(Data.Playbooks.Keys);
-            _training.Value = playbooks.IndexOf(_editingEntry.Playbook);
+            _playbook.Value = playbooks.IndexOf(_editingEntry.Playbook);
         }
     }
 
